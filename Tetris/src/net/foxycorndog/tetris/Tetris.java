@@ -53,6 +53,8 @@ public class Tetris extends GameStarter
 		board    = new Board(10, 20, 10);
 		
 		mainMenu = new MainMenu();
+		
+		//editing init method!!
 	}
 
 	/**
