@@ -66,6 +66,8 @@ public class Tetris extends GameStarter
 //			GL.scale(3, 3, 1);
 			
 //			longPiece.render();
+		
+		//editing the rendr2d method!!
 	}
 
 	/**
