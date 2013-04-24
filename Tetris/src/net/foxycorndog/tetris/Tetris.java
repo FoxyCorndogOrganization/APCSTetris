@@ -4,6 +4,7 @@ import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.GameStarter;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.tetris.board.Board;
+import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.board.Piece;
 import net.foxycorndog.tetris.menu.MainMenu;
 
@@ -39,6 +40,13 @@ public class Tetris extends GameStarter
 		game.start();
 	}
 	
+	public void playGame()
+	{
+		mainMenu = null;
+		
+//		board.addPiece(Piece.getRandomPiece(), 5, 5);
+	}
+	
 	/**
 	 * The method to do the game's OpenGL initialization.
 	 */
@@ -52,7 +60,7 @@ public class Tetris extends GameStarter
 		
 		board    = new Board(10, 20, 10);
 		
-		mainMenu = new MainMenu();
+		mainMenu = new MainMenu(this);
 	}
 
 	/**
@@ -60,10 +68,14 @@ public class Tetris extends GameStarter
 	 */
 	public void render2D()
 	{
-		mainMenu.render();
-//			GL.scale(3, 3, 1);
-			
-//			longPiece.render();
+		if (mainMenu != null)
+		{
+			mainMenu.render();
+		}
+		else
+		{
+			board.render();
+		}
 	}
 
 	/**
@@ -79,8 +91,13 @@ public class Tetris extends GameStarter
 	 */
 	public void loop()
 	{
-		mainMenu.loop();
-		
-		board.loop();
+		if (mainMenu != null)
+		{
+			mainMenu.loop();
+		}
+		else
+		{
+			board.loop();
+		}
 	}
 }

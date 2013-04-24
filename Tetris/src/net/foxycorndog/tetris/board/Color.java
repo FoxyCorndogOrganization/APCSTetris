@@ -14,7 +14,12 @@ package net.foxycorndog.tetris.board;
  */
 public class Color
 {
-	private	int	red, green, blue;
+	private	int					red, green, blue;
+	
+	public static final Color	MAGENTA = new Color(157, 0, 159),
+			YELLOW = new Color(220, 212, 0), RED = new Color(159, 0, 30),
+			BLUE = new Color(0, 0, 165), ORANGE = new Color(196, 106, 0),
+			CYAN = new Color(0, 196, 175), GREEN = new Color(0, 196, 55);
 	
 	/**
 	 * Create a color with the specified red, green, and blue values.

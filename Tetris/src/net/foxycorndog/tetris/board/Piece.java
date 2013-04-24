@@ -17,14 +17,19 @@ import net.foxycorndog.jfoxylib.graphics.opengl.GL;
  * @version	Apr 22, 2013 at 11:17:15 PM
  * @version	v0.1
  */
-public class Piece
+public class Piece implements Cloneable
 {
 	private 		int		rotation;
 	private			int		x, y;
+	private			int		width, height;
 	
 	private 		Bundle	bundle;
 	
+	private 		Color	matrix[];
+	
 	private	static	Texture	square;
+	
+	private static	Piece	pieces[];
 	
 	static
 	{
@@ -36,6 +41,77 @@ public class Piece
 		{
 			e.printStackTrace();
 		}
+		
+		Color matrix[] = null;
+		
+		pieces    = new Piece[7];
+		
+		// Long Piece
+		matrix = new Color[]
+		{
+			Color.MAGENTA,
+			Color.MAGENTA,
+			Color.MAGENTA,
+			Color.MAGENTA,
+		};
+		
+		pieces[0] = new Piece(matrix, 1);
+		
+		// Square Piece
+		matrix = new Color[]
+		{
+			Color.ORANGE, Color.ORANGE,
+			Color.ORANGE, Color.ORANGE,
+		};
+		
+		pieces[1] = new Piece(matrix, 2);
+		
+		// L Piece
+		matrix = new Color[]
+		{
+			Color.GREEN, null,
+			Color.GREEN, null,
+			Color.GREEN, Color.GREEN,
+		};
+		
+		pieces[2] = new Piece(matrix, 2);
+		
+		// Backwards L Piece
+		matrix = new Color[]
+		{
+			null,       Color.BLUE,
+			null,       Color.BLUE,
+			Color.BLUE, Color.BLUE,
+		};
+		
+		pieces[3] = new Piece(matrix, 2);
+		
+		// S Piece
+		matrix = new Color[]
+		{
+			null,         Color.YELLOW, Color.YELLOW,
+			Color.YELLOW, Color.YELLOW, null,
+		};
+		
+		pieces[4] = new Piece(matrix, 3);
+		
+		// Backwards S Piece
+		matrix = new Color[]
+		{
+			Color.CYAN, Color.CYAN, null,
+			null,       Color.CYAN, Color.CYAN,
+		};
+		
+		pieces[5] = new Piece(matrix, 3);
+		
+		// T Piece
+		matrix = new Color[]
+		{
+			Color.RED, Color.RED, Color.RED,
+			null,      Color.RED, null,
+		};
+		
+		pieces[6] = new Piece(matrix, 3);
 	}
 	
 	/**
@@ -65,6 +141,10 @@ public class Piece
 	 */
 	public Piece(Color matrix[], int width)
 	{
+		this.width  = width;
+		this.height = matrix.length / width;
+		this.matrix = matrix;
+		
 		bundle = new Bundle(1, 2, true, false);
 		
 		int height = matrix.length / width;
@@ -79,18 +159,18 @@ public class Piece
 			}
 		}
 		
-		bundle = new Bundle(num * 4, 2, true, false);
+		bundle = new Bundle(num * 4, 2, true, true);
 		
 		int wid = square.getWidth();
 		int hei = square.getHeight();
 		
 		bundle.beginEditingVertices();
 		{
-			for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
-				for (int y = 0; y < height; y++)
+				for (int x = 0; x < width; x++)
 				{
-					if (matrix[x + y * width] != null)
+					if (matrix[x + (height - y - 1) * width] != null)
 					{
 						bundle.addVertices(GL.genRectVerts(x * wid, y * hei, wid, hei));
 					}
@@ -101,9 +181,9 @@ public class Piece
 		
 		bundle.beginEditingTextures();
 		{
-			for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
-				for (int y = 0; y < height; y++)
+				for (int x = 0; x < width; x++)
 				{
 					if (matrix[x + y * width] != null)
 					{
@@ -113,6 +193,43 @@ public class Piece
 			}
 		}
 		bundle.endEditingTextures();
+		
+		bundle.beginEditingColors();
+		{
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					if (matrix[x + y * width] != null)
+					{
+						Color color = matrix[x + y * width];
+						
+						bundle.addColors(GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
+					}
+				}
+			}
+		}
+		bundle.endEditingColors();
+	}
+	
+	/**
+	 * Get the amount of segments the Piece is across.
+	 * 
+	 * @return The amount of segments the Piece is across.
+	 */
+	public int getWidth()
+	{
+		return width;
+	}
+
+	/**
+	 * Get the amount of segments the Piece is vertically.
+	 * 
+	 * @return The amount of segments the Piece is vertically.
+	 */
+	public int getHeight()
+	{
+		return height;
 	}
 	
 	/**
@@ -179,5 +296,59 @@ public class Piece
 		rotateClockwise();
 		rotateClockwise();
 		rotateClockwise();
+	}
+	
+	/**
+	 * Return a clone of the specified Piece instance.
+	 * 
+	 * @return Another instance of a Piece exactly like the preceding one.
+	 */
+	public Piece clone()
+	{
+		Piece piece = null;
+		
+		try
+		{
+			piece = (Piece)super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return piece;
+	}
+	
+	/**
+	 * Get the size of each segment of a Piece. (The square texture size)
+	 * 
+	 * @return The size of a segment of a Piece.
+	 */
+	public static int getSegmentSize()
+	{
+		return square.getWidth();
+	}
+	
+	/**
+	 * Get the array of Pieces. Contains all seven of the original Piece
+	 * shapes.
+	 * 
+	 * @return The array of the seven original Pieces.
+	 */
+	public static Piece[] getPieces()
+	{
+		return pieces;
+	}
+	
+	/**
+	 * Get a brand new instance of one of the seven original Pieces.
+	 * 
+	 * @return A brand new instance of one of the seven original Pieces.
+	 */
+	public static Piece getRandomPiece()
+	{
+		int index = (int)(Math.random() * pieces.length);
+		
+		return pieces[index].clone();
 	}
 }

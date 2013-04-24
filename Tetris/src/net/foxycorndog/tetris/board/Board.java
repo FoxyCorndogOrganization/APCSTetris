@@ -28,6 +28,8 @@ public class Board
 	
 	private	Image				boardImage;
 	
+	private	Piece				border[];
+	
 	private ArrayList<Piece>	pieces;
 	
 	/**
@@ -48,6 +50,8 @@ public class Board
 		this.height        = height;
 		this.gridSpaceSize = gridSpaceSize;
 		
+		border = BorderFactory.createBorder(3, width * gridSpaceSize, height * gridSpaceSize, true);
+		
 		boardImage = new Image(null);
 		
 		try
@@ -62,19 +66,41 @@ public class Board
 		pieces = new ArrayList<Piece>();
 	}
 	
+	/**
+	 * Set the location that the Board will be rendered to.
+	 * 
+	 * @param x The horizontal location to render the Board to.
+	 * @param y The vertical location to render the Board to.
+	 */
 	public void setLocation(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 	
+	/**
+	 * Translate the Board the specified amount. A positive dx value
+	 * moves the Board to the right. A positive dy value moves the Board
+	 * upward.
+	 * 
+	 * @param dx The horizontal delta value to move the Board.
+	 * @param dy The vertical delta value to move the Board.
+	 */
 	public void move(int dx, int dy)
 	{
 		this.x += dx;
 		this.y += dy;
 	}
 	
-	public void addPiece(int x, int y, Piece piece)
+	/**
+	 * Add the specified Piece to the Board at the the specified
+	 * grid space location.
+	 * 
+	 * @param piece The Tetris Piece to add to the Board.
+	 * @param x The column to add the Piece to.
+	 * @param y The row to add the Piece to.
+	 */
+	public void addPiece(Piece piece, int x, int y)
 	{
 		piece.setLocation(x * gridSpaceSize, y * gridSpaceSize);
 		
@@ -95,17 +121,30 @@ public class Board
 			// by (x, y) pixels.
 			GL.translate(x, y, 0);
 			
-			// Render the board image to the screen.
-			boardImage.render();
-			
 			// A for each loop that renders all of the Pieces to the screen.
 			for (Piece piece : pieces)
 			{
 				piece.render();
 			}
+			
+			renderBorder();
 		}
 		// Return the the previous matrix formation.
 		GL.popMatrix();
+	}
+	
+	/**
+	 * Render the Border around the grid that the Tetris game is
+	 * played inside.
+	 */
+	private void renderBorder()
+	{
+		// A for each loop that renders all of the Pieces of the Border
+		// to the screen.
+		for (Piece piece : border)
+		{
+			piece.render();
+		}
 	}
 	
 	/**
@@ -116,10 +155,13 @@ public class Board
 	{
 		// Variable created in order to keep the tempo of the game
 		// constant despite any variations  in FPS (Frames per second)
-		float delta = Frame.getFPS() / 60f;
+		float delta = 60f / Frame.getFPS();
 		
-		// Update the counter each frame.
-		counter += delta;
+		if (!Float.isInfinite(delta) && !Float.isNaN(delta))
+		{
+			// Update the counter each frame.
+			counter += delta;
+		}
 		
 		// The amount of 'ticks' it takes to do a loop.
 		int tickTime = 30;

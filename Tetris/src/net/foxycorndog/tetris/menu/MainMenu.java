@@ -10,6 +10,7 @@ import net.foxycorndog.jfoxylib.events.ButtonListener;
 import net.foxycorndog.jfoxylib.graphics.Texture;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.jfoxyutil.Queue;
+import net.foxycorndog.tetris.Tetris;
 
 /**
  * Class that represents the first Menu that the user is faced with.
@@ -30,6 +31,8 @@ public class MainMenu extends Menu
 	private int				r, g, b;
 	private	int				circleX, circleY;
 	
+	private float			counter;
+	
 	private Texture			titleScreenTexture, menuBoxTexture,
 							circleTexture;
 	
@@ -38,20 +41,24 @@ public class MainMenu extends Menu
 	
 	private Bundle			bundle;
 	
+	private Tetris			tetris;
+	
 	private Queue<Integer>	queue;
 	
 	/**
 	 * 
 	 */
-	public MainMenu()
+	public MainMenu(final Tetris tetris)
 	{
-		bundle = new Bundle(4 * 3, 2, true, false);
+		this.tetris = tetris;
 		
-		queue  = new Queue<Integer>();
+		bundle      = new Bundle(4 * 3, 2, true, false);
 		
-		r = 200;
-		g = 0;
-		b = 0;
+		queue       = new Queue<Integer>();
+		
+		r = 235;
+		g = 235;
+		b = 235;
 		
 		Texture playButtonTexture    = null;
 		Texture optionsButtonTexture = null;
@@ -124,7 +131,7 @@ public class MainMenu extends Menu
 			{
 				if (event.getSource() == playButton)
 				{
-					
+					tetris.playGame();
 				}
 				else if (event.getSource() == optionsButton)
 				{
@@ -167,6 +174,13 @@ public class MainMenu extends Menu
 	 */
 	public void loop()
 	{
+		float delta = 60f / Frame.getFPS();
+		
+		if (!Float.isInfinite(delta) && !Float.isNaN(delta))
+		{
+			counter += delta;
+		}
+		
 		updateColor();
 	}
 	
@@ -215,29 +229,34 @@ public class MainMenu extends Menu
 	 */
 	private void updateColor()
 	{
-		r = rUp ? r + 1 : r - 1;
-		r = r >= 256 ? 255 : r;
-		r = r <= 100 ? 100 : r;
-		
-		g = gUp ? g + 1 : g - 1;
-		g = g >= 256 ? 255 : g;
-		g = g <= 100 ? 100 : g;
-		
-		b = bUp ? b + 1 : b - 1;
-		b = b >= 256 ? 255 : b;
-		b = b <= 100 ? 100 : b;
-		
-		if ((int)(Math.random() * 100) == 0)
+		if (counter >= 1)
 		{
-			rUp = !rUp;
-		}
-		if ((int)(Math.random() * 100) == 0)
-		{
-			gUp = !gUp;
-		}
-		if ((int)(Math.random() * 100) == 0)
-		{
-			bUp = !bUp;
+			r = rUp ? r + 1 : r - 1;
+			r = r >= 256 ? 255 : r;
+			r = r <= 100 ? 100 : r;
+			
+			g = gUp ? g + 1 : g - 1;
+			g = g >= 256 ? 255 : g;
+			g = g <= 100 ? 100 : g;
+			
+			b = bUp ? b + 1 : b - 1;
+			b = b >= 256 ? 255 : b;
+			b = b <= 100 ? 100 : b;
+			
+			if ((int)(Math.random() * 100) == 0)
+			{
+				rUp = !rUp;
+			}
+			if ((int)(Math.random() * 100) == 0)
+			{
+				gUp = !gUp;
+			}
+			if ((int)(Math.random() * 100) == 0)
+			{
+				bUp = !bUp;
+			}
+			
+			counter %= 1;
 		}
 	}
 	
