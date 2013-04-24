@@ -53,8 +53,6 @@ public class Tetris extends GameStarter
 		board    = new Board(10, 20, 10);
 		
 		mainMenu = new MainMenu();
-		
-		//editing init method!!
 	}
 
 	/**
@@ -66,8 +64,6 @@ public class Tetris extends GameStarter
 //			GL.scale(3, 3, 1);
 			
 //			longPiece.render();
-		
-		//editing the rendr2d method!!
 	}
 
 	/**
