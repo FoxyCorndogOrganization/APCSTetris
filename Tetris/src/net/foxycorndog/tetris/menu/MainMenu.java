@@ -21,7 +21,7 @@ import net.foxycorndog.tetris.Tetris;
  * @author	Braden Steffaniak
  * @since	Apr 21, 2013 at 12:10:55 AM
  * @since	v0.1
- * @version	Apr 23, 2013 at 5:47:55 PM
+ * @version	Apr 24, 2013 at 6:38:55 AM
  * @version	v0.1
  */
 public class MainMenu extends Menu
@@ -46,7 +46,9 @@ public class MainMenu extends Menu
 	private Queue<Integer>	queue;
 	
 	/**
+	 * Create the MainMenu for the specified Tetris instance.
 	 * 
+	 * @param tetris The Tetris game to limk with this MainMenu.
 	 */
 	public MainMenu(final Tetris tetris)
 	{
@@ -170,7 +172,8 @@ public class MainMenu extends Menu
 	}
 	
 	/**
-	 * 
+	 * Method called each frame. Used to calculate logic and
+	 * update the Color of the MainMenu.
 	 */
 	public void loop()
 	{
@@ -185,7 +188,7 @@ public class MainMenu extends Menu
 	}
 	
 	/**
-	 * 
+	 * Render the MainMenu and all of its components to the screen.
 	 */
 	public void render()
 	{
@@ -260,6 +263,9 @@ public class MainMenu extends Menu
 		}
 	}
 	
+	/**
+	 * Render the Buttons to their correct place.
+	 */
 	private void renderButtons()
 	{
 		GL.setColor((r + 100) / 255f, (g + 100) / 255f, (b + 100) / 255f, 1);
@@ -274,16 +280,5 @@ public class MainMenu extends Menu
 			GL.translate(circleX, circleY, 0);
 			bundle.render(GL.QUADS, 4 * 2, 4, circleTexture);
 		}
-//		GL.translate(86, 222, 0);
-//		bundle.render(GL.QUADS, 4 * 2, 4, playButtonTexture);
-		
-//		GL.translate(0, -38, 0);
-//		bundle.render(GL.QUADS, 4 * 3, 4, optionsButtonTexture);
-		
-//		GL.translate(0, -38, 0);
-//		bundle.render(GL.QUADS, 4 * 4, 4, creditsButtonTexture);
-		
-//		GL.translate(0, -38, 0);
-//		bundle.render(GL.QUADS, 4 * 5, 4, quitButtonTexture);
 	}
 }
