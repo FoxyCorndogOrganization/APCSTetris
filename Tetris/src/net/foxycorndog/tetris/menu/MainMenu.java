@@ -145,7 +145,7 @@ public class MainMenu extends Menu
 				}
 				else if (event.getSource() == quitButton)
 				{
-					System.exit(0);
+//					System.exit(0);
 				}
 			}
 			
@@ -273,7 +273,10 @@ public class MainMenu extends Menu
 		playButton.render();
 		optionsButton.render();
 		creditsButton.render();
-		quitButton.render();
+		if (circleY != quitButton.getY() +- 5)
+		{
+			quitButton.render();
+		}
 		
 		if (queue.size() > 0)
 		{
