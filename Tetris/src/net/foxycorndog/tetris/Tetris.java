@@ -44,6 +44,10 @@ public class Tetris extends GameStarter
 	{
 		mainMenu = null;
 		
+		board    = new Board(10, 20, 10);
+		
+		board.newGame();
+		
 //		board.addPiece(Piece.getRandomPiece(), 5, 5);
 	}
 	
@@ -57,8 +61,6 @@ public class Tetris extends GameStarter
 		Frame.setResizable(true);
 		
 		bgColor  = 0;
-		
-		board    = new Board(10, 20, 10);
 		
 		mainMenu = new MainMenu(this);
 	}

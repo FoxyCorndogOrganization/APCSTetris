@@ -273,8 +273,9 @@ public class MainMenu extends Menu
 		playButton.render();
 		optionsButton.render();
 		creditsButton.render();
-		if (circleY != quitButton.getY() +- 5)
-		{
+		
+		if (circleY != quitButton.getY() - 5 || queue.size() <= 0)
+		 {
 			quitButton.render();
 		}
 		

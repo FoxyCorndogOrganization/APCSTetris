@@ -14,7 +14,7 @@ import net.foxycorndog.jfoxylib.graphics.opengl.GL;
  * @author	Braden Steffaniak
  * @since	Apr 20, 2013 at 11:17:15 PM
  * @since	v0.1
- * @version	Apr 22, 2013 at 11:17:15 PM
+ * @version	Apr 25, 2013 at 9:55:15 PM
  * @version	v0.1
  */
 public class Piece implements Cloneable
@@ -22,6 +22,8 @@ public class Piece implements Cloneable
 	private 		int		rotation;
 	private			int		x, y;
 	private			int		width, height;
+	
+	private			Board	board;
 	
 	private 		Bundle	bundle;
 	
@@ -213,6 +215,76 @@ public class Piece implements Cloneable
 	}
 	
 	/**
+	 * Get the Board that the Piece is located on.
+	 * 
+	 * @return The Board instance that the Piece is located on.
+	 */
+	public Board getBoard()
+	{
+		return board;
+	}
+	
+	/**
+	 * Set the Board that the Piece will be located on.
+	 * 
+	 * @param board The Board instance that the Piece will be located on.
+	 */
+	public void setBoard(Board board)
+	{
+		this.board = board;
+	}
+	
+	/**
+	 * Get the horizontal location of the Piece in pixels.
+	 * 
+	 * @return The horizontal location of the Piece in pixels.
+	 */
+	public int getX()
+	{
+		return x;
+	}
+	
+	/**
+	 * Get the vertical location of the Piece in pixels.
+	 * 
+	 * @return The vertical location of the Piece in pixels.
+	 */
+	public int getY()
+	{
+		return y;
+	}
+	
+	/**
+	 * Get the horizontal location of the Piece on the Grid.
+	 * 
+	 * @return The horizontal location of the Piece on the Grid.
+	 */
+	public int getGridX()
+	{
+		if (board == null)
+		{
+			throw new RuntimeException("You must specify a Board to set its location on.");
+		}
+		
+		return x / board.getGridSpaceSize();
+	}
+	
+	/**
+	 * Get the vertical location of the Piece on the Grids.
+	 * 
+	 * @return The vertical location of the Piece on the Grid.
+	 */
+	public int getGridY()
+	{
+		if (board == null)
+		{
+			throw new RuntimeException("You must specify a Board to set its location on.");
+		}
+		
+		return y / board.getGridSpaceSize();
+	}
+	
+	/**
 	 * Get the amount of segments the Piece is across.
 	 * 
 	 * @return The amount of segments the Piece is across.
@@ -255,8 +327,50 @@ public class Piece implements Cloneable
 	 */
 	public void move(int dx, int dy)
 	{
-		this.x += dx;
-		this.y += dy;
+		setLocation(x + dx, y + dy);
+	}
+	
+	/**
+	 * Set the location of the Piece in relation to the Grid spaces.
+	 * The origin of the Piece is the bottom left corner.
+	 * 
+	 * For example:<br>
+	 * _________<br>
+	 * |-------|<br>
+	 * |-------|<br>
+	 * |-------|<br>
+	 * |--P----|<br>
+	 * |--P----|<br>
+	 * |--P----|<br>
+	 * |--P----|<br>
+	 * |-------|<br>
+	 * |_______|<br>
+	 * 
+	 * The long piece is located at (2, 1)
+	 * 
+	 * @param col The column to set the Piece in.
+	 * @param row The row to set the Piece in.
+	 */
+	public void setGridLocation(int col, int row)
+	{
+		if (board == null)
+		{
+			throw new RuntimeException("You must specify a Board to set its location on.");
+		}
+		
+		setLocation(col * board.getGridSpaceSize(), row * board.getGridSpaceSize());
+	}
+	
+	/**
+	 * Move the Piece the specified amount of columns and rows relative
+	 * to the current location.
+	 * 
+	 * @param cols The number of columns to shift the Piece.
+	 * @param rows The number of rows to shift the Piece.
+	 */
+	public void moveGrid(int cols, int rows)
+	{
+		setGridLocation(getGridX() + cols, getGridY() + rows);
 	}
 	
 	/**

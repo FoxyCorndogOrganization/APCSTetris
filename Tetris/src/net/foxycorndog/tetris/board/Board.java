@@ -7,6 +7,7 @@ import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.components.Image;
 import net.foxycorndog.jfoxylib.graphics.Texture;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.input.Keyboard;
 
 /**
  * Class that holds the information for the Pieces in the Tetris game,
@@ -27,6 +28,8 @@ public class Board
 	private float 				counter;
 	
 	private	Image				boardImage;
+	
+	private	Piece				board[];
 	
 	private	Piece				border[];
 	
@@ -67,6 +70,19 @@ public class Board
 	}
 	
 	/**
+	 * Get the size (in pixels) that each space on the
+	 * Board will take up. eg: passing 10 would create 10x10 grid
+	 * spaces across the board.
+	 * 
+	 * @return The size (in pixels) that each space on the Board will
+	 * 		take up.
+	 */
+	public int getGridSpaceSize()
+	{
+		return gridSpaceSize;
+	}
+	
+	/**
 	 * Set the location that the Board will be rendered to.
 	 * 
 	 * @param x The horizontal location to render the Board to.
@@ -103,6 +119,7 @@ public class Board
 	public void addPiece(Piece piece, int x, int y)
 	{
 		piece.setLocation(x * gridSpaceSize, y * gridSpaceSize);
+		piece.setBoard(this);
 		
 		pieces.add(piece);
 	}
@@ -131,6 +148,14 @@ public class Board
 		}
 		// Return the the previous matrix formation.
 		GL.popMatrix();
+	}
+	
+	/**
+	 * Method called whenever a new game is started.
+	 */
+	public void newGame()
+	{
+		
 	}
 	
 	/**
