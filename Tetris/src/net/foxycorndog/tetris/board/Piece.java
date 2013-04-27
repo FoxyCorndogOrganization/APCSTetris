@@ -124,24 +124,113 @@ public class Piece implements Cloneable
 	 * 
 	 * eg:
 	 * Color c = new
-	 *         net.foxycorndog.tetris.board.Color(200, 0, 0);
+	 *         net.foxycorndog.tetris.board.Color(200, 0, 0);<br>
 	 * 
-	 * new Piece([ c, c,
-	 *             c, c ], 2);
+	 * new Piece([ c, c,<br>
+	 *             c, c ], 2);<br>
+	 * <br>
+	 * would create a red square Piece, and:<br>
 	 * 
-	 * would create a red square Piece, and;
-	 * 
-	 * new Piece([ c,
-	 * 			   c,
-	 *             c,
-	 * 			   c ], 1);
-	 * 
+	 * new Piece([ c,<br>
+	 * 			   c,<br>
+	 *             c,<br>
+	 * 			   c ], 1);<br>
+	 * <br>
 	 * would create a red long Piece.
 	 * 
 	 * @param matrix The array of Colors describing the Piece.
 	 * @param width The width of the Piece.
 	 */
 	public Piece(Color matrix[], int width)
+	{
+		loadMatrix(matrix, width);
+	}
+	
+	/**
+	 * Get the Board that the Piece is located on.
+	 * 
+	 * @return The Board instance that the Piece is located on.
+	 */
+	public Board getBoard()
+	{
+		return board;
+	}
+	
+	/**
+	 * Set the Board that the Piece will be located on.
+	 * 
+	 * @param board The Board instance that the Piece will be located on.
+	 */
+	public void setBoard(Board board)
+	{
+		this.board = board;
+	}
+	
+	/**
+	 * Get the Color matrix that represents the Piece. The width of the
+	 * matrix is defined by getWidth();
+	 * 
+	 * @return The Color matrix that represents the Piece.
+	 */
+	public Color[] getMatrix()
+	{
+		return matrix;
+	}
+	
+	/**
+	 * Set the Color matrix and width that represents the Piece.
+	 * The matrix is described with values that correspond to the
+	 * rgb of the square located at the index.
+	 * 
+	 * eg:
+	 * Color c = new
+	 *         net.foxycorndog.tetris.board.Color(200, 0, 0);<br>
+	 * 
+	 * setMatrix([ c, c,<br>
+	 *             c, c ], 2);<br>
+	 * <br>
+	 * would set the Piece as a red square Piece, and:<br>
+	 * 
+	 * setMatrix([ c,<br>
+	 * 			   c,<br>
+	 *             c,<br>
+	 * 			   c ], 1);<br>
+	 * <br>
+	 * would set the Piece as a red long Piece.
+	 * 
+	 * @param matrix The array of Colors describing the Piece.
+	 * @param width The width of the Piece.
+	 */
+	public void setMatrix(Color matrix[], int width)
+	{
+		loadMatrix(matrix, width);
+	}
+	
+	/**
+	 * Set the Color matrix and width that represents the Piece.
+	 * The matrix is described with values that correspond to the
+	 * rgb of the square located at the index.
+	 * 
+	 * eg:
+	 * Color c = new
+	 *         net.foxycorndog.tetris.board.Color(200, 0, 0);<br>
+	 * 
+	 * setMatrix([ c, c,<br>
+	 *             c, c ], 2);<br>
+	 * <br>
+	 * would set the Piece as a red square Piece, and:<br>
+	 * 
+	 * setMatrix([ c,<br>
+	 * 			   c,<br>
+	 *             c,<br>
+	 * 			   c ], 1);<br>
+	 * <br>
+	 * would set the Piece as a red long Piece.
+	 * 
+	 * @param matrix The array of Colors describing the Piece.
+	 * @param width The width of the Piece.
+	 */
+	private void loadMatrix(Color matrix[], int width)
 	{
 		this.width  = width;
 		this.height = matrix.length / width;
@@ -212,26 +301,6 @@ public class Piece implements Cloneable
 			}
 		}
 		bundle.endEditingColors();
-	}
-	
-	/**
-	 * Get the Board that the Piece is located on.
-	 * 
-	 * @return The Board instance that the Piece is located on.
-	 */
-	public Board getBoard()
-	{
-		return board;
-	}
-	
-	/**
-	 * Set the Board that the Piece will be located on.
-	 * 
-	 * @param board The Board instance that the Piece will be located on.
-	 */
-	public void setBoard(Board board)
-	{
-		this.board = board;
 	}
 	
 	/**
