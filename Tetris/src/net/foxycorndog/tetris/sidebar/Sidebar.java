@@ -11,5 +11,16 @@ package net.foxycorndog.tetris.sidebar;
  */
 public class Sidebar
 {
+	NextPiece nP;
+	ScoreBoard sB;
+	public Sidebar()
+	{
+		nP = new NextPiece();
+		sB = new ScoreBoard();
+	}
 	
+	public void render()
+	{
+		nP.render();
+	}
 }

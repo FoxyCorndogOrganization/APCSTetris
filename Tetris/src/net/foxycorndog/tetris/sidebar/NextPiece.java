@@ -1,8 +1,14 @@
 package net.foxycorndog.tetris.sidebar;
 
+import java.util.ArrayList;
+
+import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.tetris.board.Piece;
+
 /**
  * 
  * 
+ * @author	Henry Rybolt
  * @author	Braden Steffaniak
  * @since	Apr 23, 2013 at 4:55:17 PM
  * @since	v0.1
@@ -11,5 +17,26 @@ package net.foxycorndog.tetris.sidebar;
  */
 public class NextPiece
 {
+	ArrayList<Piece> stackOPieces;
 	
+	public NextPiece()
+	{
+		stackOPieces = new ArrayList<Piece>();
+		
+		addNewPiece();
+	}
+	
+	public void addNewPiece()
+	{
+		Piece piece = Piece.getRandomPiece();
+		stackOPieces.add(piece);
+	}
+	
+	public void render()
+	{
+		GL.translate(100, 100, 0);
+		GL.scale(5, 5, 1);
+		
+		stackOPieces.get(0).render();
+	}
 }

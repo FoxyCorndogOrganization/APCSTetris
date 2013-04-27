@@ -144,7 +144,7 @@ public class Board
 				piece.render();
 			}
 			
-			renderBorder();
+//			renderBorder();
 		}
 		// Return the the previous matrix formation.
 		GL.popMatrix();
