@@ -13,7 +13,7 @@ import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.board.Piece;
 import net.foxycorndog.tetris.menu.MainMenu;
-import net.foxycorndog.tetris.sidebar.SideBar;
+import net.foxycorndog.tetris.sidebar.Sidebar;
 
 /**
  * Main class and entry point for the Tetris game.
@@ -29,7 +29,7 @@ public class Tetris extends GameStarter
 	private float		bgColor;
 	
 	private Board		board;
-	private SideBar		sidebar;
+	private Sidebar		sidebar;
 	
 	private MainMenu	mainMenu;
 	
@@ -55,7 +55,7 @@ public class Tetris extends GameStarter
 		mainMenu = null;
 		
 		board    = new Board(10, 20, 10);
-		sidebar  = new SideBar();
+		sidebar  = new Sidebar();
 		
 		board.newGame();
 		
@@ -138,7 +138,7 @@ public class Tetris extends GameStarter
 		
 		if (x > closeX && x < closeX + closeWidth && y > closeY && y < closeY + closeHeight)
 		{
-			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
+//			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
 		}
 	}
 	

@@ -15,10 +15,13 @@ import net.foxycorndog.tetris.Tetris;
  */
 public class Scoreboard
 {
-	int    score;
+	int score;
 	int x;
 	int y;
 	
+	/**
+	 * creates the scoreBoard and displays it in the sideBar
+	 */
 	public Scoreboard(int x, int y)
 	{
 		this.x = x;
@@ -26,10 +29,15 @@ public class Scoreboard
 		score = 0;
 	}
 	
+	/**
+	 * renders the image of the score
+	 */
 	public void render()
 	{
+		int xC = 0;
+		int yC = 250;
 		float scale = (float) 2;
-		Tetris.getFont().render("score " + score, x, y + 250, (float)0.0, (float) (scale *.5), null);
+		Tetris.getFont().render("score " + score, x + xC, y + yC, (float)0.0, (float) (scale *.5), null);
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);

@@ -10,21 +10,28 @@ package net.foxycorndog.tetris.sidebar;
  * @version	Apr 27, 2013 at 12:43:29 PM
  * @version	v0.1
  */
-public class SideBar
+public class Sidebar
 {
 	NextPiece      nP;
 	Scoreboard     sB;
 	LinesCompleted lC;
 	
-	public SideBar()
+	/**
+	 * creates a sidebar
+	 */
+	public Sidebar()
 	{
-		int x = 300;
-		int y = 300;
+		int x = 310;
+		int y = 290;
 		nP = new NextPiece(x,y);
 		sB = new Scoreboard(x,y);
 		lC = new LinesCompleted(x,y);
 	}
 	
+	/**
+	 * renders the image of the sidebar(displays lines completed, score,
+	 * and the next piece to enter gameplay)
+	 */
 	public void render()
 	{
 		sB.render();
