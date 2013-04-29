@@ -8,11 +8,12 @@ import net.foxycorndog.jfoxylib.GameStarter;
 import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.graphics.Texture;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.input.Mouse;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.board.Piece;
 import net.foxycorndog.tetris.menu.MainMenu;
-import net.foxycorndog.tetris.sidebar.Sidebar;
+import net.foxycorndog.tetris.sidebar.SideBar;
 
 /**
  * Main class and entry point for the Tetris game.
@@ -28,7 +29,7 @@ public class Tetris extends GameStarter
 	private float		bgColor;
 	
 	private Board		board;
-	private Sidebar		sidebar;
+	private SideBar		sidebar;
 	
 	private MainMenu	mainMenu;
 	
@@ -54,7 +55,7 @@ public class Tetris extends GameStarter
 		mainMenu = null;
 		
 		board    = new Board(10, 20, 10);
-		sidebar  = new Sidebar();
+		sidebar  = new SideBar();
 		
 		board.newGame();
 		
@@ -121,6 +122,23 @@ public class Tetris extends GameStarter
 		else
 		{
 			board.loop();
+		}
+		
+		int x = Mouse.getDisplayX() - Frame.getX();
+		int y = Mouse.getDisplayY() - Frame.getY();
+		
+		int closeX = Frame.getWidth() - 20;
+		int closeY = 0;
+		
+		int closeWidth  = 30;
+		int closeHeight = 30;
+		
+		int dx = Mouse.getDX();
+		int dy = Mouse.getDY();
+		
+		if (x > closeX && x < closeX + closeWidth && y > closeY && y < closeY + closeHeight)
+		{
+			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
 		}
 	}
 	
