@@ -15,11 +15,14 @@ public class SideBar
 	NextPiece      nP;
 	Scoreboard     sB;
 	LinesCompleted lC;
+	
 	public SideBar()
 	{
-		nP = new NextPiece();
-		sB = new Scoreboard();
-		lC = new LinesCompleted();
+		int x = 300;
+		int y = 300;
+		nP = new NextPiece(x,y);
+		sB = new Scoreboard(x,y);
+		lC = new LinesCompleted(x,y);
 	}
 	
 	public void render()
