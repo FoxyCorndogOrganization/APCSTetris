@@ -1,5 +1,8 @@
 package net.foxycorndog.tetris.sidebar;
 
+import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.tetris.Tetris;
+
 /**
  * 
  * 
@@ -12,10 +15,19 @@ package net.foxycorndog.tetris.sidebar;
  */
 public class Scoreboard
 {
-	int score;
+	int    score;
 	
 	public Scoreboard()
 	{
 		score = 0;
+	}
+	
+	public void render()
+	{
+		float scale = (float) 2;
+		Tetris.getFont().render("score " + score, 350, 550, (float)0.0, (float) (scale *.5), null);
+		
+//		GL.translate(100, 100, 0);
+//		GL.scale(5, 5, 1);
 	}
 }

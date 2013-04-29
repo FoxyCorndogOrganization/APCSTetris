@@ -34,9 +34,15 @@ public class NextPiece
 	
 	public void render()
 	{
-		GL.translate(100, 100, 0);
-		GL.scale(5, 5, 1);
+		int x = 400;
+		int y = 500;
+		float scale = 3;
+		GL.translate(x, y, 0);
+		GL.scale(scale, scale, 1);
 		
 		stackOPieces.get(0).render();
+		
+		GL.scale(1/scale, 1/scale, 1);
+		GL.translate(-x, -y, 0);
 	}
 }

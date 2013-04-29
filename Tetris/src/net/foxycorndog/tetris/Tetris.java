@@ -12,7 +12,7 @@ import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.board.Piece;
 import net.foxycorndog.tetris.menu.MainMenu;
-import net.foxycorndog.tetris.sidebar.Sidebar;
+import net.foxycorndog.tetris.sidebar.SideBar;
 
 /**
  * Main class and entry point for the Tetris game.
@@ -28,7 +28,7 @@ public class Tetris extends GameStarter
 	private float		bgColor;
 	
 	private Board		board;
-	private Sidebar		sidebar;
+	private SideBar		sidebar;
 	
 	private MainMenu	mainMenu;
 	
@@ -54,7 +54,7 @@ public class Tetris extends GameStarter
 		mainMenu = null;
 		
 		board    = new Board(10, 20, 10);
-		sidebar  = new Sidebar();
+		sidebar  = new SideBar();
 		
 		board.newGame();
 		
