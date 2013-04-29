@@ -10,13 +10,13 @@ package net.foxycorndog.tetris.sidebar;
  * @version	Apr 27, 2013 at 12:43:29 PM
  * @version	v0.1
  */
-public class SideBar
+public class Sidebar
 {
 	NextPiece      nP;
 	Scoreboard     sB;
 	LinesCompleted lC;
 	
-	public SideBar()
+	public Sidebar()
 	{
 		int x = 300;
 		int y = 300;
