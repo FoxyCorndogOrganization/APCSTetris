@@ -138,7 +138,7 @@ public class Tetris extends GameStarter
 		
 		if (x > closeX && x < closeX + closeWidth && y > closeY && y < closeY + closeHeight)
 		{
-			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
+//			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
 		}
 	}
 	

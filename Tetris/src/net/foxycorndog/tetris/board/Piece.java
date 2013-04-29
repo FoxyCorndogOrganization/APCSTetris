@@ -236,8 +236,6 @@ public class Piece implements Cloneable
 		this.height = matrix.length / width;
 		this.matrix = matrix;
 		
-		bundle = new Bundle(1, 2, true, false);
-		
 		int height = matrix.length / width;
 		
 		int num = 0;
