@@ -8,6 +8,7 @@ import net.foxycorndog.jfoxylib.GameStarter;
 import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.graphics.Texture;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.input.Mouse;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.board.Piece;
@@ -121,6 +122,23 @@ public class Tetris extends GameStarter
 		else
 		{
 			board.loop();
+		}
+		
+		int x = Mouse.getDisplayX() - Frame.getX();
+		int y = Mouse.getDisplayY() - Frame.getY();
+		
+		int closeX = Frame.getWidth() - 20;
+		int closeY = 0;
+		
+		int closeWidth  = 30;
+		int closeHeight = 30;
+		
+		int dx = Mouse.getDX();
+		int dy = Mouse.getDY();
+		
+		if (x > closeX && x < closeX + closeWidth && y > closeY && y < closeY + closeHeight)
+		{
+			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
 		}
 	}
 	
