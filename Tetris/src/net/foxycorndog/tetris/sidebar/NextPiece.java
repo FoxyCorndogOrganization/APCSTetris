@@ -18,9 +18,13 @@ import net.foxycorndog.tetris.board.Piece;
 public class NextPiece
 {
 	ArrayList<Piece> stackOPieces;
+	int x;
+	int y;
 	
-	public NextPiece()
+	public NextPiece(int x, int y)
 	{
+		this.x = x;
+		this.y = y;
 		stackOPieces = new ArrayList<Piece>();
 		
 		addNewPiece();
@@ -34,15 +38,15 @@ public class NextPiece
 	
 	public void render()
 	{
-		int x = 400;
-		int y = 500;
+		int xC = 50;
+		int yC = 50;
 		float scale = 3;
-		GL.translate(x, y, 0);
+		GL.translate(xC + x, yC + y, 0);
 		GL.scale(scale, scale, 1);
 		
 		stackOPieces.get(0).render();
 		
 		GL.scale(1/scale, 1/scale, 1);
-		GL.translate(-x, -y, 0);
+		GL.translate(-x - xC, -y - yC, 0);
 	}
 }
