@@ -275,8 +275,13 @@ public class MainMenu extends Menu
 		creditsButton.render();
 		
 		if (circleY != quitButton.getY() - 5 || queue.size() <= 0)
-		 {
+		{
 			quitButton.render();
+		}
+		else
+		{
+			GL.setColor(1, 0, 0, 1);
+			Tetris.getFont().render("NO!!", quitButton.getX() + 50, quitButton.getY() - 8, 0, null);
 		}
 		
 		if (queue.size() > 0)

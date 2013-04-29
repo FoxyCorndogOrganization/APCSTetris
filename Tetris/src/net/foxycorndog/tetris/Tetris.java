@@ -1,7 +1,12 @@
 package net.foxycorndog.tetris;
 
+import java.io.File;
+import java.io.IOException;
+
 import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.GameStarter;
+import net.foxycorndog.jfoxylib.font.Font;
+import net.foxycorndog.jfoxylib.graphics.Texture;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
@@ -26,6 +31,8 @@ public class Tetris extends GameStarter
 	private Sidebar		sidebar;
 	
 	private MainMenu	mainMenu;
+	
+	private static Font	font;
 	
 	/**
 	 * Main method that creates a Frame and starts up the Tetris
@@ -62,6 +69,16 @@ public class Tetris extends GameStarter
 		Frame.setTitle("Tetris");
 		Frame.setTargetFPS(60);
 		Frame.setResizable(true);
+		
+		font = new Font("res/images/font.gif", 15, 6, new char[]
+		{
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '\\', '\\', 'a', 'b',
+			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\\', '\\', '&', '1', '2', '3',
+			'4', '5', '6', '7', '8', '9', '0', '(', '$', '\\', '.', ',', '!', '?', ')',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+		});
 		
 		bgColor  = 0;
 		
@@ -105,5 +122,15 @@ public class Tetris extends GameStarter
 		{
 			board.loop();
 		}
+	}
+	
+	/**
+	 * Get the Tetris game default Font instance.
+	 * 
+	 * @return The Tetris game default Font instance.
+	 */
+	public static Font getFont()
+	{
+		return font;
 	}
 }
