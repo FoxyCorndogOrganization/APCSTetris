@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-<<<<<<< HEAD
 	<classpathentry combineaccessrules="false" kind="src" path="/JFoxyLib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JFoxyUtil"/>
-=======
-	<classpathentry kind="lib" path="H:/Ap Comp Sci/APCSTetris/JFoxyLib.jar"/>
-	<classpathentry kind="lib" path="H:/Ap Comp Sci/APCSTetris/JFoxyUtil.jar"/>
->>>>>>> 76e31ba9ee7154dba1f7de8b5e269780906f9f6f
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
