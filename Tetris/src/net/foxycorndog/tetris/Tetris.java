@@ -17,6 +17,7 @@ import net.foxycorndog.tetris.sidebar.Sidebar;
 
 /**
  * Main class and entry point for the Tetris game.
+ * test
  * 
  * @author	Braden Steffaniak
  * @since	Apr 20, 2013 at 11:17:19 PM
