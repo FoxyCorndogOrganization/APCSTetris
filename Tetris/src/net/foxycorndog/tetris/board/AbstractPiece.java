@@ -17,7 +17,7 @@ import net.foxycorndog.jfoxylib.graphics.opengl.GL;
  * @version	Apr 25, 2013 at 9:55:15 PM
  * @version	v0.1
  */
-public class AbstractPiece implements Cloneable
+public abstract class AbstractPiece implements Cloneable
 {
 	private 		int		rotation;
 	private			int		x, y;
@@ -461,23 +461,13 @@ public class AbstractPiece implements Cloneable
 	/**
 	 * Rotates the Piece 90 degrees clockwise.
 	 */
-	public void rotateClockwise()
-	{
-		rotation += 90;
-		
-		rotation %= 360;
-	}
+	public abstract void rotateClockwise();
 	
 	/**
 	 * Rotates the Piece 90 degrees counter-clockwise. The method for this
 	 * is to rotate it clockwise three times. Three rights make a left...
 	 */
-	public void rotateCounterClockwise()
-	{
-		rotateClockwise();
-		rotateClockwise();
-		rotateClockwise();
-	}
+	public abstract void rotateCounterClockwise();
 	
 	/**
 	 * Return a clone of the specified Piece instance.
@@ -518,7 +508,7 @@ public class AbstractPiece implements Cloneable
 	 */
 	public static AbstractPiece[] getPieces()
 	{
-		return pieces;
+		return pieces.clone();
 	}
 	
 	/**
