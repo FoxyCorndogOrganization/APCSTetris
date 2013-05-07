@@ -290,4 +290,15 @@ public class MainMenu extends Menu
 			bundle.render(GL.QUADS, 4 * 2, 4, circleTexture);
 		}
 	}
+	
+	/**
+	 * Dispose the Components used in the MainMenu.
+	 */
+	public void dispose()
+	{
+		playButton.dispose();
+		optionsButton.dispose();
+		creditsButton.dispose();
+		quitButton.dispose();
+	}
 }

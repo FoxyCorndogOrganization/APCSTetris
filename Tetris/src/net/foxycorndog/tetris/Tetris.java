@@ -9,9 +9,9 @@ import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.graphics.Texture;
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.jfoxylib.input.Mouse;
+import net.foxycorndog.tetris.board.AbstractBoard;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
-import net.foxycorndog.tetris.board.Piece;
 import net.foxycorndog.tetris.menu.MainMenu;
 import net.foxycorndog.tetris.sidebar.Sidebar;
 
@@ -29,7 +29,7 @@ public class Tetris extends GameStarter
 {
 	private float		bgColor;
 	
-	private Board		board;
+	private AbstractBoard		board;
 	private Sidebar		sidebar;
 	
 	private MainMenu	mainMenu;
@@ -53,6 +53,7 @@ public class Tetris extends GameStarter
 	
 	public void playGame()
 	{
+		mainMenu.dispose();
 		mainMenu = null;
 		
 		board    = new Board(10, 20, 10);

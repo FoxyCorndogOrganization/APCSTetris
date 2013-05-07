@@ -3,7 +3,7 @@ package net.foxycorndog.tetris.sidebar;
 import java.util.ArrayList;
 
 import net.foxycorndog.jfoxylib.graphics.opengl.GL;
-import net.foxycorndog.tetris.board.Piece;
+import net.foxycorndog.tetris.board.AbstractPiece;
 
 /**
  * 
@@ -17,7 +17,7 @@ import net.foxycorndog.tetris.board.Piece;
  */
 public class NextPiece
 {
-	ArrayList<Piece> stackOPieces;
+	ArrayList<AbstractPiece> stackOPieces;
 	int x;
 	int y;
 	
@@ -25,14 +25,14 @@ public class NextPiece
 	{
 		this.x = x;
 		this.y = y;
-		stackOPieces = new ArrayList<Piece>();
+		stackOPieces = new ArrayList<AbstractPiece>();
 		
 		addNewPiece();
 	}
 	
 	public void addNewPiece()
 	{
-		Piece piece = Piece.getRandomPiece();
+		AbstractPiece piece = AbstractPiece.getRandomPiece();
 		stackOPieces.add(piece);
 	}
 	
