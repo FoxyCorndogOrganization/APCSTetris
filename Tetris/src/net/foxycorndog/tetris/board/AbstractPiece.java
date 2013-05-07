@@ -11,6 +11,7 @@ import net.foxycorndog.jfoxylib.graphics.opengl.GL;
  * game. There are also methods to manipulate the data and
  * render the data to the screen.
  * 
+ * @file 	AbstractPiece.java
  * @author	Braden Steffaniak
  * @since	Apr 20, 2013 at 11:17:15 PM
  * @since	v0.1
@@ -19,17 +20,17 @@ import net.foxycorndog.jfoxylib.graphics.opengl.GL;
  */
 public abstract class AbstractPiece implements Cloneable
 {
-	private 		int		rotation;
-	private			int		x, y;
-	private			int		width, height;
+	private 		int				rotation;
+	private			int				x, y;
+	private			int				width, height;
 	
 	private			AbstractBoard	board;
 	
-	private 		Bundle	bundle;
+	private 		Bundle			bundle;
 	
-	private 		Color	matrix[];
+	private 		Color			matrix[];
 	
-	private	static	Texture	square;
+	private	static	Texture			square;
 	
 	private static	AbstractPiece	pieces[];
 	
@@ -57,7 +58,7 @@ public abstract class AbstractPiece implements Cloneable
 			Color.MAGENTA,
 		};
 		
-		pieces[0] = new AbstractPiece(matrix, 1);
+		pieces[0] = new Piece(matrix, 1);
 		
 		// Square Piece
 		matrix = new Color[]
@@ -66,7 +67,7 @@ public abstract class AbstractPiece implements Cloneable
 			Color.ORANGE, Color.ORANGE,
 		};
 		
-		pieces[1] = new AbstractPiece(matrix, 2);
+		pieces[1] = new Piece(matrix, 2);
 		
 		// L Piece
 		matrix = new Color[]
@@ -76,7 +77,7 @@ public abstract class AbstractPiece implements Cloneable
 			Color.GREEN, Color.GREEN,
 		};
 		
-		pieces[2] = new AbstractPiece(matrix, 2);
+		pieces[2] = new Piece(matrix, 2);
 		
 		// Backwards L Piece
 		matrix = new Color[]
@@ -86,7 +87,7 @@ public abstract class AbstractPiece implements Cloneable
 			Color.BLUE, Color.BLUE,
 		};
 		
-		pieces[3] = new AbstractPiece(matrix, 2);
+		pieces[3] = new Piece(matrix, 2);
 		
 		// S Piece
 		matrix = new Color[]
@@ -95,7 +96,7 @@ public abstract class AbstractPiece implements Cloneable
 			Color.YELLOW, Color.YELLOW, null,
 		};
 		
-		pieces[4] = new AbstractPiece(matrix, 3);
+		pieces[4] = new Piece(matrix, 3);
 		
 		// Backwards S Piece
 		matrix = new Color[]
@@ -104,7 +105,7 @@ public abstract class AbstractPiece implements Cloneable
 			null,       Color.CYAN, Color.CYAN,
 		};
 		
-		pieces[5] = new AbstractPiece(matrix, 3);
+		pieces[5] = new Piece(matrix, 3);
 		
 		// T Piece
 		matrix = new Color[]
@@ -113,7 +114,7 @@ public abstract class AbstractPiece implements Cloneable
 			null,      Color.RED, null,
 		};
 		
-		pieces[6] = new AbstractPiece(matrix, 3);
+		pieces[6] = new Piece(matrix, 3);
 	}
 	
 	/**

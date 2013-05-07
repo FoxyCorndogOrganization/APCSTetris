@@ -1,7 +1,9 @@
 package net.foxycorndog.tetris.board;
 
 /**
- * 
+ * Class used to hold information for each Piece in the Tetris
+ * game. There are also methods to manipulate the data and
+ * render the data to the screen.
  * 
  * @file	Piece.java
  * @author	Braden Steffaniak
@@ -12,7 +14,6 @@ package net.foxycorndog.tetris.board;
  */
 public class Piece extends AbstractPiece
 {
-	
 	/**
 	 * Create a Tetris Piece given the specified matrix, and
 	 * matrix width. The matrix is described with values
