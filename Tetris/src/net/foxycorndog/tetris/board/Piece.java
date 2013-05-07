@@ -43,4 +43,19 @@ public class Piece extends AbstractPiece
 		super(matrix, width);
 	}
 	
+	/**
+	 * @see net.foxycorndog.tetris.board.AbstractPiece#rotateClockwise()
+	 */
+	public void rotateClockwise()
+	{
+		
+	}
+
+	/**
+	 * @see net.foxycorndog.tetris.board.AbstractPiece#rotateCounterClockwise()
+	 */
+	public void rotateCounterClockwise()
+	{
+
+	}
 }
