@@ -6,7 +6,7 @@ public class BorderFactory
 {
 	public static Piece[] createBorder(int borderSize, int width, int height, boolean flat)
 	{
-		ArrayList<Piece> pieces = new ArrayList<Piece>();
+		ArrayList<AbstractPiece> pieces = new ArrayList<AbstractPiece>();
 		
 		int size = Piece.getSegmentSize();
 		
@@ -24,13 +24,13 @@ public class BorderFactory
 		
 		while (y < height)
 		{
-			Piece piece = null;
+			AbstractPiece piece = null;
 			
 			while (x < width)
 			{
 				piece = Piece.getRandomPiece();
 				
-				piece.setLocation(x, y);
+				piece.setPixelLocation(x, y);
 				
 				pieces.add(piece);
 				

@@ -1,6 +1,6 @@
 package net.foxycorndog.tetris.sidebar;
 
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
 
 /**

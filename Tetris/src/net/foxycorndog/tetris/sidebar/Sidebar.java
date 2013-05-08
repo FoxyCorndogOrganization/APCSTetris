@@ -16,12 +16,9 @@ public class Sidebar
 	Scoreboard     sB;
 	LinesCompleted lC;
 	
-<<<<<<< HEAD
 	/**
 	 * creates a sidebar
 	 */
-=======
->>>>>>> 76e31ba9ee7154dba1f7de8b5e269780906f9f6f
 	public Sidebar()
 	{
 		int x = 310;

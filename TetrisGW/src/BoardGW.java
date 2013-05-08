@@ -10,6 +10,4 @@ public class BoardGW
 	private BoundedGrid grid = new BoundedGrid(20, 10);
 	private int height = grid.getNumRows();
 	private int width = grid.getNumCols();
-	
-	
 }

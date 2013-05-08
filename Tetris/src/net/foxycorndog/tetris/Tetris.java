@@ -6,12 +6,12 @@ import java.io.IOException;
 import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.GameStarter;
 import net.foxycorndog.jfoxylib.font.Font;
-import net.foxycorndog.jfoxylib.graphics.Texture;
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.jfoxylib.input.Mouse;
+import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.texture.Texture;
+import net.foxycorndog.tetris.board.AbstractBoard;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
-import net.foxycorndog.tetris.board.Piece;
 import net.foxycorndog.tetris.menu.MainMenu;
 import net.foxycorndog.tetris.sidebar.Sidebar;
 
@@ -52,6 +52,7 @@ public class Tetris extends GameStarter
 	
 	public void playGame()
 	{
+		mainMenu.dispose();
 		mainMenu = null;
 		
 		board    = new Board(10, 20, 10);
@@ -74,10 +75,10 @@ public class Tetris extends GameStarter
 		font = new Font("res/images/font.gif", 15, 6, new char[]
 		{
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-			'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '\\', '\\', 'a', 'b',
+			'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'A', 'a', 'b',
 			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\\', '\\', '&', '1', '2', '3',
-			'4', '5', '6', '7', '8', '9', '0', '(', '$', '\\', '.', ',', '!', '?', ')',
+			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'a', '&', '1', '2', '3',
+			'4', '5', '6', '7', '8', '9', '0', '(', '$', 'E', '.', ',', '!', '?', ')',
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 		});
 		
@@ -127,11 +128,11 @@ public class Tetris extends GameStarter
 		int x = Mouse.getDisplayX() - Frame.getX();
 		int y = Mouse.getDisplayY() - Frame.getY();
 		
-		int closeX = Frame.getWidth() - 20;
-		int closeY = 0;
+		int closeX = Frame.getWidth() - 50;
+		int closeY = -20;
 		
-		int closeWidth  = 30;
-		int closeHeight = 30;
+		int closeWidth  = 82;
+		int closeHeight = 50;
 		
 		int dx = Mouse.getDX();
 		int dy = Mouse.getDY();
