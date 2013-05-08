@@ -83,8 +83,9 @@ public class Tetrimino
 	{
 		for(int i = 0; i < 4; i++)
 		{
+			System.out.println(convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y)));
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares[i]; 
+			Square s = squares[i];
 			if(s.getGrid() != null)
 				s.moveTo(next);
 			else
@@ -94,6 +95,7 @@ public class Tetrimino
 	
 	public void rotateCC()
 	{
+		updateLocations();
 		if(n == 7)
 			return;
 		if(n == 1 && d == 0)
@@ -104,36 +106,33 @@ public class Tetrimino
 		boolean ableToRotate = true;
 		int[][] copy         = shape.clone();
 		
+		System.out.println(copy[1][0] +" : " +shape[1][0]);
+		
 		for(int i = 0; i < 4; i++)
 		{
-			int temp    = shape[i][0];
-			shape[i][0] = -shape[i][1];
-			shape[i][1] = temp;
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
+			int temp    = copy[i][0];
+			copy[i][0] = -copy[i][1];
+			copy[i][1] = temp;
+			Location next = convertLFromCToG(new Location(copy[i][0] + x, copy[i][1] + y));
 			Square s = squares[i]; 
-			//Square neighborInNext = (Square) s.getGrid().get(next);
-			if(spaceIsFree(s, next) == false)
+			if(!spaceIsFree(s, next))
 				ableToRotate = false;
 		}
-		if(!ableToRotate)
+		if(ableToRotate)
 			shape = copy;
 		updateLocations();
+		System.out.println(copy[1][0] +" : " +shape[1][0]);
 	}
 	
 	public boolean spaceIsFree(Square s, Location next)
 	{
-		if(!g.isValid(next))
-			return false;
-			
-		Square neighborInNext = (Square) g.get(next);
 		if(g.isValid(next))
 		{
+			Square neighborInNext = (Square) g.get(next);
 			if(neighborInNext != null)
 			{
 				if(neighborInNext.getTetris() != this)
-				{
 					return false;
-				}
 				else
 				{
 					neighborInNext.removeSelfFromGrid();
@@ -163,8 +162,36 @@ public class Tetrimino
 		return !ableToMove;
 	}
 	
+	/**
+	 * precondition: the tetrimino this method is being used on has just
+	 * been constructed
+	 * returns true if their are two or more tetriminos occupying the same
+	 * space false if their is only one tetrimino returns false
+	 */
+	public boolean doubledUp()
+	{
+		boolean doubledUp = false;
+		for(int i = 0; i < 4; i++)
+		{
+			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
+			Square s = squares[i]; 
+			if(s.getGrid() != null)
+			{
+				if(s.getGrid().get(next) != null)
+					doubledUp = true;
+			}
+			else
+			{
+				if(w.getGrid().get(next) != null)
+					doubledUp = true;
+			}
+		}
+		return doubledUp;
+	}
+
 	public void rotateC()
 	{
+		updateLocations();
 		if(n == 7)
 			return;
 		if(n == 1 && d == 1)
@@ -178,17 +205,17 @@ public class Tetrimino
 		 
 		for(int i = 0; i < 4; i++)
 		{
-			int temp    = shape[i][0];
-			shape[i][0] = shape[i][1];
-			shape[i][1] = -temp;
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares[i]; 
-			//Square neighborInNext = (Square) s.getGrid().get(next);
+			int temp    = copy[i][0];
+			copy[i][0] = copy[i][1];
+			copy[i][1] = -temp;
+			Location next = convertLFromCToG(new Location(copy[i][0] + x, copy[i][1] + y));
+			Square s = squares[i];
 			if(spaceIsFree(s, next) == false)
-				ableToRotate = false;
+				ableToRotate = false; 
 		}
-		if(!ableToRotate)
+		if(ableToRotate)
 			shape = copy;
+		System.out.print(ableToRotate);
 		updateLocations();
 	}
 	
