@@ -5,7 +5,6 @@ package net.foxycorndog.tetris.board;
  * game. There are also methods to manipulate the data and
  * render the data to the screen.
  * 
- * @file	Piece.java
  * @author	Braden Steffaniak
  * @since	May 6, 2013 at 3:36:36 PM
  * @since	v0.1

@@ -2,7 +2,7 @@ package net.foxycorndog.tetris.sidebar;
 
 import java.util.ArrayList;
 
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.board.AbstractPiece;
 
 /**

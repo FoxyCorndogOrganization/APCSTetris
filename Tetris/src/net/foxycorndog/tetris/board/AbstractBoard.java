@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.components.Image;
-import net.foxycorndog.jfoxylib.graphics.Texture;
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.jfoxylib.input.Keyboard;
+import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.texture.Texture;
 
 /**
  * Class that holds the information for the Pieces in the Tetris game,
@@ -21,19 +21,19 @@ import net.foxycorndog.jfoxylib.input.Keyboard;
  */
 public abstract class AbstractBoard
 {
-	private int					x, y;
-	private int					width, height;
-	private int					gridSpaceSize;
+	private int							x, y;
+	private int							width, height;
+	private int							gridSpaceSize;
 	
-	private float 				counter;
+	private float 						counter;
 	
-	private	Image				boardImage;
+	private	Image						boardImage;
 	
-	private	AbstractPiece				board[];
+	private	Piece						board[];
 	
-	private	AbstractPiece				border[];
+	private	Piece						border[];
 	
-	private ArrayList<AbstractPiece>	pieces;
+	private ArrayList<Piece>			pieces;
 	
 	/**
 	 * Instantiate the image for the Board as well as other
@@ -66,7 +66,7 @@ public abstract class AbstractBoard
 			e.printStackTrace();
 		}
 		
-		pieces = new ArrayList<AbstractPiece>();
+		pieces = new ArrayList<Piece>();
 	}
 	
 	/**
@@ -116,10 +116,12 @@ public abstract class AbstractBoard
 	 * @param x The column to add the Piece to.
 	 * @param y The row to add the Piece to.
 	 */
-	public void addPiece(AbstractPiece piece, int x, int y)
+	public void addPiece(Piece piece, int x, int y)
 	{
-		piece.setPixelLocation(x * gridSpaceSize, y * gridSpaceSize);
-		piece.setBoard(this);
+		piece.setLocation(x, y);
+		
+		// Risky... but safe to assume.
+		piece.setBoard((Board)this);
 		
 		pieces.add(piece);
 	}
@@ -166,7 +168,7 @@ public abstract class AbstractBoard
 	{
 		// A for each loop that renders all of the Pieces of the Border
 		// to the screen.
-		for (AbstractPiece piece : border)
+		for (Piece piece : border)
 		{
 			piece.render();
 		}
@@ -195,7 +197,7 @@ public abstract class AbstractBoard
 		{
 			// Do all of the game movement and stuff here.
 			
-			gameLogic();
+			tick();
 			
 			// Keep the leftover time too...
 			counter %= tickTime;
@@ -206,5 +208,5 @@ public abstract class AbstractBoard
 	 * Method that calculates the game logic for the Tetris game each
 	 * tick.
 	 */
-	public abstract void gameLogic();
+	public abstract void tick();
 }

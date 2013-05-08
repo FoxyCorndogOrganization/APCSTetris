@@ -6,9 +6,9 @@ import java.io.IOException;
 import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.GameStarter;
 import net.foxycorndog.jfoxylib.font.Font;
-import net.foxycorndog.jfoxylib.graphics.Texture;
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
 import net.foxycorndog.jfoxylib.input.Mouse;
+import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.texture.Texture;
 import net.foxycorndog.tetris.board.AbstractBoard;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
@@ -17,7 +17,6 @@ import net.foxycorndog.tetris.sidebar.Sidebar;
 
 /**
  * Main class and entry point for the Tetris game.
- * test
  * 
  * @author	Braden Steffaniak
  * @since	Apr 20, 2013 at 11:17:19 PM
@@ -29,7 +28,7 @@ public class Tetris extends GameStarter
 {
 	private float		bgColor;
 	
-	private AbstractBoard		board;
+	private Board		board;
 	private Sidebar		sidebar;
 	
 	private MainMenu	mainMenu;

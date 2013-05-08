@@ -2,16 +2,15 @@ package net.foxycorndog.tetris.board;
 
 import java.io.IOException;
 
-import net.foxycorndog.jfoxylib.bundle.Bundle;
-import net.foxycorndog.jfoxylib.graphics.Texture;
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.bundle.Bundle;
+import net.foxycorndog.jfoxylib.opengl.texture.Texture;
 
 /**
  * Class used to hold information for each Piece in the Tetris
  * game. There are also methods to manipulate the data and
  * render the data to the screen.
  * 
- * @file 	AbstractPiece.java
  * @author	Braden Steffaniak
  * @since	Apr 20, 2013 at 11:17:15 PM
  * @since	v0.1
@@ -24,7 +23,7 @@ public abstract class AbstractPiece implements Cloneable
 	private			int				x, y;
 	private			int				width, height;
 	
-	private			AbstractBoard	board;
+	private			Board			board;
 	
 	private 		Bundle			bundle;
 	
@@ -32,7 +31,7 @@ public abstract class AbstractPiece implements Cloneable
 	
 	private	static	Texture			square;
 	
-	private static	AbstractPiece	pieces[];
+	private static	Piece			pieces[];
 	
 	static
 	{
@@ -47,7 +46,7 @@ public abstract class AbstractPiece implements Cloneable
 		
 		Color matrix[] = null;
 		
-		pieces    = new AbstractPiece[7];
+		pieces    = new Piece[7];
 		
 		// Long Piece
 		matrix = new Color[]
@@ -152,7 +151,7 @@ public abstract class AbstractPiece implements Cloneable
 	 * 
 	 * @return The Board instance that the Piece is located on.
 	 */
-	public AbstractBoard getBoard()
+	public Board getBoard()
 	{
 		return board;
 	}
@@ -162,7 +161,7 @@ public abstract class AbstractPiece implements Cloneable
 	 * 
 	 * @param board The Board instance that the Piece will be located on.
 	 */
-	public void setBoard(AbstractBoard board)
+	public void setBoard(Board board)
 	{
 		this.board = board;
 	}
@@ -275,7 +274,7 @@ public abstract class AbstractPiece implements Cloneable
 			{
 				for (int x = 0; x < width; x++)
 				{
-					if (matrix[x + y * width] != null)
+					if (matrix[x + (height - y - 1) * width] != null)
 					{
 						bundle.addTextures(GL.genRectTextures(square.getImageOffsets()));
 					}
@@ -290,9 +289,9 @@ public abstract class AbstractPiece implements Cloneable
 			{
 				for (int x = 0; x < width; x++)
 				{
-					if (matrix[x + y * width] != null)
+					if (matrix[x + (height - y - 1) * width] != null)
 					{
-						Color color = matrix[x + y * width];
+						Color color = matrix[x + (height - y - 1) * width];
 						
 						bundle.addColors(GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
 					}

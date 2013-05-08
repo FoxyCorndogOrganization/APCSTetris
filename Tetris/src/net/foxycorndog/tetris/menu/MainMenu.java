@@ -3,12 +3,12 @@ package net.foxycorndog.tetris.menu;
 import java.io.IOException;
 
 import net.foxycorndog.jfoxylib.Frame;
-import net.foxycorndog.jfoxylib.bundle.Bundle;
 import net.foxycorndog.jfoxylib.components.Button;
 import net.foxycorndog.jfoxylib.events.ButtonEvent;
 import net.foxycorndog.jfoxylib.events.ButtonListener;
-import net.foxycorndog.jfoxylib.graphics.Texture;
-import net.foxycorndog.jfoxylib.graphics.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.bundle.Bundle;
+import net.foxycorndog.jfoxylib.opengl.texture.Texture;
 import net.foxycorndog.jfoxyutil.Queue;
 import net.foxycorndog.tetris.Tetris;
 
@@ -184,7 +184,12 @@ public class MainMenu extends Menu
 			counter += delta;
 		}
 		
-		updateColor();
+		if (counter >= 1)
+		{
+			updateColor();
+			
+			counter %= 1;
+		}
 	}
 	
 	/**
@@ -232,34 +237,29 @@ public class MainMenu extends Menu
 	 */
 	private void updateColor()
 	{
-		if (counter >= 1)
+		r = rUp ? r + 1 : r - 1;
+		r = r >= 256 ? 255 : r;
+		r = r <= 100 ? 100 : r;
+		
+		g = gUp ? g + 1 : g - 1;
+		g = g >= 256 ? 255 : g;
+		g = g <= 100 ? 100 : g;
+		
+		b = bUp ? b + 1 : b - 1;
+		b = b >= 256 ? 255 : b;
+		b = b <= 100 ? 100 : b;
+		
+		if ((int)(Math.random() * 100) == 0)
 		{
-			r = rUp ? r + 1 : r - 1;
-			r = r >= 256 ? 255 : r;
-			r = r <= 100 ? 100 : r;
-			
-			g = gUp ? g + 1 : g - 1;
-			g = g >= 256 ? 255 : g;
-			g = g <= 100 ? 100 : g;
-			
-			b = bUp ? b + 1 : b - 1;
-			b = b >= 256 ? 255 : b;
-			b = b <= 100 ? 100 : b;
-			
-			if ((int)(Math.random() * 100) == 0)
-			{
-				rUp = !rUp;
-			}
-			if ((int)(Math.random() * 100) == 0)
-			{
-				gUp = !gUp;
-			}
-			if ((int)(Math.random() * 100) == 0)
-			{
-				bUp = !bUp;
-			}
-			
-			counter %= 1;
+			rUp = !rUp;
+		}
+		if ((int)(Math.random() * 100) == 0)
+		{
+			gUp = !gUp;
+		}
+		if ((int)(Math.random() * 100) == 0)
+		{
+			bUp = !bUp;
 		}
 	}
 	

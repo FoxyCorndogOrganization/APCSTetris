@@ -1,6 +1,8 @@
 package net.foxycorndog.tetris.board;
 
 /**
+ * Class that holds the information for the Pieces in the Tetris game,
+ * as well as demonstrating the interactions of the Pieces.
  * 
  * @author	Jeremiah Blackburn
  * @author	Braden Steffaniak
@@ -30,9 +32,9 @@ public class Board extends AbstractBoard
 	}
 
 	/**
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#gameLogic()
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick()
 	 */
-	public void gameLogic()
+	public void tick()
 	{
 		
 	}

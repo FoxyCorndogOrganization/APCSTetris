@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class BorderFactory
 {
-	public static AbstractPiece[] createBorder(int borderSize, int width, int height, boolean flat)
+	public static Piece[] createBorder(int borderSize, int width, int height, boolean flat)
 	{
 		ArrayList<AbstractPiece> pieces = new ArrayList<AbstractPiece>();
 		
-		int size = AbstractPiece.getSegmentSize();
+		int size = Piece.getSegmentSize();
 		
 		if (width % size != 0)
 		{
@@ -28,7 +28,7 @@ public class BorderFactory
 			
 			while (x < width)
 			{
-				piece = AbstractPiece.getRandomPiece();
+				piece = Piece.getRandomPiece();
 				
 				piece.setPixelLocation(x, y);
 				
@@ -42,6 +42,6 @@ public class BorderFactory
 			y += piece.getHeight() * size;
 		}
 		
-		return pieces.toArray(new AbstractPiece[0]);
+		return pieces.toArray(new Piece[0]);
 	}
 }
