@@ -1,10 +1,18 @@
+
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.World;
 
 import java.awt.Color;
 
-
+/**
+* File:  			Tetrimino.java
+* Author:			Henry Thomas Rybolt
+* Programming:	  	3rd Hour
+* Last Modified: 	May 06, 2013
+* Description:      A Tetrimino can rotate and move in the world it was
+*                   created by moving its four squares in the world
+*/
 public class Tetrimino 
 {
 	private Grid     g;
@@ -13,9 +21,12 @@ public class Tetrimino
 	private int[][]  shape;
 	private Color    c;
 	private World    w;
-	private int      n;
-	private int      d;
 	
+	/**
+	 * creates a tetrimino with its center at point (x,y), of color c, its
+	 * square componenets defined by their x and y coordinates stored in
+	 * the shape matrix, and in the world w
+	 */
 	public void Tetrimino(int[][] shape, Color c, int x, int y, World w)
 	{
 		this.c     = c;
@@ -23,8 +34,6 @@ public class Tetrimino
 		this.y     = y;
 		this.shape = shape;		
 		squares    = new Square[4];
-		g = w.getGrid();
-		this.w = w;
 		
 		for(int i = 0; i < 4; i++)
 		{
@@ -35,12 +44,22 @@ public class Tetrimino
 			Location l = convertLFromCToG(new Location(x + shape[i][0], y + shape[i][1]));
 			w.add(l, squares[i]);
 		}
+		g = w.getGrid();
+		this.w = w;
 	}
 	
-	public Tetrimino(int n, World w)
+	/**
+	 * creates a tetrimino at the top of the world w, a color that 
+	 * cooresponds with its shape, its shape is defined by n the code is
+	 * as follows n values are the integer the shape is the image:                                    
+	 *                          |_|            |_||_|    |_||_|    
+	 * 1 = |_||_||_||_|, 2 = |_||_||_|, 3 = |_||_|  , 4 =   |_||_|,
+	 * 
+	 *     |_||_||_|      |_||_||_|      |_||_|
+	 * 5 = |_|      , 6 =       |_|, 7 = |_||_|
+	 */
+	public Tetrimino(int n, World w) throws Exception
 	{
-		d      = 0;
-		this.n = n;
 		int[][] temp;
 		if(n == 1)
 		{
@@ -79,13 +98,15 @@ public class Tetrimino
 		}
 	}
 	
+	/**
+	 * updates the image of the tetrimino in gridworld
+	 */
 	public void updateLocations()
 	{
 		for(int i = 0; i < 4; i++)
 		{
-			System.out.println(convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y)));
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares[i];
+			Square s = squares[i]; 
 			if(s.getGrid() != null)
 				s.moveTo(next);
 			else
@@ -93,46 +114,53 @@ public class Tetrimino
 		}
 	}
 	
+	/**
+	 * rotates the tetrimino 90 degrees counter-clockwise if possible
+	 */
 	public void rotateCC()
 	{
-		updateLocations();
-		if(n == 7)
-			return;
-		if(n == 1 && d == 0)
-		{
-			rotateC();
-			return;
-		}
 		boolean ableToRotate = true;
-		int[][] copy         = shape.clone();
-		
-		System.out.println(copy[1][0] +" : " +shape[1][0]);
-		
+		int[][] copy         = new int[4][2];
+		for(int a = 0; a < 4; a++)
+		{
+			for(int b = 0; b < 2; b++)
+			{
+				copy[a][b] = shape[a][b];
+			}
+		}
 		for(int i = 0; i < 4; i++)
 		{
-			int temp    = copy[i][0];
-			copy[i][0] = -copy[i][1];
-			copy[i][1] = temp;
-			Location next = convertLFromCToG(new Location(copy[i][0] + x, copy[i][1] + y));
+			int temp    = shape[i][0];
+			shape[i][0] = -shape[i][1];
+			shape[i][1] = temp;
+			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
 			Square s = squares[i]; 
-			if(!spaceIsFree(s, next))
+			//Square neighborInNext = (Square) s.getGrid().get(next);
+			if(spaceIsFree(s, next) == false)
 				ableToRotate = false;
 		}
-		if(ableToRotate)
+		if(!ableToRotate)
 			shape = copy;
 		updateLocations();
-		System.out.println(copy[1][0] +" : " +shape[1][0]);
 	}
 	
+	/**
+	 * retruns true if the space is free of other tetriminos else false
+	 */
 	public boolean spaceIsFree(Square s, Location next)
 	{
+		if(!g.isValid(next))
+			return false;
+			
+		Square neighborInNext = (Square) g.get(next);
 		if(g.isValid(next))
 		{
-			Square neighborInNext = (Square) g.get(next);
 			if(neighborInNext != null)
 			{
 				if(neighborInNext.getTetris() != this)
+				{
 					return false;
+				}
 				else
 				{
 					neighborInNext.removeSelfFromGrid();
@@ -146,9 +174,47 @@ public class Tetrimino
 	}
 	
 	/**
-	 * 
+	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
-	public boolean yallHitTheBottomBaby()
+	public void rotateC()
+	{
+		boolean ableToRotate = true;
+		int[][] copy         = new int[4][2];
+		for(int a = 0; a < 4; a++)
+		{
+			for(int b = 0; b < 2; b++)
+			{
+				copy[a][b] = shape[a][b];
+			}
+		}
+		for(int i = 0; i < 4; i++)
+		{
+			int temp    = shape[i][0];
+			shape[i][0] = shape[i][1];
+			shape[i][1] = -temp;
+			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
+			Square s = squares[i]; 
+			//Square neighborInNext = (Square) s.getGrid().get(next);
+			if(spaceIsFree(s, next) == false)
+				ableToRotate = false;
+		}
+		if(!ableToRotate)
+			shape = copy;
+		updateLocations();
+	}
+	
+	/**
+	 * converts a location from the cartesian grid(standard x and y axis) to GridWorlds's grid(with rows and columns)
+	 */
+	public Location convertLFromCToG(Location l)
+	{
+		return new Location((19-l.getCol()), l.getRow());
+	}
+	
+	/**
+	 * moves the tetrimino down if possible
+	 */
+	public void moveDown() 
 	{
 		boolean ableToMove = true;
 		for(int i = 0; i < 4; i++)
@@ -158,8 +224,29 @@ public class Tetrimino
 			if(spaceIsFree(s, next) == false)
 				ableToMove = false;
 		}
+		
+		if(ableToMove == true)
+			y--;
 		updateLocations();
-		return !ableToMove;
+	}
+	
+	/**
+	 * moves the tetrimino left if possible
+	 */
+	public void moveLeft() 
+	{
+		boolean ableToMove = true;
+		for(int i = 0; i < 4; i++)
+		{
+			Square s = squares[i]; 
+			Location next = convertLFromCToG(new Location(shape[i][0] + x - 1, shape[i][1] + y));
+			if(spaceIsFree(s, next) == false)
+				ableToMove = false;
+		}
+		
+		if(ableToMove == true)
+			x--;
+		updateLocations();
 	}
 	
 	/**
@@ -188,46 +275,8 @@ public class Tetrimino
 		}
 		return doubledUp;
 	}
-
-	public void rotateC()
-	{
-		updateLocations();
-		if(n == 7)
-			return;
-		if(n == 1 && d == 1)
-		{
-			rotateCC();
-			return;
-		}
-		
-		boolean ableToRotate = true;
-		int[][] copy         = shape.clone();
-		 
-		for(int i = 0; i < 4; i++)
-		{
-			int temp    = copy[i][0];
-			copy[i][0] = copy[i][1];
-			copy[i][1] = -temp;
-			Location next = convertLFromCToG(new Location(copy[i][0] + x, copy[i][1] + y));
-			Square s = squares[i];
-			if(spaceIsFree(s, next) == false)
-				ableToRotate = false; 
-		}
-		if(ableToRotate)
-			shape = copy;
-		System.out.print(ableToRotate);
-		updateLocations();
-	}
 	
-	/**
-	 * converts a location from the cartesian grid(standard x and y axis) to GridWorlds's grid(with rows and columns)
-	 */
-	public Location convertLFromCToG(Location l)
-	{
-		return new Location((g.getNumRows() - l.getCol()) - 1, l.getRow());
-	}
-	
-	public void moveDown() 
+	public boolean yallHitTheBottomBaby()
 	{
 		boolean ableToMove = true;
 		for(int i = 0; i < 4; i++)
@@ -237,28 +286,14 @@ public class Tetrimino
 			if(spaceIsFree(s, next) == false)
 				ableToMove = false;
 		}
-		
-		if(ableToMove == true)
-			y--;
 		updateLocations();
+		return !ableToMove;
 	}
+
 	
-	public void moveLeft() 
-	{
-		boolean ableToMove = true;
-		for(int i = 0; i < 4; i++)
-		{
-			Square s = squares[i]; 
-			Location next = convertLFromCToG(new Location(shape[i][0] + x - 1, shape[i][1] + y));
-			if(spaceIsFree(s, next) == false)
-				ableToMove = false;
-		}
-		
-		if(ableToMove == true)
-			x--;
-		updateLocations();
-	}
-	
+	/**
+	 * moves the tetrimino right if possible
+	 */
 	public void moveRight() 
 	{
 		boolean ableToMove = true;

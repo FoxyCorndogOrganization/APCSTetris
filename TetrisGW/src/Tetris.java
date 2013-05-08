@@ -57,11 +57,21 @@ public class Tetris
 				addScore(linesCompleted);
 				if(t.yallHitTheBottomBaby())
 				{
-					t = new Tetrimino((int)(Math.random()*7)+1, this);
+					try {
+						t = new Tetrimino((int)(Math.random()*7)+1, this);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		};
-		t = new Tetrimino((int)(Math.random()*7)+1, world);
+		try {
+			t = new Tetrimino((int)(Math.random()*7)+1, world);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		world.show();
 	}
 	
