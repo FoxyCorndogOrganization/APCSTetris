@@ -56,6 +56,6 @@ public class Piece extends AbstractPiece
 	 */
 	public void rotateCounterClockwise()
 	{
-
+		
 	}
 }

@@ -1,6 +1,7 @@
 package net.foxycorndog.tetris.board;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.jfoxylib.opengl.bundle.Bundle;
@@ -23,15 +24,17 @@ public abstract class AbstractPiece implements Cloneable
 	private			int				x, y;
 	private			int				width, height;
 	
+	private			Color			color;
+	
 	private			Board			board;
 	
 	private 		Bundle			bundle;
 	
-	private 		Color			matrix[];
-	
 	private	static	Texture			square;
 	
 	private static	Piece			pieces[];
+	
+	private			ArrayList<int[]>	shape;
 	
 	static
 	{
@@ -43,77 +46,6 @@ public abstract class AbstractPiece implements Cloneable
 		{
 			e.printStackTrace();
 		}
-		
-		Color matrix[] = null;
-		
-		pieces    = new Piece[7];
-		
-		// Long Piece
-		matrix = new Color[]
-		{
-			Color.MAGENTA,
-			Color.MAGENTA,
-			Color.MAGENTA,
-			Color.MAGENTA,
-		};
-		
-		pieces[0] = new Piece(matrix, 1);
-		
-		// Square Piece
-		matrix = new Color[]
-		{
-			Color.ORANGE, Color.ORANGE,
-			Color.ORANGE, Color.ORANGE,
-		};
-		
-		pieces[1] = new Piece(matrix, 2);
-		
-		// L Piece
-		matrix = new Color[]
-		{
-			Color.GREEN, null,
-			Color.GREEN, null,
-			Color.GREEN, Color.GREEN,
-		};
-		
-		pieces[2] = new Piece(matrix, 2);
-		
-		// Backwards L Piece
-		matrix = new Color[]
-		{
-			null,       Color.BLUE,
-			null,       Color.BLUE,
-			Color.BLUE, Color.BLUE,
-		};
-		
-		pieces[3] = new Piece(matrix, 2);
-		
-		// S Piece
-		matrix = new Color[]
-		{
-			null,         Color.YELLOW, Color.YELLOW,
-			Color.YELLOW, Color.YELLOW, null,
-		};
-		
-		pieces[4] = new Piece(matrix, 3);
-		
-		// Backwards S Piece
-		matrix = new Color[]
-		{
-			Color.CYAN, Color.CYAN, null,
-			null,       Color.CYAN, Color.CYAN,
-		};
-		
-		pieces[5] = new Piece(matrix, 3);
-		
-		// T Piece
-		matrix = new Color[]
-		{
-			Color.RED, Color.RED, Color.RED,
-			null,      Color.RED, null,
-		};
-		
-		pieces[6] = new Piece(matrix, 3);
 	}
 	
 	/**
@@ -141,9 +73,9 @@ public abstract class AbstractPiece implements Cloneable
 	 * @param matrix The array of Colors describing the Piece.
 	 * @param width The width of the Piece.
 	 */
-	public AbstractPiece(Color matrix[], int width)
+	public AbstractPiece(ArrayList<int[]> shape)
 	{
-		loadMatrix(matrix, width);
+		setShape(shape);
 	}
 	
 	/**
@@ -167,14 +99,32 @@ public abstract class AbstractPiece implements Cloneable
 	}
 	
 	/**
-	 * Get the Color matrix that represents the Piece. The width of the
-	 * matrix is defined by getWidth();
+	 * Set the Color matrix and width that represents the Piece.
+	 * The matrix is described with values that correspond to the
+	 * rgb of the square located at the index.
 	 * 
-	 * @return The Color matrix that represents the Piece.
+	 * eg:
+	 * Color c = new
+	 *         net.foxycorndog.tetris.board.Color(200, 0, 0);<br>
+	 * 
+	 * setMatrix([ c, c,<br>
+	 *             c, c ], 2);<br>
+	 * <br>
+	 * would set the Piece as a red square Piece, and:<br>
+	 * 
+	 * setMatrix([ c,<br>
+	 * 			   c,<br>
+	 *             c,<br>
+	 * 			   c ], 1);<br>
+	 * <br>
+	 * would set the Piece as a red long Piece.
+	 * 
+	 * @param matrix The array of Colors describing the Piece.
+	 * @param width The width of the Piece.
 	 */
-	public Color[] getMatrix()
+	public void setShape(ArrayList<int[]> shape)
 	{
-		return matrix;
+		loadMatrix(shape);
 	}
 	
 	/**
@@ -201,104 +151,64 @@ public abstract class AbstractPiece implements Cloneable
 	 * @param matrix The array of Colors describing the Piece.
 	 * @param width The width of the Piece.
 	 */
-	public void setMatrix(Color matrix[], int width)
+	private void loadMatrix(ArrayList<int[]> shape)
 	{
-		loadMatrix(matrix, width);
-	}
-	
-	/**
-	 * Set the Color matrix and width that represents the Piece.
-	 * The matrix is described with values that correspond to the
-	 * rgb of the square located at the index.
-	 * 
-	 * eg:
-	 * Color c = new
-	 *         net.foxycorndog.tetris.board.Color(200, 0, 0);<br>
-	 * 
-	 * setMatrix([ c, c,<br>
-	 *             c, c ], 2);<br>
-	 * <br>
-	 * would set the Piece as a red square Piece, and:<br>
-	 * 
-	 * setMatrix([ c,<br>
-	 * 			   c,<br>
-	 *             c,<br>
-	 * 			   c ], 1);<br>
-	 * <br>
-	 * would set the Piece as a red long Piece.
-	 * 
-	 * @param matrix The array of Colors describing the Piece.
-	 * @param width The width of the Piece.
-	 */
-	private void loadMatrix(Color matrix[], int width)
-	{
-		this.width  = width;
-		this.height = matrix.length / width;
-		this.matrix = matrix;
+		int amountOfSquares = shape.size();
 		
-		int height = matrix.length / width;
+		int minX = Integer.MIN_VALUE, maxX = Integer.MAX_VALUE;
+		int minY = Integer.MIN_VALUE, maxY = Integer.MAX_VALUE;
 		
-		int num = 0;
-		
-		for (int i = 0; i < matrix.length; i++)
+		for (int i = 0; i < amountOfSquares; i++)
 		{
-			if (matrix[i] != null)
+			int x = shape.get(i)[0];
+			int y = shape.get(i)[1];
+			
+			if (x < minX)
 			{
-				num++;
+				minX = x;
+			}
+			if (x > maxX)
+			{
+				maxX = x;
+			}
+			if (y < minY)
+			{
+				minY = y;
+			}
+			if (y > maxY)
+			{
+				maxY = y;
 			}
 		}
 		
-		bundle = new Bundle(num * 4, 2, true, true);
+		this.width  = maxX - minX;
+		this.height = maxY - minY;
+		this.shape  = shape;
+		
+		bundle = new Bundle(amountOfSquares * 4, 2, true, true);
 		
 		int wid = square.getWidth();
 		int hei = square.getHeight();
 		
 		bundle.beginEditingVertices();
 		{
-			for (int y = 0; y < height; y++)
+			for (int i = 0; i < amountOfSquares; i++)
 			{
-				for (int x = 0; x < width; x++)
-				{
-					if (matrix[x + (height - y - 1) * width] != null)
-					{
-						bundle.addVertices(GL.genRectVerts(x * wid, y * hei, wid, hei));
-					}
-				}
+				bundle.addVertices(GL.genRectVerts(shape.get(i)[0] * wid, shape.get(i)[1] * hei, wid, hei));
 			}
 		}
 		bundle.endEditingVertices();
 		
 		bundle.beginEditingTextures();
 		{
-			for (int y = 0; y < height; y++)
+			for (int i = 0; i < amountOfSquares; i++)
 			{
-				for (int x = 0; x < width; x++)
-				{
-					if (matrix[x + (height - y - 1) * width] != null)
-					{
-						bundle.addTextures(GL.genRectTextures(square.getImageOffsets()));
-					}
-				}
+				bundle.addTextures(GL.genRectTextures(square.getImageOffsets()));
 			}
 		}
 		bundle.endEditingTextures();
 		
-		bundle.beginEditingColors();
-		{
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					if (matrix[x + (height - y - 1) * width] != null)
-					{
-						Color color = matrix[x + (height - y - 1) * width];
-						
-						bundle.addColors(GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
-					}
-				}
-			}
-		}
-		bundle.endEditingColors();
+		updateColor();
 	}
 	
 	/**
@@ -456,6 +366,33 @@ public abstract class AbstractPiece implements Cloneable
 			bundle.render(GL.QUADS, square);
 		}
 		GL.popMatrix();
+	}
+	
+	public Color getColor()
+	{
+		return color;
+	}
+	
+	public void setColor(Color color)
+	{
+		this.color = color;
+		
+		if (bundle != null)
+		{
+			updateColor();
+		}
+	}
+	
+	private void updateColor()
+	{
+		bundle.beginEditingColors();
+		{
+			for (int i = 0; i < shape.size(); i++)
+			{
+				bundle.setColors(4 * 4, GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
+			}
+		}
+		bundle.endEditingColors();
 	}
 	
 	/**
