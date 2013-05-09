@@ -1,5 +1,10 @@
 package net.foxycorndog.tetris.board;
 
+import java.util.ArrayList;
+
+import net.foxycorndog.tetris.event.BoardListener;
+
+
 /**
  * Class that holds the information for the Pieces in the Tetris game,
  * as well as demonstrating the interactions of the Pieces.
@@ -13,6 +18,12 @@ package net.foxycorndog.tetris.board;
  */
 public class Board extends AbstractBoard
 {
+	private	Piece	currentPiece;
+	
+	private boolean lost;
+	private int[] 	deleteRows;
+	private ArrayList<BoardListener> events;
+	
 	
 	/**
 	 * Instantiate the image for the Board as well as other
@@ -29,6 +40,9 @@ public class Board extends AbstractBoard
 	public Board(int width, int height, int gridSpaceSize)
 	{
 		super(width, height, gridSpaceSize);
+		
+		events = new ArrayList<BoardListener>();
+		deleteRows = new int[4];
 	}
 
 	/**
@@ -38,7 +52,45 @@ public class Board extends AbstractBoard
 	 */
 	public void tick()
 	{
+		if(!getLost())
+		{
+			if(yallHitTheBottomBaby())
+			{
+				currentPiece.kill();
+				currentPiece = new Piece( new Color[5],(int)Math.random()*7);
+				if(!isValid(currentPiece.getX(),currentPiece.getY()))
+				{
+					if(currentPiece.getX()==super.getHeight())
+					{
+						for (BoardListener listener : events)
+						{
+							listener.onGameLost(null);
+						}
+					}
+				}
+				clearRows();
+			}
+		}
+	}
+	
+	public boolean yallHitTheBottomBaby()
+	{
+		if(isValid(currentPiece.getX(), currentPiece.getY()))
+			lost = false;
+		else 
+			lost = true;
 		
+		return lost;
+	}
+	
+	public void setLost(boolean l)
+	{
+		lost = l;
+	}
+	
+	public boolean getLost()
+	{
+		return lost;
 	}
 	
 	/**
@@ -56,5 +108,32 @@ public class Board extends AbstractBoard
 		}
 		
 		return false;
+	}
+	
+	public void clearRows()
+	{
+		int counter = 0;
+		for(int r = 0; r < super.getHeight()-1;r++)
+			for(int c = 0; c < super.getWidth()-1;c++)
+			{
+				if(!isValid(r,c))
+				{
+					counter++;
+				}
+				if(counter==getWidth())
+				{
+					for(int dRow =0; dRow < super.getHeight()-1; dRow++)
+					{
+						Location l = new Location(dRow,c);
+						
+						get(l).deleteSquare(l);
+					}
+				}
+			}
+	}
+	
+	public void addListener(BoardListener b)
+	{
+		events.add(b);
 	}
 }

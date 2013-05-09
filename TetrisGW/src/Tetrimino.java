@@ -39,6 +39,7 @@ public class Tetrimino
 		this.y     = y;
 		this.shape = shape;		
 		squares    = new Square[4];
+		g = w.getGrid();
 		
 		for(int i = 0; i < 4; i++)
 		{
@@ -49,7 +50,6 @@ public class Tetrimino
 			Location l = convertLFromCToG(new Location(x + shape[i][0], y + shape[i][1]));
 			//w.add(l, squares[i]);
 		}
-		g = w.getGrid();
 		this.w = w;
 	}
 	
@@ -231,7 +231,7 @@ public class Tetrimino
 	 */
 	public Location convertLFromCToG(Location l)
 	{
-		return new Location((19-l.getCol()), l.getRow());
+		return new Location((g.getNumRows() -l.getCol() - 1), l.getRow());
 	}
 	
 	/**

@@ -29,8 +29,6 @@ public abstract class AbstractBoard
 	
 	private	Image						boardImage;
 	
-	private	Piece						board[];
-	
 	private	Piece						border[];
 	
 	private ArrayList<Piece>			pieces;
