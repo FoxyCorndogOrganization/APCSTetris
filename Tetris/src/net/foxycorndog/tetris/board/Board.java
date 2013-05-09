@@ -37,4 +37,14 @@ public class Board extends AbstractBoard
 	{
 		
 	}
+	
+	/**
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
+	 */
+	public boolean isValid(int x, int y)
+	{
+		
+		
+		return false;
+	}
 }
