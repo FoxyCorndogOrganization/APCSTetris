@@ -13,6 +13,7 @@ package net.foxycorndog.tetris.board;
  */
 public class Board extends AbstractBoard
 {
+	
 	/**
 	 * Instantiate the image for the Board as well as other
 	 * instantiations.
@@ -32,6 +33,8 @@ public class Board extends AbstractBoard
 
 	/**
 	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick()
+	 * Moves a piece down one space after half a second until the piece
+	 * hits the bottom of the board or another piece on the board.
 	 */
 	public void tick()
 	{
@@ -39,11 +42,18 @@ public class Board extends AbstractBoard
 	}
 	
 	/**
+	 * Coordinates use the Cartesian system.
 	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
+	 * checks to see it the coordinate (x,y) is valid for the piece to
+	 * move to.
 	 */
 	public boolean isValid(int x, int y)
 	{
 		
+		if((x >= 0 && x < super.getWidth())&& y >=0 && y < super.getHeight())
+		{
+			return true;
+		}
 		
 		return false;
 	}

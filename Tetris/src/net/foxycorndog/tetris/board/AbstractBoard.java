@@ -70,6 +70,26 @@ public abstract class AbstractBoard
 	}
 	
 	/**
+	 * Get the number of columns in the Grid.
+	 * 
+	 * @return The number of columns in the Grid.
+	 */
+	public int getWidth()
+	{
+		return width;
+	}
+	
+	/**
+	 * Get the number of rows in the Grid.
+	 * 
+	 * @return The number of rows in the Grid.
+	 */
+	public int getHeight()
+	{
+		return height;
+	}
+	
+	/**
 	 * Get the size (in pixels) that each space on the
 	 * Board will take up. eg: passing 10 would create 10x10 grid
 	 * spaces across the board.
