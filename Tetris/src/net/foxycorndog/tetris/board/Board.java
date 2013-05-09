@@ -13,7 +13,6 @@ package net.foxycorndog.tetris.board;
  */
 public class Board extends AbstractBoard
 {
-	
 	/**
 	 * Instantiate the image for the Board as well as other
 	 * instantiations.
