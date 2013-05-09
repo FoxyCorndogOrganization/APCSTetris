@@ -27,7 +27,9 @@ public abstract class AbstractPiece implements Cloneable
 	
 	private 		Bundle			bundle;
 	
-	private 		Color			matrix[];
+	private 		Color			colorMatrix[];
+	
+	private			int				shape[][];
 	
 	private	static	Texture			square;
 	
@@ -43,77 +45,6 @@ public abstract class AbstractPiece implements Cloneable
 		{
 			e.printStackTrace();
 		}
-		
-		Color matrix[] = null;
-		
-		pieces    = new Piece[7];
-		
-		// Long Piece
-		matrix = new Color[]
-		{
-			Color.MAGENTA,
-			Color.MAGENTA,
-			Color.MAGENTA,
-			Color.MAGENTA,
-		};
-		
-		pieces[0] = new Piece(matrix, 1);
-		
-		// Square Piece
-		matrix = new Color[]
-		{
-			Color.ORANGE, Color.ORANGE,
-			Color.ORANGE, Color.ORANGE,
-		};
-		
-		pieces[1] = new Piece(matrix, 2);
-		
-		// L Piece
-		matrix = new Color[]
-		{
-			Color.GREEN, null,
-			Color.GREEN, null,
-			Color.GREEN, Color.GREEN,
-		};
-		
-		pieces[2] = new Piece(matrix, 2);
-		
-		// Backwards L Piece
-		matrix = new Color[]
-		{
-			null,       Color.BLUE,
-			null,       Color.BLUE,
-			Color.BLUE, Color.BLUE,
-		};
-		
-		pieces[3] = new Piece(matrix, 2);
-		
-		// S Piece
-		matrix = new Color[]
-		{
-			null,         Color.YELLOW, Color.YELLOW,
-			Color.YELLOW, Color.YELLOW, null,
-		};
-		
-		pieces[4] = new Piece(matrix, 3);
-		
-		// Backwards S Piece
-		matrix = new Color[]
-		{
-			Color.CYAN, Color.CYAN, null,
-			null,       Color.CYAN, Color.CYAN,
-		};
-		
-		pieces[5] = new Piece(matrix, 3);
-		
-		// T Piece
-		matrix = new Color[]
-		{
-			Color.RED, Color.RED, Color.RED,
-			null,      Color.RED, null,
-		};
-		
-		pieces[6] = new Piece(matrix, 3);
 	}
 	
 	/**
@@ -174,7 +105,18 @@ public abstract class AbstractPiece implements Cloneable
 	 */
 	public Color[] getMatrix()
 	{
-		return matrix;
+		return colorMatrix;
+	}
+	
+	/**
+	 * Get the Color matrix that represents the Piece. The width of the
+	 * matrix is defined by getWidth();
+	 * 
+	 * @return The Color matrix that represents the Piece.
+	 */
+	public int[][] getShape()
+	{
+		return shape;
 	}
 	
 	/**
@@ -438,6 +380,18 @@ public abstract class AbstractPiece implements Cloneable
 	public void move(int cols, int rows)
 	{
 		setLocation(getX() + cols, getY() + rows);
+	}
+	
+	/**
+	 * Move the Piece the specified amount of columns and rows relative
+	 * to the current location.
+	 * 
+	 * @param cols The number of columns to shift the Piece.
+	 * @param rows The number of rows to shift the Piece.
+	 */
+	public void moveTo(Location l)
+	{
+		setLocation(l.getX(), l.getY());
 	}
 	
 	/**
