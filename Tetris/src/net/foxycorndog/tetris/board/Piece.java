@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Class used to hold information for each Piece in the Tetris
  * game. There are also methods to manipulate the data and
  * render the data to the screen.
- * 
+ *
  * @author	Braden Steffaniak
  * @since	May 6, 2013 at 3:36:36 PM
  * @since	v0.1
@@ -36,9 +36,9 @@ public class Piece extends AbstractPiece
 		this.c     = c;
 		this.x     = x;
 		this.y     = y;
-		this.shape = shape;		
+		this.shape = shape;
 		squares    = new ArrayList<Square>();
-		
+
 		for(int i = 0; i < 4; i++)
 		{
 			boolean center = false;
@@ -48,7 +48,7 @@ public class Piece extends AbstractPiece
 			Location l = new Location(x + shape.get(i)[0], y + shape.get(i)[1]);
 		}
 	}
-	
+
 	public void editShape(int[][] s)
 	{
 		for(int index = 0; index < s.length; index++)
@@ -60,12 +60,12 @@ public class Piece extends AbstractPiece
 		}
 	}
 	/**
-	 * creates a tetrimino at the top of the world w, a color that 
+	 * creates a tetrimino at the top of the world w, a color that
 	 * cooresponds with its shape, its shape is defined by n the code is
-	 * as follows n values are the integer the shape is the image:                                    
-	 *                          |_|            |_||_|    |_||_|    
+	 * as follows n values are the integer the shape is the image:
+	 *                          |_|            |_||_|    |_||_|
 	 * 1 = |_||_||_||_|, 2 = |_||_||_|, 3 = |_||_|  , 4 =   |_||_|,
-	 * 
+	 *
 	 *     |_||_||_|      |_||_||_|      |_||_|
 	 * 5 = |_|      , 6 =       |_|, 7 = |_||_|
 	 */
@@ -116,7 +116,7 @@ public class Piece extends AbstractPiece
 			piece(temp, Color.YELLOW, 5, 18, w);
 		}
 	}
-		
+
 	/**
 	 * updates the image of the tetrimino in gridworld
 	 */
@@ -125,14 +125,14 @@ public class Piece extends AbstractPiece
 		for(int i = 0; i < 4; i++)
 		{
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			if(s.getBoard() != null)
 				s.moveTo(next);
 			else
 				getBoard().add(next, s);
 		}
 	}
-	
+
 	/**
 	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
@@ -161,7 +161,7 @@ public class Piece extends AbstractPiece
 			shape[i][0] = -shape[i][1];
 			shape[i][1] = temp;
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			//Square neighborInNext = (Square) s.getGrid().get(next);
 			if(spaceIsFree(s, next) == false)
 				ableToRotate = false;
@@ -170,7 +170,7 @@ public class Piece extends AbstractPiece
 			shape = copy;
 		updateLocations();
 	}
-		
+
 	/**
 	 * retruns true if the space is free of other tetriminos else false
 	 */
@@ -178,7 +178,7 @@ public class Piece extends AbstractPiece
 	{
 		if(!getBoard().isValid(next))
 			return false;
-			
+
 		Square neighborInNext = (Square) getBoard().get(next);
 		if(getBoard().isValid(next))
 		{
@@ -196,10 +196,10 @@ public class Piece extends AbstractPiece
 			}
 			return true;
 		}
-		else 
+		else
 			return false;
 	}
-		
+
 	/**
 	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
@@ -228,7 +228,7 @@ public class Piece extends AbstractPiece
 			shape[i][0] = shape[i][1];
 			shape[i][1] = -temp;
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			//Square neighborInNext = (Square) s.getGrid().get(next);
 			if(spaceIsFree(s, next) == false)
 				ableToRotate = false;
@@ -237,7 +237,7 @@ public class Piece extends AbstractPiece
 			shape = copy;
 		updateLocations();
 	}
-		
+
 	/**
 	 * converts a location from the cartesian grid(standard x and y axis) to GridWorlds's grid(with rows and columns)
 	 */
@@ -245,45 +245,45 @@ public class Piece extends AbstractPiece
 	{
 		return new Location((19-l.getCol()), l.getRow());
 	}
-		
+
 	/**
 	 * moves the tetrimino down if possible
 	 */
-	public void moveDown() 
+	public void moveDown()
 	{
 		boolean ableToMove = true;
 		for(int i = 0; i < 4; i++)
 		{
-			Square s = squares[i]; 
+			Square s = squares[i];
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y - 1));
 			if(spaceIsFree(s, next) == false)
 				ableToMove = false;
 		}
-		
+
 		if(ableToMove == true)
 			y--;
 		updateLocations();
 	}
-		
+
 	/**
 	 * moves the tetrimino left if possible
 	 */
-	public void moveLeft() 
+	public void moveLeft()
 	{
 		boolean ableToMove = true;
 		for(int i = 0; i < 4; i++)
 		{
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			Location next = convertLFromCToG(new Location(shape[i][0] + x - 1, shape[i][1] + y));
 			if(spaceIsFree(s, next) == false)
 				ableToMove = false;
 		}
-			
+
 		if(ableToMove == true)
 			x--;
 		updateLocations();
 	}
-		
+
 	/**
 	 * precondition: the tetrimino this method is being used on has just
 	 * been constructed
@@ -296,7 +296,7 @@ public class Piece extends AbstractPiece
 		for(int i = 0; i < 4; i++)
 		{
 			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			if(s.getBoard() != null)
 			{
 				if(s.getBoard().get(next) != null)
@@ -310,7 +310,7 @@ public class Piece extends AbstractPiece
 		}
 		return doubledUp;
 	}
-		
+
 		/**
 	 * returns true if this tetrimino can not move any further down else false
 	 */
@@ -319,7 +319,7 @@ public class Piece extends AbstractPiece
 		boolean ableToMove = true;
 		for(int i = 0; i < 4; i++)
 		{
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			Location next = new Location(shape[i][0] + x, shape[i][1] + y - 1);
 			if(spaceIsFree(s, next) == false)
 				ableToMove = false;
@@ -328,26 +328,26 @@ public class Piece extends AbstractPiece
 		return !ableToMove;
 	}
 
-		
+
 	/**
 	 * moves the tetrimino right if possible
 	 */
-	public void moveRight() 
+	public void moveRight()
 	{
 		boolean ableToMove = true;
 		for(int i = 0; i < 4; i++)
 		{
-			Square s = squares.get(i); 
+			Square s = squares.get(i);
 			Location next = new Location(shape[i][0] + x + 1, shape[i][1] + y);
 			if(spaceIsFree(s, next) == false)
 				ableToMove= false;
 		}
-		
+
 		if(ableToMove == true)
 			x++;
 		updateLocations();
 	}
-		
+
 	/**
 	 * kills the tetrimino makes it outdated
 	 */
@@ -355,7 +355,7 @@ public class Piece extends AbstractPiece
 	{
 		dead = true;
 	}
-		
+
 	/**
 	 * returns whether the tetrimino was klled
 	 */
@@ -364,13 +364,13 @@ public class Piece extends AbstractPiece
 		return dead;
 	}
 
-	public void rotateClockwise() 
+	public void rotateClockwise()
 	{
 		rotateC();
 	}
 
-	public void rotateCounterClockwise() 
+	public void rotateCounterClockwise()
 	{
-		rotateCC();
+
 	}
 }
