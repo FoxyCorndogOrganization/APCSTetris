@@ -15,12 +15,15 @@ import java.awt.Color;
 */
 public class Tetrimino 
 {
+	private int      direction;
+	private int      n;
 	private Grid     g;
 	private Square[] squares;
 	private int      x,y;
 	private int[][]  shape;
 	private Color    c;
 	private World    w;
+	private boolean  dead;
 	
 	/**
 	 * creates a tetrimino with its center at point (x,y), of color c, its
@@ -29,6 +32,8 @@ public class Tetrimino
 	 */
 	public void Tetrimino(int[][] shape, Color c, int x, int y, World w)
 	{
+		direction  = 0;
+		dead       = false;
 		this.c     = c;
 		this.x     = x;
 		this.y     = y;
@@ -42,7 +47,7 @@ public class Tetrimino
 				center = true;
 			squares[i] = new Square(c, this, center);
 			Location l = convertLFromCToG(new Location(x + shape[i][0], y + shape[i][1]));
-			w.add(l, squares[i]);
+			//w.add(l, squares[i]);
 		}
 		g = w.getGrid();
 		this.w = w;
@@ -58,8 +63,10 @@ public class Tetrimino
 	 *     |_||_||_|      |_||_||_|      |_||_|
 	 * 5 = |_|      , 6 =       |_|, 7 = |_||_|
 	 */
-	public Tetrimino(int n, World w) throws Exception
+	public Tetrimino(int n, World w)
 	{
+		this.n = n;
+		dead = true;
 		int[][] temp;
 		if(n == 1)
 		{
@@ -119,6 +126,14 @@ public class Tetrimino
 	 */
 	public void rotateCC()
 	{
+		if(n == 1 && direction == 1)
+		{
+			rotateC();
+			direction = 0;
+			return;
+		}
+		if(n == 7)
+			return;
 		boolean ableToRotate = true;
 		int[][] copy         = new int[4][2];
 		for(int a = 0; a < 4; a++)
@@ -178,6 +193,14 @@ public class Tetrimino
 	 */
 	public void rotateC()
 	{
+		if(n == 7)
+			return;
+		if(n == 1 && direction == 0)
+		{
+			rotateCC();
+			direction = 1;
+			return;
+		}
 		boolean ableToRotate = true;
 		int[][] copy         = new int[4][2];
 		for(int a = 0; a < 4; a++)
@@ -276,6 +299,9 @@ public class Tetrimino
 		return doubledUp;
 	}
 	
+	/**
+	 * returns true if this tetrimino can not move any further down else false
+	 */
 	public boolean yallHitTheBottomBaby()
 	{
 		boolean ableToMove = true;
@@ -308,6 +334,22 @@ public class Tetrimino
 		if(ableToMove == true)
 			x++;
 		updateLocations();
+	}
+	
+	/**
+	 * kills the tetrimino makes it outdated
+	 */
+	public void kill()
+	{
+		dead = true;
+	}
+	
+	/**
+	 * returns whether the tetrimino was klled
+	 */
+	public boolean isDead()
+	{
+		return dead;
 	}
 }
 

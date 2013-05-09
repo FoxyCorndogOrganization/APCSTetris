@@ -11,14 +11,26 @@ import info.gridworld.grid.Grid;
 import info.gridworld.gui.WorldFrame;
 import info.gridworld.grid.Location;
 
+/**
+* File:  			Tetris.java
+* Author:			Henry Thomas Rybolt
+* Programming:	  	3rd Hour
+* Last Modified: 	May 06, 2013
+* Description:      The Tetris game it runs a tetris game
+*/
 public class Tetris
 {
+	private boolean   lost;
 	private boolean   tetris;
 	private int       points;
 	private Tetrimino t;
 	
+	/**
+	 * creates a new tetris game
+	 */
 	public Tetris()
 	{
+		lost = false;
 		points = 0;
 		tetris = false;
 		final BoundedGrid bG = new BoundedGrid(20,10);
@@ -51,30 +63,29 @@ public class Tetris
 			
 			public void step()
 			{
-				super.step();
-				lose(t);
-				int linesCompleted = clearRows(bG);
-				addScore(linesCompleted);
-				if(t.yallHitTheBottomBaby())
+				if(!getLost())
 				{
-					try {
+					super.step();
+					if(t.yallHitTheBottomBaby())
+					{
+						t.kill();
 						t = new Tetrimino((int)(Math.random()*7)+1, this);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						lose(t);
+						int linesCompleted = clearRows(bG);
+						addScore(linesCompleted);
 					}
 				}
 			}
 		};
-		try {
-			t = new Tetrimino((int)(Math.random()*7)+1, world);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		t = new Tetrimino((int)(Math.random()*7)+1, world);
+		
 		world.show();
 	}
 	
+	/**
+	 * creates a new tetris game
+	 */
 	public static void main(String[] arg)
 	{
 		new Tetris();
@@ -87,7 +98,27 @@ public class Tetris
 	private void lose(Tetrimino t)
 	{
 		if(t.doubledUp())
+		{
 			System.out.print("You lose Score: " + getPoints());
+			setLost();
+		}
+		t.updateLocations();
+	}
+	
+	/**
+	 * declares the loser and their score
+	 */
+	private boolean getLost()
+	{
+		return lost;
+	}
+	
+	/**
+	 * set the game to have lost
+	 */
+	private void setLost()
+	{
+		lost = true;
 	}
 	
 	/**
