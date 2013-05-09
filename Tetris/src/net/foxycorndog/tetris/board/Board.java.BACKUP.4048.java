@@ -37,7 +37,8 @@ public class Board extends AbstractBoard
 	{
 		
 	}
-	
+<<<<<<< HEAD
+
 	/**
 	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
 	 */
@@ -48,3 +49,6 @@ public class Board extends AbstractBoard
 		return false;
 	}
 }
+=======
+}
+>>>>>>> 64924c2cd448a93cac457c4713474c71341024d5

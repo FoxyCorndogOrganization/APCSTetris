@@ -209,4 +209,16 @@ public abstract class AbstractBoard
 	 * tick.
 	 */
 	public abstract void tick();
+	
+	/**
+	 * Get whether the specified location (x, y) is a valid
+	 * location on the Board. That is, the location is within
+	 * the bounds of the Grid.
+	 * 
+	 * @param x The horizontal location (column) to check.
+	 * @param y The vertical location (row) to check.
+	 * @return Whether or not the specified location is within
+	 *		the bounds of the Grid.
+	 */
+	public abstract boolean isValid(int x, int y);
 }
