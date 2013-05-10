@@ -2,6 +2,9 @@ package net.foxycorndog.tetris.board;
 
 import java.util.ArrayList;
 
+import net.foxycorndog.jfoxylib.events.KeyEvent;
+import net.foxycorndog.jfoxylib.events.KeyListener;
+import net.foxycorndog.jfoxylib.input.Keyboard;
 import net.foxycorndog.tetris.event.BoardListener;
 
 
@@ -18,11 +21,11 @@ import net.foxycorndog.tetris.event.BoardListener;
  */
 public class Board extends AbstractBoard
 {
-	private	Piece	currentPiece;
+	private	Piece						currentPiece;
 	
-	private boolean lost;
-	private int[] 	deleteRows;
-	private ArrayList<BoardListener> events;
+	private boolean						lost;
+	private int[]						deleteRows;
+	private ArrayList<BoardListener>	events;
 	
 	
 	/**
@@ -43,6 +46,26 @@ public class Board extends AbstractBoard
 		
 		events = new ArrayList<BoardListener>();
 		deleteRows = new int[4];
+		
+		KeyListener listener = new KeyListener()
+		{
+			public void keyPressed(KeyEvent event)
+			{
+				
+			}
+
+			public void keyReleased(KeyEvent event)
+			{
+				
+			}
+
+			public void keyTyped(KeyEvent event)
+			{
+				
+			}
+		};
+		
+		Keyboard.addKeyListener(listener);
 	}
 
 	/**
@@ -135,6 +158,8 @@ public class Board extends AbstractBoard
 			{
 				if(!isValid(r,c))
 				{
+					//TODO when is counter reset?
+					
 					counter++;
 				}
 				if(counter==getWidth())
