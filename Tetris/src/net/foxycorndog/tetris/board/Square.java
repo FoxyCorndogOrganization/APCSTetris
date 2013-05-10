@@ -2,6 +2,8 @@ package net.foxycorndog.tetris.board;
 
 import java.awt.Color;
 
+import net.foxycorndog.tetris.board.Piece;
+
 /**
 * File:  			Square.java
 * Author:			Henry Thomas Rybolt
@@ -17,61 +19,77 @@ public class Square
 	private int       x;
 	private int       y;
 	private boolean   center;
-	private boolean   dead;
+	//private boolean   dead;
 	private Color     c;
+	private Location  location;
+
+	public void setLocation(Location l)
+	{
+		location = l;
+	}
+	/**
+	 * deletes this square removing it from its peice
+	 */
+	public void delete()
+	{
+		getPiece().delete(this);
+	}
 	
 	/**
 	 * creates a square with its color the same as its tetrimino and
 	 * records its tetrimino and if its the center of the tetrimino
 	 */
-	public Square(Color c, Piece p, boolean center) 
+	public Square(Color c, Piece p, boolean center, Location l) 
 	{
+		location = l;
 		this.c = c;
 		this.p      = p;
 		this.center = center;
 	}
 
 	/**
-	 * rotates the tetrimino that this square belongs to clockwise if possible
+	 * rotates the tetrimino that this square belongs to clockwise if 
+	 * possible
 	 */
 	public void rotateC()
 	{
 		p.rotateC();
 	}
-	
+
 	/**
-	 * rotates the tetrimino that this square belongs to counter-clockwise if possible
+	 * rotates the tetrimino that this square belongs to 
+	 * counter-clockwise if possible
 	 */
 	public void rotateCC()
 	{
 		p.rotateCC();
 	}
 
-	
+
 	/**
 	 * moves the tetrimino that this square belongs to left if possible
 	 */
 	public void moveLeft()
 	{
-		p.moveLeft();
+		p.move(Piece.LEFT);
 	}
-	
+
 	/**
 	 * moves the tetrimino that this square belongs to right if possible
 	 */
 	public void moveRight()
 	{
-		p.moveRight();
+		p.move(Piece.RIGHT);
 	}
-	
+
 	/**
 	 * moves the tetrimino that this square belongs to down if possible
 	 */
 	public void moveDown()
 	{
-		p.moveDown();
+		p.move(Piece.DOWN);
 	}
-	
+
 	/**
 	 * moves the tetrimino that this square belongs to down if possible
 	 * and if this square is the center of a tetrimino this condition 
@@ -81,30 +99,45 @@ public class Square
 	 */
 	public void act()
 	{
-		if(center == true && ! getPiece().isDead())
-			p.moveDown();
+		if(center == true)//&& ! getPiece().isDead())
+			p.move(Piece.DOWN);
 	}
 
-	public Object getBoard() 
+	/**
+	 * returns the board that this square belongs to
+	 */
+	public Board getBoard() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return getPiece().getBoard();
 	}
 
+	/**
+	 * moves the square to location next on the board
+	 */
 	public void moveTo(Location next) 
 	{
-		// TODO Auto-generated method stub
-		
+		getBoard().getBOS().moveTo(next, this);
 	}
 
+	/**
+	 * returns the peice that this square belongs to
+	 */
 	public Piece getPiece() 
 	{
 		return p;
 	}
 
-	public void removeSelfFromGrid() 
+	/**
+	 * removes this piece from the board is temporary unlike deletion
+	 * which is permanent
+	 */
+	public void removeFromBoard() 
 	{
-		// TODO Auto-generated method stub
-		
+		getPiece().getBOS().remove(this);
+	}
+	
+	public Location getlocation()
+	{
+		return location;
 	}
 }

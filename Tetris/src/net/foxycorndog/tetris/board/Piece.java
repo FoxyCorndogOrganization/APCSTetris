@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * game. There are also methods to manipulate the data and
  * render the data to the screen.
  *
- * @author	Braden Steffaniak
+ * @author	Braden Steffaniak, Henry Rybolt
  * @since	May 6, 2013 at 3:36:36 PM
  * @since	v0.1
  * @version	May 6, 2013 at 3:36:36 PM
@@ -16,49 +16,55 @@ import java.util.ArrayList;
  */
 public class Piece extends AbstractPiece
 {
-	private int      direction;
-	private int      n;
-	private ArrayList<Square> squares;
-	private int      x,y;
-	private ArrayList<int []>  shape;
-	private Color    c;
-	private boolean  dead;
-
+	private int                   direction;
+	private int                   n;
+	private ArrayList<Square>     squares;
+	private Location              place;
+	private ArrayList<Location>   shape;
+	private Color                 c;
+	private boolean               dead;
+	public static final Location RIGHT = new Location(1,0);
+	public static final Location LEFT  = new Location(-1,0);
+	public static final Location UP    = new Location(0,1);
+	public static final Location DOWN  = new Location(0,-1);
+	
 	/**
 	* creates a tetrimino with its center at point (x,y), of color c, its
 	* square componenets defined by their x and y coordinates stored in
 	* the shape matrix, and in the world w
 	*/
-	public void piece(ArrayList<int[]> shape, Color c, int x, int y)
+	public void piece(int[][] temp, Color c, int x, int y)
 	{
 		direction  = 0;
-		dead       = false;
+		dead     = false;
 		this.c     = c;
-		this.x     = x;
-		this.y     = y;
-		this.shape = shape;
+		place      = new Location(x,y);
 		squares    = new ArrayList<Square>();
-
-		for(int i = 0; i < 4; i++)
-		{
-			boolean center = false;
-			if(shape.get(i)[0] == 0 && shape.get(i)[1] == 0)
-				center = true;
-			squares.add(new Square(c, this, center));
-			Location l = new Location(x + shape.get(i)[0], y + shape.get(i)[1]);
-		}
+		
+		editShape(temp);
 	}
 
+	/**
+	 * sets the shape using a 2 dimensional matrix
+	 */
 	public void editShape(int[][] s)
 	{
 		for(int index = 0; index < s.length; index++)
 		{
-			int[] temp = new int[2];
-			temp[0] = s[index][0];
-			temp[1] = s[index][1];
-			shape.set(index, temp);
+			Location loc = new Location(s[index][0], s[index][1]);
+			shape.set(index, loc);
+			squares.get(index).setLocation(place.add(shape.get(index)));
 		}
 	}
+	
+	/**
+	 * deletes a square
+	 */
+	public void delete(Square s)
+	{
+		squares.remove(s);
+	}
+	
 	/**
 	 * creates a tetrimino at the top of the world w, a color that
 	 * cooresponds with its shape, its shape is defined by n the code is
@@ -72,48 +78,42 @@ public class Piece extends AbstractPiece
 	public Piece(int n)
 	{
 		this.n = n;
-		dead = true;
-		ArrayList<int []> temp;
+		//dead = true;
+		int[][] temp;
 		if(n == 1)
 		{
-			temp = new ArrayList<int []>();
-			int[] a = {0,0};
-			temp.add(a);
-			int[] a = {-1,0};
-			temp.get(0)[0] = 0; temp.get(0)[1] = 0;
-			temp.get(1)[]
-			{{0,0},{-1,0},{1,0},{2,0}};
-			piece(temp, Color.CYAN, 5, 19, w);
+			temp = new int[][] {{0,0},{-1,0},{1,0},{2,0}};
+			piece(temp, Color.CYAN, 5, 19);
 		}
 		else if(n == 2)
 		{
 			temp = new int[][] {{0,0},{-1,0},{1,0},{0,1}};
-			piece(temp, new Color(255,0,255), 5, 18, w);
+			piece(temp, new Color(255,0,255), 5, 18);
 		}
 		else if(n == 3)
 		{
 			temp = new int[][] {{0,0},{-1,0},{0,1},{1,1}};
-			piece(temp, Color.GREEN, 5, 18, w);
+			piece(temp, Color.GREEN, 5, 18);
 		}
 		else if(n == 4)
 		{
 			temp = new int[][] {{0,0},{-1,1},{1,0},{0,1}};
-			piece(temp, Color.RED, 5, 18, w);
+			piece(temp, Color.RED, 5, 18);
 		}
 		else if(n == 5)
 		{
 			temp = new int[][] {{0,0},{-1,0},{1,0},{1,1}};
-			piece(temp, Color.ORANGE, 5, 18, w);
+			piece(temp, Color.ORANGE, 5, 18);
 		}
 		else if(n == 6)
 		{
 			temp = new int[][] {{0,0},{-1,0},{1,0},{-1,1}};
-			piece(temp, Color.BLUE, 5, 18, w);
+			piece(temp, Color.BLUE, 5, 18);
 		}
 		else if(n == 7)
 		{
 			temp = new int[][] {{0,0},{1,0},{1,1},{0,1}};
-			piece(temp, Color.YELLOW, 5, 18, w);
+			piece(temp, Color.YELLOW, 5, 18);
 		}
 	}
 
@@ -122,14 +122,16 @@ public class Piece extends AbstractPiece
 	 */
 	public void updateLocations()
 	{
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < shape.size(); i++)
 		{
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
+			Location next = shape.get(i).add(place);
 			Square s = squares.get(i);
+			s.setLocation(next);
 			if(s.getBoard() != null)
 				s.moveTo(next);
 			else
-				getBoard().add(next, s);
+				getBoard().getBoss().add(next, s);
+			s.setLocation(next);
 		}
 	}
 
@@ -147,22 +149,12 @@ public class Piece extends AbstractPiece
 		if(n == 7)
 			return;
 		boolean ableToRotate = true;
-		int[][] copy         = new int[4][2];
-		for(int a = 0; a < 4; a++)
+		ArrayList<Location> copy = (ArrayList<Location>) shape.clone();
+		for(int i = 0; i < shape.size(); i++)
 		{
-			for(int b = 0; b < 2; b++)
-			{
-				copy[a][b] = shape[a][b];
-			}
-		}
-		for(int i = 0; i < 4; i++)
-		{
-			int temp    = shape[i][0];
-			shape[i][0] = -shape[i][1];
-			shape[i][1] = temp;
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares.get(i);
-			//Square neighborInNext = (Square) s.getGrid().get(next);
+			shape.get(i).rotateCC();
+			Location next = shape.get(i).add(place);
+			Square s      = squares.get(i);
 			if(spaceIsFree(s, next) == false)
 				ableToRotate = false;
 			}
@@ -176,11 +168,11 @@ public class Piece extends AbstractPiece
 	 */
 	public boolean spaceIsFree(Square s, Location next)
 	{
-		if(!getBoard().isValid(next))
+		if(!getBoard().getBoss().isValid(next))
 			return false;
 
-		Square neighborInNext = (Square) getBoard().get(next);
-		if(getBoard().isValid(next))
+		Square neighborInNext = (Square) getBoard().getBoss().get(next);
+		if(getBoard().getBoss().isValid(next))
 		{
 			if(neighborInNext != null)
 			{
@@ -190,7 +182,7 @@ public class Piece extends AbstractPiece
 				}
 				else
 				{
-					neighborInNext.removeSelfFromGrid();
+					neighborInNext.removeFromBoard();
 					return true;
 				}
 			}
@@ -205,82 +197,26 @@ public class Piece extends AbstractPiece
 	 */
 	public void rotateC()
 	{
-		if(n == 7)
-			return;
-		if(n == 1 && direction == 0)
+		if(n == 1 && direction == 1)
 		{
 			rotateCC();
-			direction = 1;
+			direction = 0;
 			return;
 		}
+		if(n == 7)
+			return;
 		boolean ableToRotate = true;
-		int[][] copy         = new int[4][2];
-		for(int a = 0; a < 4; a++)
+		ArrayList<Location> copy = (ArrayList<Location>) shape.clone();
+		for(int i = 0; i < shape.size(); i++)
 		{
-			for(int b = 0; b < 2; b++)
-			{
-				copy[a][b] = shape[a][b];
-			}
-		}
-		for(int i = 0; i < 4; i++)
-		{
-			int temp    = shape[i][0];
-			shape[i][0] = shape[i][1];
-			shape[i][1] = -temp;
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
-			Square s = squares.get(i);
-			//Square neighborInNext = (Square) s.getGrid().get(next);
+			shape.get(i).rotateC();
+			Location next = shape.get(i).add(place);
+			Square s      = squares.get(i);
 			if(spaceIsFree(s, next) == false)
 				ableToRotate = false;
 		}
 		if(!ableToRotate)
 			shape = copy;
-		updateLocations();
-	}
-
-	/**
-	 * converts a location from the cartesian grid(standard x and y axis) to GridWorlds's grid(with rows and columns)
-	 */
-	public Location convertLFromCToG(Location l)
-	{
-		return new Location((19-l.getCol()), l.getRow());
-	}
-
-	/**
-	 * moves the tetrimino down if possible
-	 */
-	public void moveDown()
-	{
-		boolean ableToMove = true;
-		for(int i = 0; i < 4; i++)
-		{
-			Square s = squares[i];
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y - 1));
-			if(spaceIsFree(s, next) == false)
-				ableToMove = false;
-		}
-
-		if(ableToMove == true)
-			y--;
-		updateLocations();
-	}
-
-	/**
-	 * moves the tetrimino left if possible
-	 */
-	public void moveLeft()
-	{
-		boolean ableToMove = true;
-		for(int i = 0; i < 4; i++)
-		{
-			Square s = squares.get(i);
-			Location next = convertLFromCToG(new Location(shape[i][0] + x - 1, shape[i][1] + y));
-			if(spaceIsFree(s, next) == false)
-				ableToMove = false;
-		}
-
-		if(ableToMove == true)
-			x--;
 		updateLocations();
 	}
 
@@ -293,58 +229,58 @@ public class Piece extends AbstractPiece
 	public boolean doubledUp()
 	{
 		boolean doubledUp = false;
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < shape.size(); i++)
 		{
-			Location next = convertLFromCToG(new Location(shape[i][0] + x, shape[i][1] + y));
+			Location next = shape.get(i).add(place);
 			Square s = squares.get(i);
 			if(s.getBoard() != null)
 			{
-				if(s.getBoard().get(next) != null)
+				if(s.getBoard().getBoss().get(next) != null)
 					doubledUp = true;
 			}
 			else
 			{
-				if(w.getGrid().get(next) != null)
+				if(getBoard().getBoss().get(next) != null)
 					doubledUp = true;
 			}
 		}
 		return doubledUp;
 	}
 
-		/**
-	 * returns true if this tetrimino can not move any further down else false
+	/**
+	 * returns true if this tetrimino can not move any further down else 
+	 * false
 	 */
 	public boolean yallHitTheBottomBaby()
 	{
 		boolean ableToMove = true;
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < shape.size(); i++)
 		{
 			Square s = squares.get(i);
-			Location next = new Location(shape[i][0] + x, shape[i][1] + y - 1);
+			Location next = shape.get(i).add(place).add(DOWN);
 			if(spaceIsFree(s, next) == false)
 				ableToMove = false;
 		}
 		updateLocations();
 		return !ableToMove;
 	}
-
-
+	
 	/**
-	 * moves the tetrimino right if possible
+	 * moves the peice according to the positional vector added
 	 */
-	public void moveRight()
+	public void move(Location l)
 	{
 		boolean ableToMove = true;
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < shape.size(); i++)
 		{
 			Square s = squares.get(i);
-			Location next = new Location(shape[i][0] + x + 1, shape[i][1] + y);
+			Location next = shape.get(i).add(place).add(l);
 			if(spaceIsFree(s, next) == false)
 				ableToMove= false;
 		}
 
 		if(ableToMove == true)
-			x++;
+			place.add(l);
 		updateLocations();
 	}
 
@@ -359,18 +295,24 @@ public class Piece extends AbstractPiece
 	/**
 	 * returns whether the tetrimino was klled
 	 */
-	public boolean isDead()
-	{
-		return dead;
-	}
+	//public boolean isDead()
+	//{
+	//	return dead;
+	//}
 
+	/**
+	 * rotates the tetrimino clockwise
+	 */
 	public void rotateClockwise()
 	{
 		rotateC();
 	}
 
+	/**
+	 * rotates the tetrimino counter-clockwise
+	 */
 	public void rotateCounterClockwise()
 	{
-
+		rotateCC();
 	}
 }
