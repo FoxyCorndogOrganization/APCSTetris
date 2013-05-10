@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.board.AbstractPiece;
+import net.foxycorndog.tetris.board.Piece;
 
 /**
  * 
@@ -38,7 +39,7 @@ public class NextPiece
 	 */
 	public void addNewPiece()
 	{
-		AbstractPiece piece = AbstractPiece.getRandomPiece();
+		Piece piece = Piece.getRandomPiece();
 		stackOPieces.add(piece);
 	}
 	

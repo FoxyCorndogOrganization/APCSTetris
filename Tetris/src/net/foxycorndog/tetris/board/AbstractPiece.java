@@ -32,9 +32,7 @@ public abstract class AbstractPiece implements Cloneable
 
 	private	static	Texture			square;
 
-	private static	Piece			pieces[];
-
-	private			ArrayList<int[]>	shape;
+	private			ArrayList<Location>	shape;
 
 	static
 	{
@@ -48,6 +46,14 @@ public abstract class AbstractPiece implements Cloneable
 		}
 	}
 
+	/**
+	 * Default constructor.
+	 */
+	public AbstractPiece()
+	{
+		
+	}
+	
 	/**
 	 * Create a Tetris Piece given the specified matrix, and
 	 * matrix width. The matrix is described with values
@@ -73,8 +79,13 @@ public abstract class AbstractPiece implements Cloneable
 	 * @param matrix The array of Colors describing the Piece.
 	 * @param width The width of the Piece.
 	 */
-	public AbstractPiece(ArrayList<int[]> shape)
+	public AbstractPiece(ArrayList<Location> shape)
 	{
+		setShape(shape);
+	}
+	public AbstractPiece(ArrayList<Location> shape, Color color)
+	{
+		setColor(color);
 		setShape(shape);
 	}
 
@@ -96,6 +107,11 @@ public abstract class AbstractPiece implements Cloneable
 	public void setBoard(Board board)
 	{
 		this.board = board;
+	}
+	
+	public ArrayList<Location> getShape()
+	{
+		return shape;
 	}
 
 	/**
@@ -122,7 +138,7 @@ public abstract class AbstractPiece implements Cloneable
 	 * @param matrix The array of Colors describing the Piece.
 	 * @param width The width of the Piece.
 	 */
-	public void setShape(ArrayList<int[]> shape)
+	public void setShape(ArrayList<Location> shape)
 	{
 		loadMatrix(shape);
 	}
@@ -151,7 +167,7 @@ public abstract class AbstractPiece implements Cloneable
 	 * @param matrix The array of Colors describing the Piece.
 	 * @param width The width of the Piece.
 	 */
-	private void loadMatrix(ArrayList<int[]> shape)
+	private void loadMatrix(ArrayList<Location> shape)
 	{
 		int amountOfSquares = shape.size();
 
@@ -160,8 +176,8 @@ public abstract class AbstractPiece implements Cloneable
 
 		for (int i = 0; i < amountOfSquares; i++)
 		{
-			int x = shape.get(i)[0];
-			int y = shape.get(i)[1];
+			int x = shape.get(i).getX();
+			int y = shape.get(i).getY();
 
 			if (x < minX)
 			{
@@ -194,7 +210,7 @@ public abstract class AbstractPiece implements Cloneable
 		{
 			for (int i = 0; i < amountOfSquares; i++)
 			{
-				bundle.addVertices(GL.genRectVerts(shape.get(i)[0] * wid, shape.get(i)[1] * hei, wid, hei));
+				bundle.addVertices(GL.genRectVerts(shape.get(i).getX() * wid, shape.get(i).getY() * hei, wid, hei));
 			}
 		}
 		bundle.endEditingVertices();
@@ -447,28 +463,5 @@ public abstract class AbstractPiece implements Cloneable
 	public static int getSegmentSize()
 	{
 		return square.getWidth();
-	}
-
-	/**
-	 * Get the array of Pieces. Contains all seven of the original Piece
-	 * shapes.
-	 *
-	 * @return The array of the seven original Pieces.
-	 */
-	public static AbstractPiece[] getPieces()
-	{
-		return pieces.clone();
-	}
-
-	/**
-	 * Get a brand new instance of one of the seven original Pieces.
-	 *
-	 * @return A brand new instance of one of the seven original Pieces.
-	 */
-	public static AbstractPiece getRandomPiece()
-	{
-		int index = (int)(Math.random() * pieces.length);
-
-		return pieces[index].clone();
 	}
 }

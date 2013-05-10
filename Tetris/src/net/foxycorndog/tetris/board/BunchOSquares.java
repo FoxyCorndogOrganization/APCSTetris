@@ -1,5 +1,6 @@
-import java.util.ArrayList;
 package net.foxycorndog.tetris.board;
+
+import java.util.ArrayList;
 
 /**
 * File:  			BunchOSquares.java
@@ -104,7 +105,7 @@ public class BunchOSquares
 	/**
 	 * returns a square if their is a square their else null
 	 */
-	private Square get(Location l)
+	public Square get(Location l)
 	{
 		return map[l.getX()][l.getY()];
 	}
@@ -113,7 +114,7 @@ public class BunchOSquares
 	 * moves a square to location l and removes any the square from its
 	 * old location
 	 */
-	private boolean moveTo(Square s, Location l)
+	public boolean moveTo(Square s, Location l)
 	{
 		remove(s);
 		if(map[l.getX()][l.getY()] == null)
@@ -127,7 +128,7 @@ public class BunchOSquares
 	/**
 	 * removes square s
 	 */
-	private void remove(Square s)
+	public void remove(Square s)
 	{
 		map[s.getlocation().getX()][s.getlocation().getY()] = null;
 		s.setLocation(null);
@@ -136,7 +137,7 @@ public class BunchOSquares
 	/**
 	 * adds a square to location s;
 	 */
-	private void add(Location l, Square s)
+	public void add(Location l, Square s)
 	{
 		map[l.getX()][l.getY()] = s;
 	}
@@ -145,7 +146,7 @@ public class BunchOSquares
 	 * searches for square s and returns the location where it found it
 	 * and if it cannot be found it returns null
 	 */
-	private Location search(Square s) 
+	public Location search(Square s) 
 	{
 		for(int x = 0; x < width; x++)
 		{

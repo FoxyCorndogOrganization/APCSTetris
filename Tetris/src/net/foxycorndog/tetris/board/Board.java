@@ -86,7 +86,7 @@ public class Board extends AbstractBoard
 			if(yallHitTheBottomBaby())
 			{
 				currentPiece.kill();
-				currentPiece = new Piece( new Color[5],(int)Math.random()*7);
+				currentPiece = Piece.getRandomPiece();
 				if(!isValid(currentPiece.getX(),currentPiece.getY()))
 				{
 					if(currentPiece.getX()==super.getHeight())
@@ -172,7 +172,7 @@ public class Board extends AbstractBoard
 					{
 						Location l = new Location(dRow,c);
 						
-						get(l).deleteSquare(l);
+//						get(l).deleteSquare(l);
 					}
 					
 					counter = 0;

@@ -1,7 +1,5 @@
 package net.foxycorndog.tetris.board;
 
-import java.awt.Color;
-
 import net.foxycorndog.tetris.board.Piece;
 
 /**
@@ -116,7 +114,7 @@ public class Square
 	 */
 	public void moveTo(Location next) 
 	{
-		getBoard().getBOS().moveTo(next, this);
+		getBoard().getBoss().moveTo(this, next);
 	}
 
 	/**
@@ -133,7 +131,7 @@ public class Square
 	 */
 	public void removeFromBoard() 
 	{
-		getPiece().getBOS().remove(this);
+		getBoard().getBoss().remove(this);
 	}
 	
 	public Location getlocation()
