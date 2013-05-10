@@ -74,8 +74,8 @@ public class MainMenu extends Menu
 			circleTexture        = new Texture("res/images/circle.png");
 			
 			playButtonTexture    = new Texture("res/images/play.png");
-			optionsButtonTexture = new Texture("res/images/options.png");
-			creditsButtonTexture = new Texture("res/images/credits.png");
+//			optionsButtonTexture = new Texture("res/images/options.png");
+//			creditsButtonTexture = new Texture("res/images/credits.png");
 			quitButtonTexture    = new Texture("res/images/quit.png");
 		}
 		catch (IOException e)
