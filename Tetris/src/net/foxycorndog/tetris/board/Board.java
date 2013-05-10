@@ -22,7 +22,7 @@ import net.foxycorndog.tetris.event.BoardListener;
 public class Board extends AbstractBoard
 {
 	private	Piece						currentPiece;
-	
+	private BunchOSquares				boss;
 	private boolean						lost;
 	private int[]						deleteRows;
 	private ArrayList<BoardListener>	events;
@@ -46,6 +46,7 @@ public class Board extends AbstractBoard
 		
 		events = new ArrayList<BoardListener>();
 		deleteRows = new int[4];
+		boss = new BunchOSquares(width,height);
 		
 		KeyListener listener = new KeyListener()
 		{
@@ -68,6 +69,11 @@ public class Board extends AbstractBoard
 		Keyboard.addKeyListener(listener);
 	}
 
+	public BunchOSquares getBoss()
+	{
+		return boss;
+	}
+	
 	/**
 	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick()
 	 * Moves a piece down one space after half a second until the piece
@@ -157,9 +163,7 @@ public class Board extends AbstractBoard
 			for(int c = 0; c < super.getWidth()-1;c++)
 			{
 				if(!isValid(r,c))
-				{
-					//TODO when is counter reset?
-					
+				{					
 					counter++;
 				}
 				if(counter==getWidth())
@@ -170,6 +174,8 @@ public class Board extends AbstractBoard
 						
 						get(l).deleteSquare(l);
 					}
+					
+					counter = 0;
 				}
 			}
 	}
