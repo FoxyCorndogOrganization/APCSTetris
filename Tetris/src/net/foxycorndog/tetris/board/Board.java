@@ -43,6 +43,13 @@ public class Board extends AbstractBoard
 		
 		events = new ArrayList<BoardListener>();
 		deleteRows = new int[4];
+		
+		KeyListener listener = new KeyListener()
+		{
+			
+		};
+		
+		Keyboard.addKeyListener(listener);
 	}
 
 	/**
@@ -118,6 +125,8 @@ public class Board extends AbstractBoard
 			{
 				if(!isValid(r,c))
 				{
+					//TODO when is counter reset?
+					
 					counter++;
 				}
 				if(counter==getWidth())
