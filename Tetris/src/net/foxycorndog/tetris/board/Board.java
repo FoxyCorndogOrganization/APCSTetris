@@ -73,6 +73,11 @@ public class Board extends AbstractBoard
 		}
 	}
 	
+	/**
+	 * Checks to see if the piece can move down or not. If it can move
+	 * lost returns true, otherwise lost returns false.
+	 * @return lost. Lost is either true or false.
+	 */
 	public boolean yallHitTheBottomBaby()
 	{
 		if(isValid(currentPiece.getX(), currentPiece.getY()))
@@ -83,11 +88,18 @@ public class Board extends AbstractBoard
 		return lost;
 	}
 	
+	/**
+	 * Sets lost to l.
+	 */
 	public void setLost(boolean l)
 	{
 		lost = l;
 	}
 	
+	/**
+	 * @return lost. Lost is either true or false. If lost is true, the
+	 * piece is still able to move.
+	 */
 	public boolean getLost()
 	{
 		return lost;
@@ -110,6 +122,11 @@ public class Board extends AbstractBoard
 		return false;
 	}
 	
+	/**
+	 * Looks at one row of the board at a time and checks each location in
+	 * that row to see if it has a square. If all of the locations in the
+	 * row have a square the squares are deleted.
+	 */
 	public void clearRows()
 	{
 		int counter = 0;
@@ -132,6 +149,10 @@ public class Board extends AbstractBoard
 			}
 	}
 	
+	/**
+	 * Adds a BoardListener to the ArrayList events.
+	 * @param b
+	 */
 	public void addListener(BoardListener b)
 	{
 		events.add(b);
