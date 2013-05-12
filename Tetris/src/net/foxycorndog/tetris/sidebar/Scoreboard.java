@@ -36,8 +36,8 @@ public class Scoreboard
 	{
 		int xC = 0;
 		int yC = 250;
-		float scale = (float) 2;
-		Tetris.getFont().render("score " + score, x + xC, y + yC, (float)0.0, (float) (scale *.5), null);
+		float scale = 0.5f;
+		Tetris.getFont().render("score " + score, x + xC, y + yC, 0, scale, null);
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);

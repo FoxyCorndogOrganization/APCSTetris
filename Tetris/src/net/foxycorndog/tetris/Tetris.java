@@ -44,6 +44,9 @@ public class Tetris extends GameStarter
 	public static void main(String args[])
 	{
 		Frame.create((int)(390 * 1.4), (int)(510 * 1.4));
+		Frame.setResizable(false);
+		Frame.setTitle("Tetris");
+		Frame.setTargetFPS(60);
 		
 		Tetris game = new Tetris();
 		
@@ -55,10 +58,11 @@ public class Tetris extends GameStarter
 		mainMenu.dispose();
 		mainMenu = null;
 		
-		board    = new Board(10, 20, 10);
+		board    = new Board(10, 20, 10, this);
 		sidebar  = new Sidebar();
 		
 		board.newGame();
+		board.move(50, 50);
 		
 //		board.addPiece(Piece.getRandomPiece(), 5, 5);
 	}
@@ -68,23 +72,29 @@ public class Tetris extends GameStarter
 	 */
 	public void init()
 	{
-		Frame.setTitle("Tetris");
-		Frame.setTargetFPS(60);
-		Frame.setResizable(true);
-		
 		font = new Font("res/images/font.gif", 15, 6, new char[]
 		{
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
 			'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'A', 'a', 'b',
 			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
 			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'a', '&', '1', '2', '3',
-			'4', '5', '6', '7', '8', '9', '0', '(', '$', 'E', '.', ',', '!', '?', ')',
+			'4', '5', '6', '7', '8', '9', '0', '(', '$', ':', '.', ',', '!', '?', ')',
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 		});
 		
 		bgColor  = 0;
 		
 		mainMenu = new MainMenu(this);
+	}
+	
+	/**
+	 * Get the Sidebar of the Tetris game.
+	 * 
+	 * @return The Sidebar of the Tetris game.
+	 */
+	public Sidebar getSidebar()
+	{
+		return sidebar;
 	}
 
 	/**

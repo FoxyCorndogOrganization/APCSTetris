@@ -26,6 +26,7 @@ public abstract class AbstractBoard
 	private int							gridSpaceSize;
 	
 	private float 						counter;
+	private	float						ticksPerSecond;
 	
 	private	Image						boardImage;
 	
@@ -51,13 +52,15 @@ public abstract class AbstractBoard
 		this.height        = height;
 		this.gridSpaceSize = gridSpaceSize;
 		
-		border = BorderFactory.createBorder(3, width * gridSpaceSize, height * gridSpaceSize, true);
+		ticksPerSecond = 4f;
+		
+		border = new Piece[0];//BorderFactory.createBorder(3, width * gridSpaceSize, height * gridSpaceSize, true);
 		
 		boardImage = new Image(null);
 		
 		try
 		{
-			boardImage.setImage(new Texture("res/images/board.png"));
+			boardImage.setImage(new Texture("res/images/grid.png"));
 		}
 		catch (IOException e)
 		{
@@ -127,6 +130,44 @@ public abstract class AbstractBoard
 	}
 	
 	/**
+	 * Get the Piece that has a square that is located on the
+	 * grid location of (x, y).
+	 * 
+	 * @param x The column to get the Piece from.
+	 * @param y The row to get the Piece from.
+	 * @return The Piece at the location (x, y).
+	 */
+	public Piece getPiece(int x, int y)
+	{
+		for (Piece piece : pieces)
+		{
+			ArrayList<Location> shape = piece.getShape();
+			
+			for (Location loc : shape)
+			{
+				if (loc.getX() + piece.getX() == x && loc.getY() + piece.getY() == y)
+				{
+					return piece;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get the Piece that has a square that is located on the grid
+	 * location of loc.
+	 * 
+	 * @param loc The location to get the Piece from.
+	 * @return The Piece at the location.
+	 */
+	public Piece getPiece(Location loc)
+	{
+		return getPiece(loc.getX(), loc.getY());
+	}
+	
+	/**
 	 * Add the specified Piece to the Board at the the specified
 	 * grid space location.
 	 * 
@@ -136,10 +177,10 @@ public abstract class AbstractBoard
 	 */
 	public void addPiece(Piece piece, int x, int y)
 	{
-		piece.setLocation(x, y);
-		
 		// Risky... but safe to assume.
 		piece.setBoard((Board)this);
+		
+		piece.setLocation(x, y);
 		
 		pieces.add(piece);
 	}
@@ -157,6 +198,9 @@ public abstract class AbstractBoard
 			// Translate everything that will be rendered after this call
 			// by (x, y) pixels.
 			GL.translate(x, y, 0);
+			GL.scale(3, 3, 1);
+			
+			boardImage.render();
 			
 			// A for each loop that renders all of the Pieces to the screen.
 			for (AbstractPiece piece : pieces)
@@ -173,10 +217,7 @@ public abstract class AbstractBoard
 	/**
 	 * Method called whenever a new game is started.
 	 */
-	public void newGame()
-	{
-		
-	}
+	public abstract void newGame();
 	
 	/**
 	 * Render the Border around the grid that the Tetris game is
@@ -208,17 +249,13 @@ public abstract class AbstractBoard
 			counter += delta;
 		}
 		
-		// The amount of 'ticks' it takes to do a loop.
-		int tickTime = 30;
-		
-		if (counter >= tickTime)
+		if (counter >= 1/ticksPerSecond * 60)
 		{
 			// Do all of the game movement and stuff here.
-			
 			tick();
 			
 			// Keep the leftover time too...
-			counter %= tickTime;
+			counter %= 1/ticksPerSecond * 60;
 		}
 	}
 	
@@ -239,4 +276,25 @@ public abstract class AbstractBoard
 	 *		the bounds of the Grid.
 	 */
 	public abstract boolean isValid(int x, int y);
+	
+	/**
+	 * Get the amount of times the tick() method is called per second.
+	 * 
+	 * @return The amount of times the tick() method is called per second.
+	 */
+	public float getTicksPerSecond()
+	{
+		return ticksPerSecond;
+	}
+	
+	/**
+	 * Set the amount of times the tick() method is called per second.
+	 * 
+	 * @param f The amount of times the tick() method is called per
+	 * 		second.
+	 */
+	public void setTicksPerSecond(float f)
+	{
+		this.ticksPerSecond = f;
+	}
 }

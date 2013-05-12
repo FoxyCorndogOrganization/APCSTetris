@@ -3,71 +3,105 @@ package net.foxycorndog.tetris.board;
 import java.util.ArrayList;
 
 /**
- * Class used to hold information for each Piece in the Tetris
- * game. There are also methods to manipulate the data and
- * render the data to the screen.
- *
- * @author	Braden Steffaniak, Henry Rybolt
- * @since	May 6, 2013 at 3:36:36 PM
- * @since	v0.1
- * @version	May 6, 2013 at 3:36:36 PM
- * @version	v0.1
+ * Class used to hold information for each Piece in the Tetris game. There are
+ * also methods to manipulate the data and render the data to the screen.
+ * 
+ * @author Braden Steffaniak, Henry Rybolt
+ * @since May 6, 2013 at 3:36:36 PM
+ * @since v0.1
+ * @version May 6, 2013 at 3:36:36 PM
+ * @version v0.1
  */
 public class Piece extends AbstractPiece implements Cloneable
 {
-	private int                   direction;
-	private int                   n;
-	private ArrayList<Square>     squares;
-	private Location              place;
-	private Color                 c;
-	private boolean               dead;
-	private static	Piece		  pieces[];
-	public static final Location  RIGHT = new Location(1,0);
-	public static final Location  LEFT  = new Location(-1,0);
-	public static final Location  UP    = new Location(0,1);
-	public static final Location  DOWN  = new Location(0,-1);
-	
+	private int						direction;
+	private int						n;
+	private ArrayList<Square>		squares;
+	private Location				place;
+	private Color					c;
+	private boolean					dead;
+	private static Piece			pieces[];
+	public static final Location	RIGHT	= new Location(1, 0);
+	public static final Location	LEFT	= new Location(-1, 0);
+	public static final Location	UP		= new Location(0, 1);
+	public static final Location	DOWN	= new Location(0, -1);
+
 	static
 	{
 		pieces = new Piece[7];
+
+		for (int i = 0; i < pieces.length; i++)
+		{
+			pieces[i] = new Piece(i + 1);
+		}
 	}
-	
+
 	/**
-	* creates a tetrimino with its center at point (x,y), of color c, its
-	* square componenets defined by their x and y coordinates stored in
-	* the shape matrix, and in the world w
-	*/
-	public ArrayList<Location> piece(int[][] temp, Color c, int x, int y)
+	 * Create a Piece with the specified shapes and color.
+	 * 
+	 * @param locations
+	 *            ArrayList of the locations of the square within.
+	 * @param color
+	 *            The Color of the Piece.
+	 */
+	public Piece(ArrayList<Location> locations, Color color)
 	{
-		direction  = 0;
-		dead     = false;
-		this.c     = c;
-		place      = new Location(x,y);
-		squares    = new ArrayList<Square>();
-		
+		super(locations, color);
+	}
+
+	/**
+	 * creates a tetrimino at the top of the world w, a color that corresponds
+	 * with its shape, its shape is defined by n the code is as follows n values
+	 * are the integer the shape is the image: |_| |_||_| |_||_| 1 =
+	 * |_||_||_||_|, 2 = |_||_||_|, 3 = |_||_| , 4 = |_||_|,
+	 * 
+	 * |_||_||_| |_||_||_| |_||_| 5 = |_| , 6 = |_|, 7 = |_||_|
+	 */
+	public Piece(int n)
+	{
+		squares = new ArrayList<Square>();
+
+		calculatePiece(n);
+	}
+
+	/**
+	 * creates a tetrimino with its center at point (x,y), of color c, its
+	 * square componenets defined by their x and y coordinates stored in the
+	 * shape matrix, and in the world w
+	 */
+	public void piece(int[][] temp, Color c, int x, int y)
+	{
+		direction = 0;
+		dead = false;
+		this.c = c;
+		place = new Location(x, y);
 		setColor(c);
-		
-		return editShape(temp);
+
+		editShape(temp);
 	}
 
 	/**
 	 * sets the shape using a 2 dimensional matrix
 	 */
-	public ArrayList<Location> editShape(int[][] s)
+	public void editShape(int[][] s)
 	{
 		ArrayList<Location> locs = new ArrayList<Location>();
-		
-		for(int index = 0; index < s.length; index++)
+
+		for (int index = 0; index < s.length; index++)
 		{
 			Location loc = new Location(s[index][0], s[index][1]);
 			locs.add(loc);
-			squares.add(new Square(c, this, locs.get(index).getX() == 0 && locs.get(index).getY() == 0, loc));
+
+			boolean center = locs.get(index).getX() == 0
+					&& locs.get(index).getY() == 0;
+
+			squares.add(new Square(c, this, center, loc));
 			squares.get(index).setLocation(place.add(loc));
 		}
-		
-		return locs;
+
+		setShape(locs);
 	}
-	
+
 	/**
 	 * deletes a square
 	 */
@@ -75,76 +109,48 @@ public class Piece extends AbstractPiece implements Cloneable
 	{
 		squares.remove(s);
 	}
-	
-	public Piece(ArrayList<Location> locations, Color color)
-	{
-		super(locations, color);
-	}
-	
-	/**
-	 * creates a tetrimino at the top of the world w, a color that
-	 * cooresponds with its shape, its shape is defined by n the code is
-	 * as follows n values are the integer the shape is the image:
-	 *                          |_|            |_||_|    |_||_|
-	 * 1 = |_||_||_||_|, 2 = |_||_||_|, 3 = |_||_|  , 4 =   |_||_|,
-	 *
-	 *     |_||_||_|      |_||_||_|      |_||_|
-	 * 5 = |_|      , 6 =       |_|, 7 = |_||_|
-	 */
-	public Piece(int n)
-	{
-		if (pieces[n] == null)
-		{
-			pieces[n] = calculatePiece(n);
-		}
-		
-		setShape((ArrayList<Location>)pieces[n].getShape().clone());
-		
-		this.n = n;
-	}
-	
-	private Piece calculatePiece(int n)
+
+	private void calculatePiece(int n)
 	{
 		this.n = n;
-		//dead = true;
+		// dead = true;
 		int[][] temp;
-		if(n == 1)
+
+		if (n == 1)
 		{
-			temp = new int[][] {{0,0},{-1,0},{1,0},{2,0}};
-			return new Piece(piece(temp, Color.CYAN, 5, 19), Color.CYAN);
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 2, 0 } };
+			piece(temp, Color.CYAN, 5, 17);
 		}
-		else if(n == 2)
+		else if (n == 2)
 		{
-			temp = new int[][] {{0,0},{-1,0},{1,0},{0,1}};
-			return new Piece(piece(temp, Color.MAGENTA, 5, 18), Color.MAGENTA);
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
+			piece(temp, Color.MAGENTA, 5, 18);
 		}
-		else if(n == 3)
+		else if (n == 3)
 		{
-			temp = new int[][] {{0,0},{-1,0},{0,1},{1,1}};
-			return new Piece(piece(temp, Color.GREEN, 5, 18), Color.GREEN);
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 1 } };
+			piece(temp, Color.GREEN, 5, 18);
 		}
-		else if(n == 4)
+		else if (n == 4)
 		{
-			temp = new int[][] {{0,0},{-1,1},{1,0},{0,1}};
-			return new Piece(piece(temp, Color.RED, 5, 18), Color.RED);
+			temp = new int[][] { { 0, 0 }, { -1, 1 }, { 1, 0 }, { 0, 1 } };
+			piece(temp, Color.RED, 5, 18);
 		}
-		else if(n == 5)
+		else if (n == 5)
 		{
-			temp = new int[][] {{0,0},{-1,0},{1,0},{1,1}};
-			return new Piece(piece(temp, Color.ORANGE, 5, 18), Color.ORANGE);
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 1, 1 } };
+			piece(temp, Color.ORANGE, 5, 18);
 		}
-		else if(n == 6)
+		else if (n == 6)
 		{
-			temp = new int[][] {{0,0},{-1,0},{1,0},{-1,1}};
-			return new Piece(piece(temp, Color.BLUE, 5, 18), Color.BLUE);
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, 1 } };
+			piece(temp, Color.BLUE, 5, 18);
 		}
-		else if(n == 7)
+		else if (n == 7)
 		{
-			temp = new int[][] {{0,0},{1,0},{1,1},{0,1}};
-			return new Piece(piece(temp, Color.YELLOW, 5, 18), Color.YELLOW);
+			temp = new int[][] { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
+			piece(temp, Color.YELLOW, 5, 18);
 		}
-		
-		return null;
 	}
 
 	/**
@@ -152,15 +158,23 @@ public class Piece extends AbstractPiece implements Cloneable
 	 */
 	public void updateLocations()
 	{
-		for(int i = 0; i < getShape().size(); i++)
+		for (int i = 0; i < getShape().size(); i++)
 		{
 			Location next = getShape().get(i).add(place);
 			Square s = squares.get(i);
 			s.setLocation(next);
-			if(s.getBoard() != null)
+			
+			if (s.getBoard() != null)
+			{
+				System.out.println(next);
 				s.moveTo(next);
+			}
 			else
+			{
+				System.out.println(next);
 				getBoard().getBoss().add(next, s);
+			}
+			
 			s.setLocation(next);
 		}
 	}
@@ -170,26 +184,38 @@ public class Piece extends AbstractPiece implements Cloneable
 	 */
 	public void rotateCC()
 	{
-		if(n == 1 && direction == 1)
+		if (n == 1 && direction == 1)
 		{
 			rotateC();
 			direction = 0;
+
 			return;
 		}
-		if(n == 7)
+		if (n == 7)
+		{
 			return;
+		}
+
 		boolean ableToRotate = true;
 		ArrayList<Location> copy = (ArrayList<Location>) getShape().clone();
-		for(int i = 0; i < getShape().size(); i++)
+
+		for (int i = 0; i < getShape().size(); i++)
 		{
 			getShape().get(i).rotateCC();
 			Location next = getShape().get(i).add(place);
-			Square s      = squares.get(i);
-			if(spaceIsFree(s, next) == false)
+			Square s = squares.get(i);
+
+			if (spaceIsFree(s, next) == false)
+			{
 				ableToRotate = false;
 			}
-		if(!ableToRotate)
+		}
+
+		if (!ableToRotate)
+		{
 			setShape(copy);
+		}
+
 		updateLocations();
 	}
 
@@ -198,28 +224,35 @@ public class Piece extends AbstractPiece implements Cloneable
 	 */
 	public boolean spaceIsFree(Square s, Location next)
 	{
-		if(!getBoard().isValid(next.getX(), next.getY()))
+		if (!getBoard().isValid(next.getX(), next.getY()))
+		{
 			return false;
+		}
 
 		Square neighborInNext = (Square) getBoard().getBoss().get(next);
-		if(getBoard().isValid(next.getX(), next.getY()))
+
+		if (getBoard().isValid(next.getX(), next.getY()))
 		{
-			if(neighborInNext != null)
+			if (neighborInNext != null)
 			{
-				if(neighborInNext.getPiece() != this)
+				if (neighborInNext.getPiece() != this)
 				{
 					return false;
 				}
 				else
 				{
 					neighborInNext.removeFromBoard();
+
 					return true;
 				}
 			}
+
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
@@ -227,90 +260,117 @@ public class Piece extends AbstractPiece implements Cloneable
 	 */
 	public void rotateC()
 	{
-		if(n == 1 && direction == 1)
+		if (n == 1 && direction == 1)
 		{
 			rotateCC();
 			direction = 0;
+
 			return;
 		}
-		if(n == 7)
+
+		if (n == 7)
+		{
 			return;
+		}
+
 		boolean ableToRotate = true;
 		ArrayList<Location> copy = (ArrayList<Location>) getShape().clone();
-		for(int i = 0; i < getShape().size(); i++)
+
+		for (int i = 0; i < getShape().size(); i++)
 		{
 			getShape().get(i).rotateC();
 			Location next = getShape().get(i).add(place);
 			Square s      = squares.get(i);
-			if(spaceIsFree(s, next) == false)
+
+			if (spaceIsFree(s, next) == false)
+			{
 				ableToRotate = false;
+			}
 		}
-		if(!ableToRotate)
+
+		if (!ableToRotate)
+		{
 			setShape(copy);
+		}
+
 		updateLocations();
 	}
 
 	/**
-	 * precondition: the tetrimino this method is being used on has just
-	 * been constructed
-	 * returns true if their are two or more tetriminos occupying the same
-	 * space false if their is only one tetrimino returns false
+	 * precondition: the tetrimino this method is being used on has just been
+	 * constructed returns true if their are two or more tetriminos occupying
+	 * the same space false if their is only one tetrimino returns false
 	 */
 	public boolean doubledUp()
 	{
 		boolean doubledUp = false;
-		for(int i = 0; i < getShape().size(); i++)
+
+		for (int i = 0; i < getShape().size(); i++)
 		{
 			Location next = getShape().get(i).add(place);
 			Square s = squares.get(i);
-			if(s.getBoard() != null)
+
+			if (s.getBoard() != null)
 			{
-				if(s.getBoard().getBoss().get(next) != null)
+				if (s.getBoard().getBoss().get(next) != null)
 					doubledUp = true;
 			}
 			else
 			{
-				if(getBoard().getBoss().get(next) != null)
+				if (getBoard().getBoss().get(next) != null)
 					doubledUp = true;
 			}
 		}
+
 		return doubledUp;
 	}
 
 	/**
-	 * returns true if this tetrimino can not move any further down else 
-	 * false
+	 * returns true if this tetrimino can not move any further down else false
 	 */
 	public boolean yallHitTheBottomBaby()
 	{
 		boolean ableToMove = true;
-		for(int i = 0; i < getShape().size(); i++)
+
+		for (int i = 0; i < getShape().size(); i++)
 		{
 			Square s = squares.get(i);
 			Location next = getShape().get(i).add(place).add(DOWN);
-			if(spaceIsFree(s, next) == false)
+
+			if (spaceIsFree(s, next) == false)
+			{
 				ableToMove = false;
+			}
 		}
+
 		updateLocations();
+
 		return !ableToMove;
 	}
-	
+
 	/**
 	 * moves the peice according to the positional vector added
 	 */
 	public void move(Location l)
 	{
 		boolean ableToMove = true;
-		for(int i = 0; i < getShape().size(); i++)
+
+		for (int i = 0; i < getShape().size(); i++)
 		{
 			Square s = squares.get(i);
 			Location next = getShape().get(i).add(place).add(l);
-			if(spaceIsFree(s, next) == false)
-				ableToMove= false;
+
+			if (spaceIsFree(s, next) == false)
+			{
+				ableToMove = false;
+			}
 		}
 
-		if(ableToMove == true)
+		if (ableToMove == true)
+		{
 			place.add(l);
+		}
+
 		updateLocations();
 	}
 
@@ -325,10 +385,10 @@ public class Piece extends AbstractPiece implements Cloneable
 	/**
 	 * returns whether the tetrimino was klled
 	 */
-	//public boolean isDead()
-	//{
-	//	return dead;
-	//}
+	// public boolean isDead()
+	// {
+	// return dead;
+	// }
 
 	/**
 	 * rotates the tetrimino clockwise
@@ -347,9 +407,8 @@ public class Piece extends AbstractPiece implements Cloneable
 	}
 
 	/**
-	 * Get the array of Pieces. Contains all seven of the original Piece
-	 * shapes.
-	 *
+	 * Get the array of Pieces. Contains all seven of the original Piece shapes.
+	 * 
 	 * @return The array of the seven original Pieces.
 	 */
 	public static AbstractPiece[] getPieces()
@@ -359,16 +418,16 @@ public class Piece extends AbstractPiece implements Cloneable
 
 	/**
 	 * Get a brand new instance of one of the seven original Pieces.
-	 *
+	 * 
 	 * @return A brand new instance of one of the seven original Pieces.
 	 */
 	public static Piece getRandomPiece()
 	{
-		int index = (int)(Math.random() * pieces.length);
-		
+		int index = (int) (Math.random() * pieces.length);
+
 		if (pieces[index] == null)
 		{
-			new Piece(index);
+			return new Piece(index);
 		}
 
 		return pieces[index].clone();
@@ -376,14 +435,14 @@ public class Piece extends AbstractPiece implements Cloneable
 
 	/**
 	 * Return a clone of the specified Piece instance.
-	 *
+	 * 
 	 * @return Another instance of a Piece exactly like the preceding one.
 	 */
 	public Piece clone()
 	{
 		Piece piece = null;
 
-		piece = (Piece)super.clone();
+		piece = (Piece) super.clone();
 
 		return piece;
 	}

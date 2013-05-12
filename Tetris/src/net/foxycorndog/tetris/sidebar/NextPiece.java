@@ -1,8 +1,12 @@
 package net.foxycorndog.tetris.sidebar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import net.foxycorndog.jfoxylib.components.Image;
 import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.texture.Texture;
+import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.board.AbstractPiece;
 import net.foxycorndog.tetris.board.Piece;
 
@@ -18,29 +22,52 @@ import net.foxycorndog.tetris.board.Piece;
  */
 public class NextPiece
 {
-	ArrayList<AbstractPiece> stackOPieces;
-	int x;
-	int y;
+	private	int		x;
+	private	int		y;
+	
+	private	Piece	nextPiece;
+	
+	private	Image	bgImage;
 	
 	/**
-	 * creates the next piece to enter the game and displays it in the sideBar
+	 * creates the next piece to enter the game and displays it in the
+	 * sideBar
 	 */
 	public NextPiece(int x, int y)
 	{
-		this.x = x;
-		this.y = y;
-		stackOPieces = new ArrayList<AbstractPiece>();
+		this.x  = x;
+		this.y  = y;
 		
-		addNewPiece();
+		bgImage = new Image(null);
+		
+		generateNextPiece();
+		
+		try
+		{
+			bgImage.setImage(new Texture("res/images/nextpiece.png"));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
-	 * adds a new piece to the stackOfPieces(the queued pieces that will go next)
+	 * Get the Piece that will be used next in the Tetris game.
+	 * 
+	 * @return The Piece that will be used next in the Tetris game.
 	 */
-	public void addNewPiece()
+	public Piece getNextPiece()
 	{
-		Piece piece = Piece.getRandomPiece();
-		stackOPieces.add(piece);
+		return nextPiece;
+	}
+	
+	/**
+	 * Tells this instance to generate the next random Piece.
+	 */
+	public void generateNextPiece()
+	{
+		nextPiece = Piece.getRandomPiece();
 	}
 	
 	/**
@@ -48,15 +75,24 @@ public class NextPiece
 	 */
 	public void render()
 	{
-		int xC = 70;
-		int yC = 300;
-		float scale = 3;
-		GL.translate(xC + x, yC + y, 0);
-		GL.scale(scale, scale, 1);
+		int   xC    = 30;
+		int   yC    = 280;
 		
-		stackOPieces.get(0).render();
+		float scale = 2;
 		
-		GL.scale(1/scale, 1/scale, 1);
-		GL.translate(-x - xC, -y - yC, 0);
+		GL.pushMatrix();
+		{
+			GL.translate(x, y + yC, 0);
+			GL.scale(scale, scale, 1);
+			
+			bgImage.render();
+			
+			GL.translate(xC / scale, 20 / scale, 0);
+			nextPiece.render();
+
+			GL.translate(-xC / scale + 20 / scale, 60 / scale, 0);
+			Tetris.getFont().render("Next:", 0, 0, 0, 0.25f, null);
+		}
+		GL.popMatrix();
 	}
 }

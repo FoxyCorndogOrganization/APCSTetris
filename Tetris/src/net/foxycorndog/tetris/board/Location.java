@@ -7,7 +7,7 @@ package net.foxycorndog.tetris.board;
 * Last Modified: 	May 06, 2013
 * Description:      A Location is a positional vector.
 */
-public class Location 
+public class Location implements Cloneable
 {
 	private int x;
 	private int y;
@@ -60,9 +60,9 @@ public class Location
 	 */
 	public void rotateC()
 	{
-		int temp = getX();
-		setX(getY());
-		setX(-temp);
+		int temp = x;
+		x        = y;
+		y        = -temp;
 	}
 	
 	/**
@@ -70,9 +70,12 @@ public class Location
 	 */
 	public void rotateCC()
 	{
-		int temp = getX();
-		setX(-getY());
-		setX(temp);
+		int temp = x;
+		x        = -y;
+		y        = temp;
+//		int temp = getX();
+//		setX(-getY());
+//		setX(temp);
 	}
 	
 	/**
@@ -89,5 +92,32 @@ public class Location
 	public void setX(int x)
 	{
 		this.x = x;
-	}	
+	}
+	
+	/**
+	 * Converts this class to a String representation.
+	 */
+	public String toString()
+	{
+		return this.getClass().getSimpleName() + " { " + x + ", " + y + " }";
+	}
+	
+	/**
+	 * Create an exact clone except for the reference.
+	 */
+	public Location clone()
+	{
+		Location location = null;
+		
+		try
+		{
+			location = (Location)super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return location;
+	}
 }

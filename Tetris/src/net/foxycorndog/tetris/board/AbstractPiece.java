@@ -20,7 +20,6 @@ import net.foxycorndog.jfoxylib.opengl.texture.Texture;
  */
 public abstract class AbstractPiece implements Cloneable
 {
-	private 		int				rotation;
 	private			int				x, y;
 	private			int				width, height;
 
@@ -389,8 +388,7 @@ public abstract class AbstractPiece implements Cloneable
 		GL.pushMatrix();
 		{
 			GL.translate(x, y, 0);
-			GL.rotate(0, 0, rotation);
-
+			
 			bundle.render(GL.QUADS, square);
 		}
 		GL.popMatrix();
@@ -417,7 +415,7 @@ public abstract class AbstractPiece implements Cloneable
 		{
 			for (int i = 0; i < shape.size(); i++)
 			{
-				bundle.setColors(4 * 4, GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
+				bundle.setColors(4 * i, GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
 			}
 		}
 		bundle.endEditingColors();

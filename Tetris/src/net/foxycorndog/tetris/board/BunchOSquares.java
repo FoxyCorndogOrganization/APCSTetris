@@ -18,8 +18,8 @@ public class BunchOSquares
 	
 	public BunchOSquares(int w, int h)
 	{
-		this.width = width;
-		this.height = height;
+		this.width = w;
+		this.height = h;
 		map = new Square[width][height];
 	}
 	
@@ -116,12 +116,14 @@ public class BunchOSquares
 	 */
 	public boolean moveTo(Square s, Location l)
 	{
-		remove(s);
 		if(map[l.getX()][l.getY()] == null)
 		{
+			remove(s);
 			map[l.getX()][l.getY()] = s;
+			
 			return true;
 		}
+		
 		return false;
 	}
 	

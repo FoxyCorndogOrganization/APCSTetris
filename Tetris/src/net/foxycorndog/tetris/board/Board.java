@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.foxycorndog.jfoxylib.events.KeyEvent;
 import net.foxycorndog.jfoxylib.events.KeyListener;
 import net.foxycorndog.jfoxylib.input.Keyboard;
+import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.event.BoardListener;
 
 
@@ -21,10 +22,16 @@ import net.foxycorndog.tetris.event.BoardListener;
  */
 public class Board extends AbstractBoard
 {
-	private	Piece						currentPiece;
-	private BunchOSquares				boss;
 	private boolean						lost;
+	
+	private	Piece						currentPiece;
+	
+	private BunchOSquares				boss;
+	
+	private	Tetris						tetris;
+	
 	private int[]						deleteRows;
+	
 	private ArrayList<BoardListener>	events;
 	
 	
@@ -40,9 +47,11 @@ public class Board extends AbstractBoard
 	 * 		Board will take up. eg: passing 10 would create 10x10 grid
 	 * 		spaces across the board.
 	 */
-	public Board(int width, int height, int gridSpaceSize)
+	public Board(int width, int height, int gridSpaceSize, Tetris tetris)
 	{
 		super(width, height, gridSpaceSize);
+		
+		this.tetris = tetris;
 		
 		events = new ArrayList<BoardListener>();
 		deleteRows = new int[4];
@@ -52,21 +61,46 @@ public class Board extends AbstractBoard
 		{
 			public void keyPressed(KeyEvent event)
 			{
-				
+				if (event.getCode() == Keyboard.KEY_LEFT)
+				{
+					currentPiece.move(-1, 0);
+				}
+				if (event.getCode() == Keyboard.KEY_RIGHT)
+				{
+					currentPiece.move(1, 0);
+				}
+				if (event.getCode() == Keyboard.KEY_UP)
+				{
+					currentPiece.rotateClockwise();
+				}
+				if (event.getCode() == Keyboard.KEY_DOWN)
+				{
+					setTicksPerSecond(getTicksPerSecond() * 2);
+				}
 			}
 
 			public void keyReleased(KeyEvent event)
 			{
-				
+				if (event.getCode() == Keyboard.KEY_DOWN)
+				{
+					setTicksPerSecond(getTicksPerSecond() / 2);
+				}
 			}
 
 			public void keyTyped(KeyEvent event)
 			{
 				
 			}
+					
+			public void keyDown(KeyEvent event)
+			{
+	
+			}
 		};
 		
 		Keyboard.addKeyListener(listener);
+		
+//		setTicksPerSecond(8f);
 	}
 
 	public BunchOSquares getBoss()
@@ -83,17 +117,35 @@ public class Board extends AbstractBoard
 	{
 		if(!getLost())
 		{
+			currentPiece.move(0, -1);
+			
 			if(yallHitTheBottomBaby())
 			{
-				currentPiece.kill();
-				currentPiece = Piece.getRandomPiece();
-				if(!isValid(currentPiece.getX(),currentPiece.getY()))
+				System.out.println("asdf");
+				
+				currentPiece.move(0, 1);
+				
+				if (currentPiece.getY() < 0)
 				{
-					if(currentPiece.getX()==super.getHeight())
+					currentPiece.move(0, 1);
+				}
+				
+				currentPiece.kill();
+				
+				currentPiece = tetris.getSidebar().getNextPiece().getNextPiece();
+				tetris.getSidebar().getNextPiece().generateNextPiece();
+				addPiece(currentPiece, 4, 18);
+				
+				if(!isValid(currentPiece.getX(), currentPiece.getY()))
+				{
+					if(currentPiece.getY() >= super.getHeight())
 					{
 						for (BoardListener listener : events)
 						{
+							System.out.println("lost");
 							listener.onGameLost(null);
+							
+							lost = true;
 						}
 					}
 				}
@@ -109,12 +161,7 @@ public class Board extends AbstractBoard
 	 */
 	public boolean yallHitTheBottomBaby()
 	{
-		if(isValid(currentPiece.getX(), currentPiece.getY()))
-			lost = false;
-		else 
-			lost = true;
-		
-		return lost;
+		return !isValid(currentPiece.getX(), currentPiece.getY());
 	}
 	
 	/**
@@ -172,7 +219,7 @@ public class Board extends AbstractBoard
 					{
 						Location l = new Location(dRow,c);
 						
-//						get(l).deleteSquare(l);
+//						getPiece(l).deleteSquare(l);
 					}
 					
 					counter = 0;
@@ -187,5 +234,15 @@ public class Board extends AbstractBoard
 	public void addListener(BoardListener b)
 	{
 		events.add(b);
+	}
+
+	/**
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#newGame()
+	 */
+	public void newGame()
+	{
+		currentPiece = new Piece(1);
+		
+		addPiece(currentPiece, 4, 18);
 	}
 }
