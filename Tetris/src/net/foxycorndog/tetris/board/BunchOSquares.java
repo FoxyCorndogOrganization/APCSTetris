@@ -132,7 +132,7 @@ public class BunchOSquares
 	 */
 	public void remove(Square s)
 	{
-		map[s.getlocation().getX()][s.getlocation().getY()] = null;
+		map[s.getLocation().getX()][s.getLocation().getY()] = null;
 		s.setLocation(null);
 	}
 

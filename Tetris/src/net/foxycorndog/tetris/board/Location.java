@@ -37,6 +37,14 @@ public class Location implements Cloneable
 	{
 		return new Location(x + l.getX(), y + l.getY());
 	}
+
+	/**
+	 * subtracts two locations like their positional vectors
+	 */
+	public Location subtract(Location l)
+	{
+		return new Location(x - l.getX(), y - l.getY());
+	}
 	
 	/**
 	 * returns the x-coordinate of the location

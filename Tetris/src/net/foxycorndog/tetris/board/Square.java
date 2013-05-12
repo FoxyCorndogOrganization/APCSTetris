@@ -134,7 +134,7 @@ public class Square
 		getBoard().getBoss().remove(this);
 	}
 	
-	public Location getlocation()
+	public Location getLocation()
 	{
 		return location;
 	}

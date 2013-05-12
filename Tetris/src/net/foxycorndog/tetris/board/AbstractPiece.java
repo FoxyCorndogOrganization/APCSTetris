@@ -170,8 +170,8 @@ public abstract class AbstractPiece implements Cloneable
 	{
 		int amountOfSquares = shape.size();
 
-		int minX = Integer.MIN_VALUE, maxX = Integer.MAX_VALUE;
-		int minY = Integer.MIN_VALUE, maxY = Integer.MAX_VALUE;
+		int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
+		int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
 
 		for (int i = 0; i < amountOfSquares; i++)
 		{
@@ -202,6 +202,11 @@ public abstract class AbstractPiece implements Cloneable
 
 		bundle = new Bundle(amountOfSquares * 4, 2, true, true);
 
+		if (amountOfSquares <= 0)
+		{
+			return;
+		}
+		
 		int wid = square.getWidth();
 		int hei = square.getHeight();
 
@@ -209,7 +214,8 @@ public abstract class AbstractPiece implements Cloneable
 		{
 			for (int i = 0; i < amountOfSquares; i++)
 			{
-				bundle.addVertices(GL.genRectVerts(shape.get(i).getX() * wid, shape.get(i).getY() * hei, wid, hei));
+//				 + Math.abs(minX)
+				bundle.addVertices(GL.genRectVerts((shape.get(i).getX()) * wid, (shape.get(i).getY()) * hei, wid, hei));
 			}
 		}
 		bundle.endEditingVertices();
@@ -224,6 +230,17 @@ public abstract class AbstractPiece implements Cloneable
 		bundle.endEditingTextures();
 
 		updateColor();
+	}
+	
+	/**
+	 * Get the Location of the Piece on the Board relative to the grid.
+	 * 
+	 * @return The Location of the Piece on the Board relative to the
+	 * 		grid.
+	 */
+	public Location getLocation()
+	{
+		return new Location(x / board.getGridSpaceSize(), y / board.getGridSpaceSize());
 	}
 
 	/**

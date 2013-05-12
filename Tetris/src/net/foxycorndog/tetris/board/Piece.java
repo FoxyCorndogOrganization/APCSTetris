@@ -166,12 +166,10 @@ public class Piece extends AbstractPiece implements Cloneable
 			
 			if (s.getBoard() != null)
 			{
-				System.out.println(next);
 				s.moveTo(next);
 			}
 			else
 			{
-				System.out.println(next);
 				getBoard().getBoss().add(next, s);
 			}
 			
@@ -203,9 +201,8 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			getShape().get(i).rotateCC();
 			Location next = getShape().get(i).add(place);
-			Square s = squares.get(i);
 
-			if (spaceIsFree(s, next) == false)
+			if (spaceIsFree(next) == false)
 			{
 				ableToRotate = false;
 			}
@@ -222,37 +219,31 @@ public class Piece extends AbstractPiece implements Cloneable
 	/**
 	 * retruns true if the space is free of other tetriminos else false
 	 */
-	public boolean spaceIsFree(Square s, Location next)
+	public boolean spaceIsFree(Location next)
 	{
 		if (!getBoard().isValid(next.getX(), next.getY()))
 		{
+			System.out.println(next);
 			return false;
 		}
 
-		Square neighborInNext = (Square) getBoard().getBoss().get(next);
-
-		if (getBoard().isValid(next.getX(), next.getY()))
+		Square neighborInNext = getBoard().getBoss().get(next);
+		
+		if (neighborInNext != null)
 		{
-			if (neighborInNext != null)
+			if (neighborInNext.getPiece() != this)
 			{
-				if (neighborInNext.getPiece() != this)
-				{
-					return false;
-				}
-				else
-				{
-					neighborInNext.removeFromBoard();
-
-					return true;
-				}
+				return true;
 			}
+			else
+			{
+				neighborInNext.removeFromBoard();
 
-			return true;
+				return true;
+			}
 		}
-		else
-		{
-			return false;
-		}
+
+		return true;
 	}
 
 	/**
@@ -280,9 +271,8 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			getShape().get(i).rotateC();
 			Location next = getShape().get(i).add(place);
-			Square s      = squares.get(i);
 
-			if (spaceIsFree(s, next) == false)
+			if (spaceIsFree(next) == false)
 			{
 				ableToRotate = false;
 			}
@@ -313,12 +303,16 @@ public class Piece extends AbstractPiece implements Cloneable
 			if (s.getBoard() != null)
 			{
 				if (s.getBoard().getBoss().get(next) != null)
+				{
 					doubledUp = true;
+				}
 			}
 			else
 			{
 				if (getBoard().getBoss().get(next) != null)
+				{
 					doubledUp = true;
+				}
 			}
 		}
 
@@ -334,11 +328,11 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		for (int i = 0; i < getShape().size(); i++)
 		{
-			Square s = squares.get(i);
-			Location next = getShape().get(i).add(place).add(DOWN);
-
-			if (spaceIsFree(s, next) == false)
+			Location next = getShape().get(i).add(getLocation());//.add(DOWN);
+			System.out.println("1: " + getLocation());
+			if (!spaceIsFree(next))
 			{
+//				System.out.println(next);
 				ableToMove = false;
 			}
 		}
@@ -357,16 +351,15 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		for (int i = 0; i < getShape().size(); i++)
 		{
-			Square s = squares.get(i);
 			Location next = getShape().get(i).add(place).add(l);
 
-			if (spaceIsFree(s, next) == false)
+			if (!spaceIsFree(next))
 			{
 				ableToMove = false;
 			}
 		}
 
-		if (ableToMove == true)
+		if (ableToMove)
 		{
 			place.add(l);
 		}
@@ -380,6 +373,37 @@ public class Piece extends AbstractPiece implements Cloneable
 	public void kill()
 	{
 		dead = true;
+	}
+	
+	public void deleteSquare(Location loc)
+	{
+		ArrayList<Location> shape = getShape();
+		
+		for (int i = shape.size() - 1; i >= 0; i--)
+		{
+			Location l = shape.get(i).add(getLocation());
+			
+			if (l.equals(loc))
+			{
+				shape.remove(i);
+				
+				for (int j = squares.size() - 1; j >= 0; j--)
+				{
+					Location l2 = squares.get(j).getLocation().add(getLocation());
+					
+					if (l2.equals(l))
+					{
+						squares.remove(j);
+						
+						break;
+					}
+				}
+				
+				break;
+			}
+		}
+		
+		setShape(shape);
 	}
 
 	/**

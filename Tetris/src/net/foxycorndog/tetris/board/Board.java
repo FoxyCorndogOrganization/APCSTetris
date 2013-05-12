@@ -6,6 +6,7 @@ import net.foxycorndog.jfoxylib.events.KeyEvent;
 import net.foxycorndog.jfoxylib.events.KeyListener;
 import net.foxycorndog.jfoxylib.input.Keyboard;
 import net.foxycorndog.tetris.Tetris;
+import net.foxycorndog.tetris.event.BoardEvent;
 import net.foxycorndog.tetris.event.BoardListener;
 
 
@@ -64,10 +65,22 @@ public class Board extends AbstractBoard
 				if (event.getCode() == Keyboard.KEY_LEFT)
 				{
 					currentPiece.move(-1, 0);
+
+					System.out.println("CHECKING VALID!: " + currentPiece.getLocation());
+					if (!isValid(currentPiece.getLocation()))
+					{
+						System.out.println("NOT VALID!: " + currentPiece.getLocation());
+						currentPiece.move(1, 0);
+					}
 				}
 				if (event.getCode() == Keyboard.KEY_RIGHT)
 				{
 					currentPiece.move(1, 0);
+
+					if (!isValid(currentPiece.getLocation().add(new Location(currentPiece.getWidth(), 0))))
+					{
+						currentPiece.move(-1, 0);
+					}
 				}
 				if (event.getCode() == Keyboard.KEY_UP)
 				{
@@ -75,7 +88,7 @@ public class Board extends AbstractBoard
 				}
 				if (event.getCode() == Keyboard.KEY_DOWN)
 				{
-					setTicksPerSecond(getTicksPerSecond() * 2);
+					setTicksPerSecond(getTicksPerSecond() * 4);
 				}
 			}
 
@@ -83,7 +96,7 @@ public class Board extends AbstractBoard
 			{
 				if (event.getCode() == Keyboard.KEY_DOWN)
 				{
-					setTicksPerSecond(getTicksPerSecond() / 2);
+					setTicksPerSecond(getTicksPerSecond() / 4);
 				}
 			}
 
@@ -117,9 +130,18 @@ public class Board extends AbstractBoard
 	{
 		if(!getLost())
 		{
+//			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+//			{
+//				currentPiece.move(-1, 0);
+//			}
+//			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+//			{
+//				currentPiece.move(1, 0);
+//			}
+			
 			currentPiece.move(0, -1);
 			
-			if(yallHitTheBottomBaby())
+			if(currentPiece.yallHitTheBottomBaby())
 			{
 				System.out.println("asdf");
 				
@@ -140,28 +162,18 @@ public class Board extends AbstractBoard
 				{
 					if(currentPiece.getY() >= super.getHeight())
 					{
+						lost = true;
+						
 						for (BoardListener listener : events)
 						{
-							System.out.println("lost");
 							listener.onGameLost(null);
-							
-							lost = true;
 						}
 					}
 				}
+				
 				clearRows();
 			}
 		}
-	}
-	
-	/**
-	 * Checks to see if the piece can move down or not. If it can move
-	 * lost returns true, otherwise lost returns false.
-	 * @return lost. Lost is either true or false.
-	 */
-	public boolean yallHitTheBottomBaby()
-	{
-		return !isValid(currentPiece.getX(), currentPiece.getY());
 	}
 	
 	/**
@@ -189,13 +201,18 @@ public class Board extends AbstractBoard
 	 */
 	public boolean isValid(int x, int y)
 	{
-		
-		if((x >= 0 && x < super.getWidth())&& y >=0 && y < super.getHeight())
-		{
-			return true;
-		}
-		
-		return false;
+		return (x >= 0 && x < getWidth()) && (y >= 0 && y < getHeight());
+	}
+	
+	/**
+	 * Coordinates use the Cartesian system.
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
+	 * checks to see it the coordinate (x,y) is valid for the piece to
+	 * move to.
+	 */
+	public boolean isValid(Location loc)
+	{
+		return isValid(loc.getX(), loc.getY());
 	}
 	
 	/**
@@ -206,25 +223,36 @@ public class Board extends AbstractBoard
 	public void clearRows()
 	{
 		int counter = 0;
-		for(int r = 0; r < super.getHeight()-1;r++)
-			for(int c = 0; c < super.getWidth()-1;c++)
+		
+		for (int r = 0; r < getHeight(); r++)
+		{
+			counter = 0;
+			
+			for (int c = 0; c < getWidth(); c++)
 			{
-				if(!isValid(r,c))
-				{					
+				if (!isValid(c, r) || getPiece(new Location(c, r)) != null)
+				{
 					counter++;
 				}
-				if(counter==getWidth())
+				
+				if (counter == getWidth())
 				{
-					for(int dRow =0; dRow < super.getHeight()-1; dRow++)
+					for (int dRow = 0; dRow < getWidth(); dRow++)
 					{
-						Location l = new Location(dRow,c);
+						Location l = new Location(dRow, r);
 						
-//						getPiece(l).deleteSquare(l);
+						getPiece(l).deleteSquare(l);
 					}
 					
-					counter = 0;
+					BoardEvent event = new BoardEvent(0, r);
+					
+					for (BoardListener listener : events)
+					{
+						listener.onLineDeleted(event);
+					}
 				}
 			}
+		}
 	}
 	
 	/**
