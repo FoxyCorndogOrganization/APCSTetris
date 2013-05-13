@@ -13,7 +13,9 @@ import net.foxycorndog.jfoxylib.components.Button;
  */
 public class OptionsMenu extends Menu
 {
-	private	Button button;
+	private	Image	soundsOn, soundsOff;
+	
+	private	Button	button;
 	
 	public void loop()
 	{
