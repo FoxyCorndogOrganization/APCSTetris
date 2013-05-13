@@ -159,16 +159,13 @@ public class Board extends AbstractBoard
 				tetris.getSidebar().getNextPiece().generateNextPiece();
 				addPiece(currentPiece, 4, 18);
 
-				if (!isValid(currentPiece.getX(), currentPiece.getY()))
+				if (currentPiece.yallHitTheBottomBaby())
 				{
-					if (currentPiece.getY() >= super.getHeight())
-					{
-						lost = true;
+					lost = true;
 
-						for (BoardListener listener : events)
-						{
-							listener.onGameLost(null);
-						}
+					for (BoardListener listener : events)
+					{
+						listener.onGameLost(null);
 					}
 				}
 
