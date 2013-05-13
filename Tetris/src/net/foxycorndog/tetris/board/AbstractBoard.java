@@ -244,13 +244,13 @@ public abstract class AbstractBoard
 			counter += delta;
 		}
 		
-		if (counter >= 1/ticksPerSecond * 60)
+		if (counter >= 1 / ticksPerSecond * 60)
 		{
 			// Do all of the game movement and stuff here.
 			tick();
 			
 			// Keep the leftover time too...
-			counter %= 1/ticksPerSecond * 60;
+			counter %= 1 / ticksPerSecond * 60;
 		}
 	}
 	

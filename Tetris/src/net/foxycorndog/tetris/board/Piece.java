@@ -133,32 +133,32 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		if (n == 1)
 		{
-			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 2, 0 } };
+			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 3, 0 } };
 			piece(temp, Color.CYAN, 5, 17);
 		}
 		else if (n == 2)
 		{
-			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
+			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 1, 1 } };
 			piece(temp, Color.MAGENTA, 5, 18);
 		}
 		else if (n == 3)
 		{
-			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 1 } };
+			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 1, 1 }, { 2, 1 } };
 			piece(temp, Color.GREEN, 5, 18);
 		}
 		else if (n == 4)
 		{
-			temp = new int[][] { { 0, 0 }, { -1, 1 }, { 1, 0 }, { 0, 1 } };
+			temp = new int[][] { { 1, 0 }, { 0, 1 }, { 2, 0 }, { 1, 1 } };
 			piece(temp, Color.RED, 5, 18);
 		}
 		else if (n == 5)
 		{
-			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 1, 1 } };
+			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 2, 1 } };
 			piece(temp, Color.ORANGE, 5, 18);
 		}
 		else if (n == 6)
 		{
-			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, 1 } };
+			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 0, 1 } };
 			piece(temp, Color.BLUE, 5, 18);
 		}
 		else if (n == 7)
@@ -169,109 +169,46 @@ public class Piece extends AbstractPiece implements Cloneable
 	}
 
 	/**
-	 * updates the image of the tetrimino in gridworld
-	 */
-	public void updateLocations()
-	{
-		for (int i = 0; i < getShape().size(); i++)
-		{
-			Location next = getShape().get(i).add(getLocation());
-			Square s = squares.get(i);
-			s.setLocation(next);
-			
-			Board b = s.getBoard();
-			
-			if (b != null && b.isValid(next))
-			{
-				s.moveTo(next);
-			}
-//			else if (b == null)
-//			{
-//				getBoard().getBoss().add(next, s);
-//			}
-			
-			s.setLocation(next);
-		}
-	}
-
-	/**
 	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
 	public void rotateCC()
 	{
-		if (n == 1 && direction == 1)
-		{
-			rotateC();
-			direction = 0;
-
-			return;
-		}
-		if (n == 7)
-		{
-			return;
-		}
-
-		boolean ableToRotate = true;
-		ArrayList<Location> copy = (ArrayList<Location>)getShape().clone();
-
-		for (int i = 0; i < getShape().size(); i++)
-		{
-			getShape().get(i).rotateCC();
-			Location next = getShape().get(i).add(place);
-
-			if (spaceIsFree(next) == false)
-			{
-				ableToRotate = false;
-			}
-		}
-
-		if (!ableToRotate)
-		{
-			setShape(copy);
-		}
-
-		updateLocations();
-	}
-
-	/**
-	 * retruns true if the space is free of other tetriminos else false
-	 */
-	public boolean spaceIsFree(Location next)
-	{
-		if (!getBoard().isValid(next.getX(), next.getY()))
-		{
-			return false;
-		}
-
-//		Square neighborInNext = getBoard().getBoss().get(next);
-//		
-//		if (neighborInNext != null)
+		rotateC();
+		rotateC();
+		rotateC();
+		
+//		if (n == 1 && direction == 1)
 //		{
-//			if (neighborInNext.getPiece() != this)
-//			{
-//				return true;
-//			}
-//			else
-//			{
-//				neighborInNext.removeFromBoard();
+//			rotateC();
+//			direction = 0;
 //
-//				return true;
+//			return;
+//		}
+//		if (n == 7)
+//		{
+//			return;
+//		}
+//
+//		boolean ableToRotate = true;
+//		ArrayList<Location> copy = (ArrayList<Location>)getShape().clone();
+//
+//		for (int i = 0; i < getShape().size(); i++)
+//		{
+//			getShape().get(i).rotateCC();
+//			Location next = getShape().get(i).add(place);
+//
+//			if (spaceIsFree(next) == false)
+//			{
+//				ableToRotate = false;
 //			}
 //		}
-		
-		Piece ps[] = getBoard().getPieces(next);
-		
-		for (int i = 0; i < ps.length; i++)
-		{
-			Piece p = ps[i];
-			
-			if (p != this)
-			{
-				return false;
-			}
-		}
-
-		return true;
+//
+//		if (!ableToRotate)
+//		{
+//			setShape(copy);
+//		}
+//
+//		updateLocations();
 	}
 
 	/**
@@ -293,25 +230,37 @@ public class Piece extends AbstractPiece implements Cloneable
 		}
 
 		boolean ableToRotate = true;
-		ArrayList<Location> copy = (ArrayList<Location>) getShape().clone();
-
-		for (int i = 0; i < getShape().size(); i++)
+		ArrayList<Location> copy = new ArrayList<Location>();
+		
+		for (Location l : getShape())
 		{
-			getShape().get(i).rotateC();
-			Location next = getShape().get(i).add(place);
+			copy.add(new Location(l.getX(), l.getY()));
+		}
 
-			if (spaceIsFree(next) == false)
+		if (getX() + getHeight() >= getBoard().getWidth())
+		{
+			ableToRotate = false;
+		}
+		else
+		{
+			for (int i = 0; i < getShape().size(); i++)
 			{
-				ableToRotate = false;
+				copy.get(i).rotateC();
+				Location next = copy.get(i).add(getLocation());
+	
+				if (!spaceIsFree(next))
+				{
+					ableToRotate = false;
+					
+					break;
+				}
 			}
 		}
 
-		if (!ableToRotate)
+		if (ableToRotate)
 		{
 			setShape(copy);
 		}
-
-		updateLocations();
 	}
 
 	/**
@@ -365,34 +314,7 @@ public class Piece extends AbstractPiece implements Cloneable
 			}
 		}
 
-		updateLocations();
-
 		return !ableToMove;
-	}
-
-	/**
-	 * moves the peice according to the positional vector added
-	 */
-	public void move(Location l)
-	{
-		boolean ableToMove = true;
-
-		for (int i = 0; i < getShape().size(); i++)
-		{
-			Location next = getShape().get(i).add(place).add(l);
-
-			if (!spaceIsFree(next))
-			{
-				ableToMove = false;
-			}
-		}
-
-		if (ableToMove)
-		{
-			place.add(l);
-		}
-
-		updateLocations();
 	}
 
 	/**
@@ -415,17 +337,24 @@ public class Piece extends AbstractPiece implements Cloneable
 			{
 				shape.remove(i);
 				
-				for (int j = squares.size() - 1; j >= 0; j--)
-				{
-					Location l2 = squares.get(j).getLocation().add(getLocation()).add(UP);
-					System.out.println(l2 + ", " + l);
-					if (l2.equals(l))
-					{
-						squares.remove(j);
-						
-						break;
-					}
-				}
+				break;
+			}
+		}
+		
+		setShape(shape);
+	}
+	
+	public void moveSquare(Location src, Location dst)
+	{
+		ArrayList<Location> shape = getShape();
+		
+		for (int i = shape.size() - 1; i >= 0; i--)
+		{
+			Location l = shape.get(i).add(getLocation());
+			
+			if (l.equals(src))
+			{
+				shape.set(i, shape.get(i).add(dst));
 				
 				break;
 			}
@@ -501,15 +430,6 @@ public class Piece extends AbstractPiece implements Cloneable
 		Piece piece = null;
 
 		piece = (Piece)super.clone();
-		
-		System.out.println("CLONING -------------------------------------------");
-		
-		for (int i = 0; i < squares.size(); i++)
-		{
-			System.out.println(piece.squares.get(i).getBoard() + ", " + squares.get(i).getBoard() + ", " + getBoard() + ", " + piece.getBoard());
-		}
-		
-		System.out.println("------------------------------------------- CLONING");
 
 		return piece;
 	}

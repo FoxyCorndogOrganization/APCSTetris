@@ -2,6 +2,8 @@ package net.foxycorndog.tetris.sidebar;
 
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
+import net.foxycorndog.tetris.event.BoardEvent;
+import net.foxycorndog.tetris.event.BoardListener;
 
 /**
  * 
@@ -13,11 +15,10 @@ import net.foxycorndog.tetris.Tetris;
  * @version	Apr 27, 2013 at 12:43:29 PM
  * @version	v0.1
  */
-public class Scoreboard
+public class Scoreboard implements BoardListener
 {
-	int score;
-	int x;
-	int y;
+	private int score;
+	private int x, y;
 	
 	/**
 	 * creates the scoreBoard and displays it in the sideBar
@@ -41,5 +42,20 @@ public class Scoreboard
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);
+	}
+
+	public void onGameLost(BoardEvent event)
+	{
+		
+	}
+
+	public void onLineDeleted(BoardEvent event)
+	{
+		score += 5;
+	}
+
+	public void onPieceMove(BoardEvent event)
+	{
+		
 	}
 }
