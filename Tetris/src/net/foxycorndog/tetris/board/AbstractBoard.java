@@ -147,7 +147,9 @@ public abstract class AbstractBoard
 			
 			for (Location loc : shape)
 			{
-				if (loc.getX() + piece.getX() == x && loc.getY() + piece.getY() == y)
+				Location absLoc = loc.add(piece.getLocation());
+				
+				if (absLoc.getX() == x && absLoc.getY() == y)
 				{
 					return piece;
 				}

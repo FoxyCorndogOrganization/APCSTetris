@@ -103,12 +103,12 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		locs = getShape();
 		
-		for (int i = 0; i < locs.length; i++)
+		for (int i = 0; i < locs.size(); i++)
 		{
 			Location loc = locs.get(i);
 			
 			//TODO fix center w/ max and min
-			boolean center = loc.getX() == 0 && loc.getY() == 0;
+			boolean center = loc.getX() == getWidth() / 2 && loc.getY() == getHeight() / 2;
 			
 			Square square = new Square(c, this, center, loc);
 			square.setLocation(place.add(loc));
@@ -336,7 +336,8 @@ public class Piece extends AbstractPiece implements Cloneable
 	}
 
 	/**
-	 * returns true if this tetrimino can not move any further down else false
+	 * returns true if this tetrimino can not move any further
+	 * down else false
 	 */
 	public boolean yallHitTheBottomBaby()
 	{
@@ -344,7 +345,7 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		for (int i = 0; i < getShape().size(); i++)
 		{
-			Location next = getShape().get(i).add(getLocation());//.add(DOWN);
+			Location next = getShape().get(i).add(getLocation());
 			
 			if (!spaceIsFree(next))
 			{

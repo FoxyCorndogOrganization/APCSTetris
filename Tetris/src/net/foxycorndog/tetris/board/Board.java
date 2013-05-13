@@ -9,55 +9,53 @@ import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.event.BoardEvent;
 import net.foxycorndog.tetris.event.BoardListener;
 
-
 /**
- * Class that holds the information for the Pieces in the Tetris game,
- * as well as demonstrating the interactions of the Pieces.
+ * Class that holds the information for the Pieces in the Tetris game, as well
+ * as demonstrating the interactions of the Pieces.
  * 
- * @author	Jeremiah Blackburn
- * @author	Braden Steffaniak
- * @since	May 6, 2013 at 3:31:08 PM
- * @since	v0.1
- * @version	May 6, 2013 at 3:31:08 PM
- * @version	v0.1
+ * @author Jeremiah Blackburn
+ * @author Braden Steffaniak
+ * @since May 6, 2013 at 3:31:08 PM
+ * @since v0.1
+ * @version May 6, 2013 at 3:31:08 PM
+ * @version v0.1
  */
 public class Board extends AbstractBoard
 {
 	private boolean						lost;
-	
-	private	Piece						currentPiece;
-	
+
+	private Piece						currentPiece;
+
 	private BunchOSquares				boss;
-	
-	private	Tetris						tetris;
-	
+
+	private Tetris						tetris;
+
 	private int[]						deleteRows;
-	
+
 	private ArrayList<BoardListener>	events;
-	
-	
+
 	/**
-	 * Instantiate the image for the Board as well as other
-	 * instantiations.
+	 * Instantiate the image for the Board as well as other instantiations.
 	 * 
-	 * @param width The number of horizontal grid spaces the Board will
-	 * 		contain.
-	 * @param height The number of vertical grid spaces the Board will
-	 * 		contain.
-	 * @param gridSpaceSize The size (in pixels) that each space on the
-	 * 		Board will take up. eg: passing 10 would create 10x10 grid
-	 * 		spaces across the board.
+	 * @param width
+	 *            The number of horizontal grid spaces the Board will contain.
+	 * @param height
+	 *            The number of vertical grid spaces the Board will contain.
+	 * @param gridSpaceSize
+	 *            The size (in pixels) that each space on the Board will take
+	 *            up. eg: passing 10 would create 10x10 grid spaces across the
+	 *            board.
 	 */
 	public Board(int width, int height, int gridSpaceSize, Tetris tetris)
 	{
 		super(width, height, gridSpaceSize);
-		
+
 		this.tetris = tetris;
-		
+
 		events = new ArrayList<BoardListener>();
 		deleteRows = new int[4];
-		boss = new BunchOSquares(width,height);
-		
+		boss = new BunchOSquares(width, height);
+
 		KeyListener listener = new KeyListener()
 		{
 			public void keyPressed(KeyEvent event)
@@ -75,7 +73,8 @@ public class Board extends AbstractBoard
 				{
 					currentPiece.move(1, 0);
 
-					if (!isValid(currentPiece.getLocation().add(new Location(currentPiece.getWidth(), 0))))
+					if (!isValid(currentPiece.getLocation().add(
+							new Location(currentPiece.getWidth(), 0))))
 					{
 						currentPiece.move(-1, 0);
 					}
@@ -100,80 +99,83 @@ public class Board extends AbstractBoard
 
 			public void keyTyped(KeyEvent event)
 			{
-				
+
 			}
-					
+
 			public void keyDown(KeyEvent event)
 			{
-	
+
 			}
 		};
-		
+
 		Keyboard.addKeyListener(listener);
-		
-//		setTicksPerSecond(8f);
+
+		// setTicksPerSecond(8f);
 	}
 
 	public BunchOSquares getBoss()
 	{
 		return boss;
 	}
-	
+
 	/**
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick()
-	 * Moves a piece down one space after half a second until the piece
-	 * hits the bottom of the board or another piece on the board.
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick() Moves a piece down
+	 *      one space after half a second until the piece hits the bottom of the
+	 *      board or another piece on the board.
 	 */
 	public void tick()
 	{
-		System.out.println(boss);
-		
-		if(!getLost())
+		// System.out.println(boss);
+
+		if (!getLost())
 		{
-//			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-//			{
-//				currentPiece.move(-1, 0);
-//			}
-//			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-//			{
-//				currentPiece.move(1, 0);
-//			}
-			
+			// if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+			// {
+			// currentPiece.move(-1, 0);
+			// }
+			// if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+			// {
+			// currentPiece.move(1, 0);
+			// }
+
 			currentPiece.move(0, -1);
 			
-			if(currentPiece.yallHitTheBottomBaby())
+			System.out.println(currentPiece.getLocation());
+
+			if (currentPiece.yallHitTheBottomBaby())
 			{
 				currentPiece.move(0, 1);
-				
+
 				if (currentPiece.getY() < 0)
 				{
 					currentPiece.move(0, 1);
 				}
-				
+
 				currentPiece.kill();
-				
-				currentPiece = tetris.getSidebar().getNextPiece().getNextPiece();
+
+				currentPiece = tetris.getSidebar().getNextPiece()
+						.getNextPiece();
 				tetris.getSidebar().getNextPiece().generateNextPiece();
 				addPiece(currentPiece, 4, 18);
-				
-				if(!isValid(currentPiece.getX(), currentPiece.getY()))
+
+				if (!isValid(currentPiece.getX(), currentPiece.getY()))
 				{
-					if(currentPiece.getY() >= super.getHeight())
+					if (currentPiece.getY() >= super.getHeight())
 					{
 						lost = true;
-						
+
 						for (BoardListener listener : events)
 						{
 							listener.onGameLost(null);
 						}
 					}
 				}
-				
+
 				clearRows();
 			}
 		}
 	}
-	
+
 	/**
 	 * Sets lost to l.
 	 */
@@ -181,71 +183,72 @@ public class Board extends AbstractBoard
 	{
 		lost = l;
 	}
-	
+
 	/**
-	 * @return lost. Lost is either true or false. If lost is true, the
-	 * piece is still able to move.
+	 * @return lost. Lost is either true or false. If lost is true, the piece is
+	 *         still able to move.
 	 */
 	public boolean getLost()
 	{
 		return lost;
 	}
-	
+
 	/**
 	 * Coordinates use the Cartesian system.
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
-	 * checks to see it the coordinate (x,y) is valid for the piece to
-	 * move to.
+	 * 
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int) checks
+	 *      to see it the coordinate (x,y) is valid for the piece to move to.
 	 */
 	public boolean isValid(int x, int y)
 	{
 		return (x >= 0 && x < getWidth()) && (y >= 0 && y < getHeight());
 	}
-	
+
 	/**
 	 * Coordinates use the Cartesian system.
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
-	 * checks to see it the coordinate (x,y) is valid for the piece to
-	 * move to.
+	 * 
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int) checks
+	 *      to see it the coordinate (x,y) is valid for the piece to move to.
 	 */
 	public boolean isValid(Location loc)
 	{
 		return isValid(loc.getX(), loc.getY());
 	}
-	
+
 	/**
-	 * Looks at one row of the board at a time and checks each location in
-	 * that row to see if it has a square. If all of the locations in the
-	 * row have a square the squares are deleted.
+	 * Looks at one row of the board at a time and checks each location in that
+	 * row to see if it has a square. If all of the locations in the row have a
+	 * square the squares are deleted.
 	 */
 	public void clearRows()
 	{
-		if (true)return;
+		// if (true)return;
 		int counter = 0;
-		
+
 		for (int r = 0; r < getHeight(); r++)
 		{
 			counter = 0;
-			
+
 			for (int c = 0; c < getWidth(); c++)
 			{
 				if (getPiece(new Location(c, r)) != null)
 				{
 					counter++;
 				}
-				
+
 				if (counter == getWidth())
 				{
 					System.out.println("Deleting row: " + r);
 					for (int dRow = 0; dRow < getWidth(); dRow++)
 					{
 						Location l = new Location(dRow, r);
-						
+
+						System.out.println(l);
 						getPiece(l).deleteSquare(l);
 					}
-					
+
 					BoardEvent event = new BoardEvent(0, r);
-					
+
 					for (BoardListener listener : events)
 					{
 						listener.onLineDeleted(event);
@@ -254,9 +257,10 @@ public class Board extends AbstractBoard
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds a BoardListener to the ArrayList events.
+	 * 
 	 * @param b
 	 */
 	public void addListener(BoardListener b)
@@ -269,20 +273,21 @@ public class Board extends AbstractBoard
 	 */
 	public void newGame()
 	{
-		currentPiece = Piece.getRandomPiece();//new Piece(1);
-		
+		currentPiece = Piece.getRandomPiece();// new Piece(1);
+
 		addPiece(currentPiece, 4, 18);
 	}
 
 	/**
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#addPiece(net.foxycorndog.tetris.board.Piece, int, int)
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#addPiece(net.foxycorndog.tetris.board.Piece,
+	 *      int, int)
 	 */
 	@Override
 	public void addPiece(Piece piece, int x, int y)
 	{
 		piece.setBoard(this);
 		piece.setLocation(x, y);
-		
+
 		getPieces().add(piece);
 	}
 }

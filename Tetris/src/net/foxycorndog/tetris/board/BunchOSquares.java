@@ -116,9 +116,9 @@ public class BunchOSquares
 	 */
 	public boolean moveTo(Square s, Location l)
 	{
-		if(map[l.getX()][l.getY()] == null)
+		if (map[l.getX()][l.getY()] == null)
 		{
-//			remove(s);
+			remove(s);
 			map[l.getX()][l.getY()] = s;
 			
 			return true;
@@ -132,41 +132,44 @@ public class BunchOSquares
 	 */
 	public void remove(Square s)
 	{
-		if (s.getLocation() == null)
-		{
-			return;
-		}
+//		if (s.getLocation() == null)
+//		{
+//			return;
+//		}
 		
 		map[s.getLocation().getX()][s.getLocation().getY()] = null;
-		s.setLocation(null);
+//		s.setLocation(null);
 	}
 
-	/**
-	 * adds a square to location s;
-	 */
-	public void add(Location l, Square s)
-	{
-		map[l.getX()][l.getY()] = s;
-	}
+//	/**
+//	 * adds a square to location s;
+//	 */
+//	public void add(Location l, Square s)
+//	{
+//		map[l.getX()][l.getY()] = s;
+//	}
 	
-	/**
-	 * searches for square s and returns the location where it found it
-	 * and if it cannot be found it returns null
-	 */
-	public Location search(Square s) 
-	{
-		for(int x = 0; x < width; x++)
-		{
-			for(int y = 0; y < height; y++)
-			{
-				Location l = new Location(x,y);
-				
-				if(l != null && get(l).equals(s))
-					return l;
-			}
-		}
-		return null;
-	}
+//	/**
+//	 * searches for square s and returns the location where it found it
+//	 * and if it cannot be found it returns null
+//	 */
+//	public Location search(Square s) 
+//	{
+//		for(int x = 0; x < width; x++)
+//		{
+//			for(int y = 0; y < height; y++)
+//			{
+//				Location l = new Location(x, y);
+//				
+//				if(l != null && get(l).equals(s))
+//				{
+//					return l;
+//				}
+//			}
+//		}
+//		
+//		return null;
+//	}
 	
 	/**
 	 * String representation of this instance.
