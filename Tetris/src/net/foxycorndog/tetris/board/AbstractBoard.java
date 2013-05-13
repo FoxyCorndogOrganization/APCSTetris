@@ -137,8 +137,10 @@ public abstract class AbstractBoard
 	 * @param y The row to get the Piece from.
 	 * @return The Piece at the location (x, y).
 	 */
-	public Piece getPiece(int x, int y)
+	public Piece[] getPieces(int x, int y)
 	{
+		ArrayList<Piece> ps = new ArrayList<Piece>();
+		
 		for (int i = 0; i < pieces.size(); i++)
 		{
 			Piece piece = pieces.get(i);
@@ -151,12 +153,12 @@ public abstract class AbstractBoard
 				
 				if (absLoc.getX() == x && absLoc.getY() == y)
 				{
-					return piece;
+					ps.add(piece);
 				}
 			}
 		}
 		
-		return null;
+		return ps.toArray(new Piece[0]);
 	}
 	
 	/**
@@ -166,9 +168,9 @@ public abstract class AbstractBoard
 	 * @param loc The location to get the Piece from.
 	 * @return The Piece at the location.
 	 */
-	public Piece getPiece(Location loc)
+	public Piece[] getPieces(Location loc)
 	{
-		return getPiece(loc.getX(), loc.getY());
+		return getPieces(loc.getX(), loc.getY());
 	}
 	
 	/**

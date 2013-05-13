@@ -1,5 +1,7 @@
 package net.foxycorndog.tetris.menu;
 
+import net.foxycorndog.jfoxylib.components.Button;
+
 /**
  * 
  * 
@@ -11,6 +13,8 @@ package net.foxycorndog.tetris.menu;
  */
 public class OptionsMenu extends Menu
 {
+	private	Button button;
+	
 	public void loop()
 	{
 		

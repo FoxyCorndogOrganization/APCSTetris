@@ -243,19 +243,31 @@ public class Piece extends AbstractPiece implements Cloneable
 			return false;
 		}
 
-		Square neighborInNext = getBoard().getBoss().get(next);
+//		Square neighborInNext = getBoard().getBoss().get(next);
+//		
+//		if (neighborInNext != null)
+//		{
+//			if (neighborInNext.getPiece() != this)
+//			{
+//				return true;
+//			}
+//			else
+//			{
+//				neighborInNext.removeFromBoard();
+//
+//				return true;
+//			}
+//		}
 		
-		if (neighborInNext != null)
+		Piece ps[] = getBoard().getPieces(next);
+		
+		for (int i = 0; i < ps.length; i++)
 		{
-			if (neighborInNext.getPiece() != this)
+			Piece p = ps[i];
+			
+			if (p != this)
 			{
-				return true;
-			}
-			else
-			{
-				neighborInNext.removeFromBoard();
-
-				return true;
+				return false;
 			}
 		}
 
@@ -405,8 +417,8 @@ public class Piece extends AbstractPiece implements Cloneable
 				
 				for (int j = squares.size() - 1; j >= 0; j--)
 				{
-					Location l2 = squares.get(j).getLocation().add(getLocation());
-					
+					Location l2 = squares.get(j).getLocation().add(getLocation()).add(UP);
+					System.out.println(l2 + ", " + l);
 					if (l2.equals(l))
 					{
 						squares.remove(j);

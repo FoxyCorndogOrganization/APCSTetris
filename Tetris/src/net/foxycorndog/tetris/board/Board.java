@@ -144,6 +144,7 @@ public class Board extends AbstractBoard
 
 			if (currentPiece.yallHitTheBottomBaby())
 			{
+				System.out.println("WE HIT THE FREAKIN BOTTOM!");
 				currentPiece.move(0, 1);
 
 				if (currentPiece.getY() < 0)
@@ -231,7 +232,7 @@ public class Board extends AbstractBoard
 
 			for (int c = 0; c < getWidth(); c++)
 			{
-				if (getPiece(new Location(c, r)) != null)
+				if (getPieces(new Location(c, r)).length > 0)
 				{
 					counter++;
 				}
@@ -244,7 +245,7 @@ public class Board extends AbstractBoard
 						Location l = new Location(dRow, r);
 
 						System.out.println(l);
-						getPiece(l).deleteSquare(l);
+						getPieces(l)[0].deleteSquare(l);
 					}
 
 					BoardEvent event = new BoardEvent(0, r);
