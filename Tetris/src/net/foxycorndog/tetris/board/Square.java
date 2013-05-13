@@ -24,6 +24,7 @@ public class Square
 	public void setLocation(Location l)
 	{
 		location = l;
+//		getBoard().getBoss().moveTo(this, l);
 	}
 	/**
 	 * deletes this square removing it from its peice

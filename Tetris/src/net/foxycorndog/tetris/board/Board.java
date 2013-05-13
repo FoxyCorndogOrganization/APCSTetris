@@ -125,8 +125,6 @@ public class Board extends AbstractBoard
 	 */
 	public void tick()
 	{
-		// System.out.println(boss);
-
 		if (!getLost())
 		{
 			// if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
@@ -138,15 +136,11 @@ public class Board extends AbstractBoard
 			// currentPiece.move(1, 0);
 			// }
 
-			currentPiece.move(0, -1);
-			
-			System.out.println(currentPiece.getLocation());
+//			currentPiece.move(0, -1);
+			boolean moved = currentPiece.move(0, -1);
 
-			if (currentPiece.yallHitTheBottomBaby())
+			if (!moved)
 			{
-				System.out.println("WE HIT THE FREAKIN BOTTOM!");
-				currentPiece.move(0, 1);
-
 				if (currentPiece.getY() < 0)
 				{
 					currentPiece.move(0, 1);
@@ -236,13 +230,28 @@ public class Board extends AbstractBoard
 
 				if (counter == getWidth())
 				{
-					System.out.println("Deleting row: " + r);
 					for (int dRow = 0; dRow < getWidth(); dRow++)
 					{
 						Location l = new Location(dRow, r);
-
-						System.out.println(l);
-						getPieces(l)[0].deleteSquare(l);
+						
+						Piece pieces[] = getPieces(l);
+						
+						pieces[0].deleteSquare(l);
+					}
+					
+					for (int y = r; y < getHeight(); y++)
+					{
+						for (int x = 0; x < getWidth(); x++)
+						{
+							Location l = new Location(x, y);
+							
+							Piece pieces[] = getPieces(l);
+							
+							if (pieces.length > 0)
+							{
+								pieces[0].moveSquare(l, new Location(0, -1));
+							}
+						}
 					}
 
 					BoardEvent event = new BoardEvent(0, r);

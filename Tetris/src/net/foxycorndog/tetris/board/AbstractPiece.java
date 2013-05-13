@@ -196,19 +196,19 @@ public abstract class AbstractPiece implements Cloneable
 			}
 		}
 		
-		for (int i = 0; i < shape.size(); i++)
-		{
-			Location loc = shape.get(i);
-			
-			loc.setX(loc.getX() - minX);
-			loc.setY(loc.getY() - minY);
-		}
+//		for (int i = 0; i < shape.size(); i++)
+//		{
+//			Location loc = shape.get(i);
+//			
+//			loc.setX(loc.getX() - minX);
+//			loc.setY(loc.getY() - minY);
+//		}
 
 		this.width  = maxX - minX;
 		this.height = maxY - minY;
 		this.shape  = shape;
 
-		bundle = new Bundle(amountOfSquares * 4, 2, true, true);
+		bundle = new Bundle(amountOfSquares * 4, 2, true, false);
 
 		if (amountOfSquares <= 0)
 		{
@@ -236,8 +236,6 @@ public abstract class AbstractPiece implements Cloneable
 			}
 		}
 		bundle.endEditingTextures();
-
-		updateColor();
 	}
 	
 	/**
@@ -385,9 +383,59 @@ public abstract class AbstractPiece implements Cloneable
 	 * @param cols The number of columns to shift the Piece.
 	 * @param rows The number of rows to shift the Piece.
 	 */
-	public void move(int cols, int rows)
+	public boolean move(int cols, int rows)
 	{
-		setLocation(getX() + cols, getY() + rows);
+		return move(new Location(cols, rows));
+	}
+	
+	/**
+	 * moves the piece according to the positional vector added
+	 */
+	public boolean move(Location l)
+	{
+		boolean ableToMove = true;
+
+		for (int i = 0; i < getShape().size(); i++)
+		{
+			Location next = getShape().get(i).add(getLocation()).add(l);
+
+			if (!spaceIsFree(next))
+			{
+				ableToMove = false;
+			}
+		}
+
+		if (ableToMove)
+		{
+			setLocation(getX() + l.getX(), getY() + l.getY());
+		}
+		
+		return ableToMove;
+	}
+	
+	/**
+	 * retruns true if the space is free of other tetriminos else false
+	 */
+	public boolean spaceIsFree(Location next)
+	{
+		if (!board.isValid(next.getX(), next.getY()))
+		{
+			return false;
+		}
+		
+		Piece ps[] = board.getPieces(next);
+		
+		for (int i = 0; i < ps.length; i++)
+		{
+			Piece p = ps[i];
+			
+			if (p != this)
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -413,6 +461,7 @@ public abstract class AbstractPiece implements Cloneable
 		GL.pushMatrix();
 		{
 			GL.translate(x, y, 0);
+			GL.setColor(color.getRedf(), color.getGreenf(), color.getBluef(), 1);
 			
 			bundle.render(GL.QUADS, square);
 		}
@@ -427,23 +476,6 @@ public abstract class AbstractPiece implements Cloneable
 	public void setColor(Color color)
 	{
 		this.color = color;
-
-		if (bundle != null)
-		{
-			updateColor();
-		}
-	}
-
-	private void updateColor()
-	{
-		bundle.beginEditingColors();
-		{
-			for (int i = 0; i < shape.size(); i++)
-			{
-				bundle.setColors(4 * i, GL.genRectColors(color.getRedf(), color.getGreenf(), color.getBluef(), 1));
-			}
-		}
-		bundle.endEditingColors();
 	}
 
 	/**
