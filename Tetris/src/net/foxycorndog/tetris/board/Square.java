@@ -39,8 +39,8 @@ public class Square
 	 */
 	public Square(Color c, Piece p, boolean center, Location l) 
 	{
-		location = l;
-		this.c = c;
+		location    = l;
+		this.c      = c;
 		this.p      = p;
 		this.center = center;
 	}
@@ -98,7 +98,9 @@ public class Square
 	public void act()
 	{
 		if(center == true)//&& ! getPiece().isDead())
+		{
 			p.move(Piece.DOWN);
+		}
 	}
 
 	/**
@@ -106,9 +108,9 @@ public class Square
 	 */
 	public Board getBoard() 
 	{
-		return getPiece().getBoard();
+		return p.getBoard();
 	}
-
+	
 	/**
 	 * moves the square to location next on the board
 	 */

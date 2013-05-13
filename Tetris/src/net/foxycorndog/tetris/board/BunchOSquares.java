@@ -118,7 +118,7 @@ public class BunchOSquares
 	{
 		if(map[l.getX()][l.getY()] == null)
 		{
-			remove(s);
+//			remove(s);
 			map[l.getX()][l.getY()] = s;
 			
 			return true;
@@ -132,6 +132,11 @@ public class BunchOSquares
 	 */
 	public void remove(Square s)
 	{
+		if (s.getLocation() == null)
+		{
+			return;
+		}
+		
 		map[s.getLocation().getX()][s.getLocation().getY()] = null;
 		s.setLocation(null);
 	}
@@ -155,10 +160,38 @@ public class BunchOSquares
 			for(int y = 0; y < height; y++)
 			{
 				Location l = new Location(x,y);
+				
 				if(l != null && get(l).equals(s))
 					return l;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * String representation of this instance.
+	 */
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append(this.getClass().getSimpleName() + " { ");
+		
+		for (int x = 0; x < map.length; x++)
+		{
+			for (int y = 0; y < map[x].length; y++)
+			{
+				if (map[x][y] != null)
+				{
+					builder.append("(" + x + ", " + y + "): ");
+					
+					builder.append(map[x][y]);
+				}
+			}
+		}
+		
+		builder.append(" }");
+		
+		return builder.toString();
 	}
 }

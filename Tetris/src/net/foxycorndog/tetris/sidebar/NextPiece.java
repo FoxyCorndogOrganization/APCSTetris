@@ -75,7 +75,7 @@ public class NextPiece
 	 */
 	public void render()
 	{
-		int   xC    = 30;
+		int   xC    = 10;
 		int   yC    = 280;
 		
 		float scale = 2;

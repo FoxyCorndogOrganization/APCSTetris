@@ -22,7 +22,7 @@ public class Sidebar
 	public Sidebar()
 	{
 		int x = 400;
-		int y = 290;
+		int y = 200;
 		nP = new NextPiece(x, y);
 		sB = new Scoreboard(x, y);
 		lC = new LinesCompleted(x, y);

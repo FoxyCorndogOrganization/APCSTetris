@@ -139,8 +139,10 @@ public abstract class AbstractBoard
 	 */
 	public Piece getPiece(int x, int y)
 	{
-		for (Piece piece : pieces)
+		for (int i = 0; i < pieces.size(); i++)
 		{
+			Piece piece = pieces.get(i);
+			
 			ArrayList<Location> shape = piece.getShape();
 			
 			for (Location loc : shape)
@@ -165,24 +167,6 @@ public abstract class AbstractBoard
 	public Piece getPiece(Location loc)
 	{
 		return getPiece(loc.getX(), loc.getY());
-	}
-	
-	/**
-	 * Add the specified Piece to the Board at the the specified
-	 * grid space location.
-	 * 
-	 * @param piece The Tetris Piece to add to the Board.
-	 * @param x The column to add the Piece to.
-	 * @param y The row to add the Piece to.
-	 */
-	public void addPiece(Piece piece, int x, int y)
-	{
-		// Risky... but safe to assume.
-		piece.setBoard((Board)this);
-		
-		piece.setLocation(x, y);
-		
-		pieces.add(piece);
 	}
 	
 	/**
@@ -215,9 +199,16 @@ public abstract class AbstractBoard
 	}
 	
 	/**
-	 * Method called whenever a new game is started.
+	 * Get the ArrayList instance that holds all of the Pieces on the
+	 * Board.
+	 * 
+	 * @return The ArrayList instance that holds all of the Pieces on the
+	 * 		Board.
 	 */
-	public abstract void newGame();
+	public ArrayList<Piece> getPieces()
+	{
+		return pieces;
+	}
 	
 	/**
 	 * Render the Border around the grid that the Tetris game is
@@ -260,24 +251,6 @@ public abstract class AbstractBoard
 	}
 	
 	/**
-	 * Method that calculates the game logic for the Tetris game each
-	 * tick.
-	 */
-	public abstract void tick();
-	
-	/**
-	 * Get whether the specified location (x, y) is a valid
-	 * location on the Board. That is, the location is within
-	 * the bounds of the Grid.
-	 * 
-	 * @param x The horizontal location (column) to check.
-	 * @param y The vertical location (row) to check.
-	 * @return Whether or not the specified location is within
-	 *		the bounds of the Grid.
-	 */
-	public abstract boolean isValid(int x, int y);
-	
-	/**
 	 * Get the amount of times the tick() method is called per second.
 	 * 
 	 * @return The amount of times the tick() method is called per second.
@@ -297,4 +270,37 @@ public abstract class AbstractBoard
 	{
 		this.ticksPerSecond = f;
 	}
+	
+	/**
+	 * Add the specified Piece to the Board at the the specified
+	 * grid space location.
+	 * 
+	 * @param piece The Tetris Piece to add to the Board.
+	 * @param x The column to add the Piece to.
+	 * @param y The row to add the Piece to.
+	 */
+	public abstract void addPiece(Piece piece, int x, int y);
+	
+	/**
+	 * Method called whenever a new game is started.
+	 */
+	public abstract void newGame();
+	
+	/**
+	 * Method that calculates the game logic for the Tetris game each
+	 * tick.
+	 */
+	public abstract void tick();
+	
+	/**
+	 * Get whether the specified location (x, y) is a valid
+	 * location on the Board. That is, the location is within
+	 * the bounds of the Grid.
+	 * 
+	 * @param x The horizontal location (column) to check.
+	 * @param y The vertical location (row) to check.
+	 * @return Whether or not the specified location is within
+	 *		the bounds of the Grid.
+	 */
+	public abstract boolean isValid(int x, int y);
 }

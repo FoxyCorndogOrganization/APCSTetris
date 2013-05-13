@@ -66,10 +66,8 @@ public class Board extends AbstractBoard
 				{
 					currentPiece.move(-1, 0);
 
-					System.out.println("CHECKING VALID!: " + currentPiece.getLocation());
 					if (!isValid(currentPiece.getLocation()))
 					{
-						System.out.println("NOT VALID!: " + currentPiece.getLocation());
 						currentPiece.move(1, 0);
 					}
 				}
@@ -128,6 +126,8 @@ public class Board extends AbstractBoard
 	 */
 	public void tick()
 	{
+		System.out.println(boss);
+		
 		if(!getLost())
 		{
 //			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
@@ -143,8 +143,6 @@ public class Board extends AbstractBoard
 			
 			if(currentPiece.yallHitTheBottomBaby())
 			{
-				System.out.println("asdf");
-				
 				currentPiece.move(0, 1);
 				
 				if (currentPiece.getY() < 0)
@@ -222,6 +220,7 @@ public class Board extends AbstractBoard
 	 */
 	public void clearRows()
 	{
+		if (true)return;
 		int counter = 0;
 		
 		for (int r = 0; r < getHeight(); r++)
@@ -230,13 +229,14 @@ public class Board extends AbstractBoard
 			
 			for (int c = 0; c < getWidth(); c++)
 			{
-				if (!isValid(c, r) || getPiece(new Location(c, r)) != null)
+				if (getPiece(new Location(c, r)) != null)
 				{
 					counter++;
 				}
 				
 				if (counter == getWidth())
 				{
+					System.out.println("Deleting row: " + r);
 					for (int dRow = 0; dRow < getWidth(); dRow++)
 					{
 						Location l = new Location(dRow, r);
@@ -269,8 +269,20 @@ public class Board extends AbstractBoard
 	 */
 	public void newGame()
 	{
-		currentPiece = new Piece(1);
+		currentPiece = Piece.getRandomPiece();//new Piece(1);
 		
 		addPiece(currentPiece, 4, 18);
+	}
+
+	/**
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#addPiece(net.foxycorndog.tetris.board.Piece, int, int)
+	 */
+	@Override
+	public void addPiece(Piece piece, int x, int y)
+	{
+		piece.setBoard(this);
+		piece.setLocation(x, y);
+		
+		getPieces().add(piece);
 	}
 }
