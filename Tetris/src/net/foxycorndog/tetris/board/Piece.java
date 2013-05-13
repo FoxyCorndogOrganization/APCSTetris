@@ -6,7 +6,8 @@ import java.util.ArrayList;
  * Class used to hold information for each Piece in the Tetris game. There are
  * also methods to manipulate the data and render the data to the screen.
  * 
- * @author Braden Steffaniak, Henry Rybolt
+ * @author Henry Rybolt
+ * @author Braden Steffaniak
  * @since May 6, 2013 at 3:36:36 PM
  * @since v0.1
  * @version May 6, 2013 at 3:36:36 PM
@@ -77,9 +78,9 @@ public class Piece extends AbstractPiece implements Cloneable
 	public void piece(int[][] temp, Color c, int x, int y)
 	{
 		direction = 0;
-		dead = false;
-		this.c = c;
-		place = new Location(x, y);
+		dead      = false;
+		this.c    = c;
+		place     = new Location(x, y);
 		setColor(c);
 
 		editShape(temp);
@@ -96,15 +97,24 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			Location loc = new Location(s[index][0], s[index][1]);
 			locs.add(loc);
-
-			boolean center = locs.get(index).getX() == 0
-					&& locs.get(index).getY() == 0;
-
-			squares.add(new Square(c, this, center, loc));
-			squares.get(index).setLocation(place.add(loc));
 		}
 
 		setShape(locs);
+
+		locs = getShape();
+		
+		for (int i = 0; i < locs.length; i++)
+		{
+			Location loc = locs.get(i);
+			
+			//TODO fix center w/ max and min
+			boolean center = loc.getX() == 0 && loc.getY() == 0;
+			
+			Square square = new Square(c, this, center, loc);
+			square.setLocation(place.add(loc));
+			
+			squares.add(square);
+		}
 	}
 
 	/**

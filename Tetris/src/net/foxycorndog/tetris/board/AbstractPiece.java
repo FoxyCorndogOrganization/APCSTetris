@@ -200,8 +200,8 @@ public abstract class AbstractPiece implements Cloneable
 		{
 			Location loc = shape.get(i);
 			
-			loc.setX(loc.getX() + Math.abs(minX));
-			loc.setY(loc.getY() + Math.abs(minY));
+			loc.setX(loc.getX() - minX);
+			loc.setY(loc.getY() - minY);
 		}
 
 		this.width  = maxX - minX;
