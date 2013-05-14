@@ -1,7 +1,7 @@
 package net.foxycorndog.tetris.menu;
 
 /**
- * 
+ * Abstract class for all Menus used in the Tetris game.
  * 
  * @author	Braden Steffaniak
  * @since	Apr 20, 2013 at 11:13:05 PM
@@ -14,7 +14,7 @@ public abstract class Menu
 	private int	x, y;
 	
 	/**
-	 * 
+	 * Default constructor of the Menu.
 	 */
 	public Menu()
 	{
@@ -54,12 +54,17 @@ public abstract class Menu
 	}
 	
 	/**
-	 * 
+	 * Do any logic needed by the Menu.
 	 */
 	public abstract void loop();
 	
 	/**
-	 * 
+	 * Render the Components of the Menu.
 	 */
 	public abstract void render();
+	
+	/**
+	 * Dispose of the Components used by the Menu.
+	 */
+	public abstract void dispose();
 }

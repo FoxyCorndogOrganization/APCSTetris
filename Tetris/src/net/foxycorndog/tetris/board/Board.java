@@ -62,22 +62,11 @@ public class Board extends AbstractBoard
 			{
 				if (event.getCode() == Keyboard.KEY_LEFT)
 				{
-					currentPiece.move(-1, 0);
-
-					if (!isValid(currentPiece.getLocation()))
-					{
-						currentPiece.move(1, 0);
-					}
+					movePiece(currentPiece, -1, 0);
 				}
 				if (event.getCode() == Keyboard.KEY_RIGHT)
 				{
-					currentPiece.move(1, 0);
-
-					if (!isValid(currentPiece.getLocation().add(
-							new Location(currentPiece.getWidth(), 0))))
-					{
-						currentPiece.move(-1, 0);
-					}
+					movePiece(currentPiece, 1, 0);
 				}
 				if (event.getCode() == Keyboard.KEY_UP)
 				{
@@ -137,15 +126,10 @@ public class Board extends AbstractBoard
 			// }
 
 //			currentPiece.move(0, -1);
-			boolean moved = currentPiece.move(0, -1);
+			boolean moved = movePiece(currentPiece, 0, -1);
 
 			if (!moved)
 			{
-				if (currentPiece.getY() < 0)
-				{
-					currentPiece.move(0, 1);
-				}
-
 				currentPiece.kill();
 
 				currentPiece = tetris.getSidebar().getNextPiece()
@@ -161,11 +145,34 @@ public class Board extends AbstractBoard
 					{
 						listener.onGameLost(null);
 					}
+					
+					Tetris.SOUND_LIBRARY.playSound("lose.wav");
+				}
+				else
+				{
+					Tetris.SOUND_LIBRARY.playSound("pop.wav");
 				}
 
 				clearRows();
 			}
 		}
+	}
+	
+	private boolean movePiece(Piece piece, int dx, int dy)
+	{
+		boolean moved = piece.move(dx, dy);
+		
+		if (moved)
+		{
+			BoardEvent event = new BoardEvent(piece.getX(), piece.getY(), piece, 0);
+			
+			for (BoardListener listener : events)
+			{
+				listener.onPieceMove(event);
+			}
+		}
+		
+		return moved;
 	}
 
 	/**
@@ -216,8 +223,12 @@ public class Board extends AbstractBoard
 	{
 		// if (true)return;
 		int counter = 0;
+		
+		int r       = 0;
+		
+		int lines   = 0;
 
-		for (int r = 0; r < getHeight(); r++)
+		while (r < getHeight())
 		{
 			counter = 0;
 
@@ -253,15 +264,27 @@ public class Board extends AbstractBoard
 							}
 						}
 					}
-
-					BoardEvent event = new BoardEvent(0, r);
-
-					for (BoardListener listener : events)
-					{
-						listener.onLineDeleted(event);
-					}
+					
+					lines++;
 				}
 			}
+			
+			if (counter < getWidth())
+			{
+				r++;
+			}
+		}
+		
+		if (lines > 0)
+		{
+			BoardEvent event = new BoardEvent(0, r, null, lines);
+	
+			for (BoardListener listener : events)
+			{
+				listener.onLineDeleted(event);
+			}
+			
+			Tetris.SOUND_LIBRARY.playSound("lineremoved.wav");
 		}
 	}
 
@@ -280,9 +303,11 @@ public class Board extends AbstractBoard
 	 */
 	public void newGame()
 	{
-		currentPiece = Piece.getRandomPiece();// new Piece(1);
+		currentPiece = Piece.getRandomPiece();
 
 		addPiece(currentPiece, 4, 18);
+		
+		Tetris.SOUND_LIBRARY.playSound("pop.wav");
 	}
 
 	/**

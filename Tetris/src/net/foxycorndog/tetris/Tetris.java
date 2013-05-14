@@ -1,12 +1,14 @@
 package net.foxycorndog.tetris;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.GameStarter;
 import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.input.Mouse;
+import net.foxycorndog.jfoxylib.openal.Sound;
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.jfoxylib.opengl.texture.Texture;
 import net.foxycorndog.tetris.board.AbstractBoard;
@@ -14,6 +16,7 @@ import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.menu.MainMenu;
 import net.foxycorndog.tetris.sidebar.Sidebar;
+import net.foxycorndog.tetris.sound.SoundLibrary;
 
 /**
  * Main class and entry point for the Tetris game.
@@ -26,14 +29,16 @@ import net.foxycorndog.tetris.sidebar.Sidebar;
  */
 public class Tetris extends GameStarter
 {
-	private float		bgColor;
+	private float						bgColor;
 	
-	private Board		board;
-	private Sidebar		sidebar;
+	private Board						board;
+	private Sidebar						sidebar;
 	
-	private MainMenu	mainMenu;
+	private MainMenu					mainMenu;
 	
-	private static Font	font;
+	private static Font					font;
+	
+	public static final SoundLibrary	SOUND_LIBRARY = createSoundLibrary();
 	
 	/**
 	 * Main method that creates a Frame and starts up the Tetris
@@ -61,6 +66,9 @@ public class Tetris extends GameStarter
 		board    = new Board(10, 20, 10, this);
 		sidebar  = new Sidebar();
 		
+		board.addListener(sidebar.getScoreboard());
+		board.addListener(sidebar.getLinesCompleted());
+		
 		board.newGame();
 		board.move(50, 50);
 		
@@ -85,6 +93,17 @@ public class Tetris extends GameStarter
 		bgColor  = 0;
 		
 		mainMenu = new MainMenu(this);
+		
+		try
+		{
+			SOUND_LIBRARY.addSound("pop.wav", new Sound("res/sounds/pop.wav"));
+			SOUND_LIBRARY.addSound("lineremoved.wav", new Sound("res/sounds/lineremoved.wav"));
+			SOUND_LIBRARY.addSound("lose.wav", new Sound("res/sounds/lose.wav"));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -161,5 +180,12 @@ public class Tetris extends GameStarter
 	public static Font getFont()
 	{
 		return font;
+	}
+	
+	private static final SoundLibrary createSoundLibrary()
+	{
+		SoundLibrary library = new SoundLibrary();
+		
+		return library;
 	}
 }

@@ -1,5 +1,7 @@
 package net.foxycorndog.tetris.event;
 
+import net.foxycorndog.tetris.board.Piece;
+
 /**
  * Class used to describe what happened in a Board Listener.
  * 
@@ -11,7 +13,10 @@ package net.foxycorndog.tetris.event;
  */
 public class BoardEvent extends Event
 {
- 	private int col, row;
+ 	private int		col, row;
+ 	private	int		lines;
+ 	
+ 	private	Piece	piece;
  	
 	/**
 	 * Create a BoardEvent at the specified column and row on the
@@ -20,14 +25,17 @@ public class BoardEvent extends Event
 	 * @param col The column that the Even has taken place.
 	 * @param row The row that the Even has taken place.
 	 */
-	public BoardEvent(int col, int row)
+	public BoardEvent(int col, int row, Piece piece, int lines)
 	{
-		this.col = col;
-		this.row = row;
+		this.col   = col;
+		this.row   = row;
+		this.lines = lines;
+		
+		this.piece = piece;
 	}
 	
 	/**
-	 * Get the column that the Even has taken place.
+	 * Get the column that the Event has taken place.
 	 */
 	public int getCol()
 	{
@@ -35,10 +43,28 @@ public class BoardEvent extends Event
 	}
 
 	/**
-	 * Get the row that the Even has taken place.
+	 * Get the row that the Event has taken place.
 	 */
 	public int getRow()
 	{
 		return row;
+	}
+
+	/**
+	 * Get how many lines were deleted on the Event.
+	 */
+	public int getLines()
+	{
+		return lines;
+	}
+	
+	/**
+	 * Get the Piece that the Event has taken place with.
+	 * 
+	 * @return
+	 */
+	public Piece getPiece()
+	{
+		return piece;
 	}
 }

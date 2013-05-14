@@ -41,6 +41,9 @@ public class MainMenu extends Menu
 	
 	private Bundle			bundle;
 	
+	private OptionsMenu		optionsMenu;
+	private	CreditsMenu		creditsMenu;
+	
 	private Tetris			tetris;
 	
 	private Queue<Integer>	queue;
@@ -137,11 +140,11 @@ public class MainMenu extends Menu
 				}
 				else if (event.getSource() == optionsButton)
 				{
-					
+					openOptionsMenu();
 				}
 				else if (event.getSource() == creditsButton)
 				{
-					
+					openCreditsMenu();
 				}
 				else if (event.getSource() == quitButton)
 				{
@@ -169,6 +172,52 @@ public class MainMenu extends Menu
 		optionsButton.addButtonListener(listener);
 		creditsButton.addButtonListener(listener);
 		quitButton.addButtonListener(listener);
+	}
+	
+	private void openOptionsMenu()
+	{
+		optionsMenu = new OptionsMenu(this);
+		
+		leaveMainMenuFocus();
+	}
+	
+	private void openCreditsMenu()
+	{
+		creditsMenu = new CreditsMenu(this);
+		
+		leaveMainMenuFocus();
+	}
+	
+	public void closeOptionsMenu()
+	{
+		optionsMenu.dispose();
+		optionsMenu = null;
+		
+		returnToMainMenu();
+	}
+	
+	public void closeCreditsMenu()
+	{
+		creditsMenu.dispose();
+		creditsMenu = null;
+		
+		returnToMainMenu();
+	}
+	
+	private void returnToMainMenu()
+	{
+		playButton.setEnabled(true);
+		optionsButton.setEnabled(true);
+		creditsButton.setEnabled(true);
+		quitButton.setEnabled(true);
+	}
+	
+	private void leaveMainMenuFocus()
+	{
+		playButton.setEnabled(false);
+		optionsButton.setEnabled(false);
+		creditsButton.setEnabled(false);
+		quitButton.setEnabled(false);
 	}
 	
 	/**
@@ -221,9 +270,20 @@ public class MainMenu extends Menu
 				GL.setColor(r / 255f, g / 255f, b / 255f, 1);
 				bundle.render(GL.QUADS, 0, 4, titleScreenTexture);
 				
-				bundle.render(GL.QUADS, 4, 4, menuBoxTexture);
-				
-				renderButtons();
+				if (optionsMenu != null)
+				{
+					optionsMenu.render();
+				}
+				else if (creditsMenu != null)
+				{
+					creditsMenu.render();
+				}
+				else
+				{
+					bundle.render(GL.QUADS, 4, 4, menuBoxTexture);
+					
+					renderButtons();
+				}
 				
 				Texture.unbind();
 			}

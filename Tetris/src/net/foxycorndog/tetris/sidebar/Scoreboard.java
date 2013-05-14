@@ -36,7 +36,7 @@ public class Scoreboard implements BoardListener
 	public void render()
 	{
 		int xC = 0;
-		int yC = 250;
+		int yC = 220;
 		float scale = 0.5f;
 		Tetris.getFont().render("score " + score, x + xC, y + yC, 0, scale, null);
 		
@@ -44,17 +44,43 @@ public class Scoreboard implements BoardListener
 //		GL.scale(5, 5, 1);
 	}
 
-	public void onGameLost(BoardEvent event)
+	/**
+	 * @see net.foxycorndog.tetris.event.BoardListener#onPieceMove(net.foxycorndog.tetris.event.BoardEvent)
+	 */
+	public void onPieceMove(BoardEvent event)
 	{
 		
 	}
 
+	/**
+	 * @see net.foxycorndog.tetris.event.BoardListener#onLineDeleted(net.foxycorndog.tetris.event.BoardEvent)
+	 */
 	public void onLineDeleted(BoardEvent event)
 	{
-		score += 5;
+		int lines = event.getLines();
+		
+		if (lines == 1)
+		{
+			score += 100;
+		}
+		else if (lines == 2)
+		{
+			score += 300;
+		}
+		else if (lines == 3)
+		{
+			score += 500;
+		}
+		else if (lines == 4)
+		{
+			score += 1200;
+		}
 	}
 
-	public void onPieceMove(BoardEvent event)
+	/**
+	 * @see net.foxycorndog.tetris.event.BoardListener#onGameLost(net.foxycorndog.tetris.event.BoardEvent)
+	 */
+	public void onGameLost(BoardEvent event)
 	{
 		
 	}

@@ -133,32 +133,32 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		if (n == 1)
 		{
-			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 3, 0 } };
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 2, 0 } };
 			piece(temp, Color.CYAN, 5, 17);
 		}
 		else if (n == 2)
 		{
-			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 1, 1 } };
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
 			piece(temp, Color.MAGENTA, 5, 18);
 		}
 		else if (n == 3)
 		{
-			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 1, 1 }, { 2, 1 } };
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 1 } };
 			piece(temp, Color.GREEN, 5, 18);
 		}
 		else if (n == 4)
 		{
-			temp = new int[][] { { 1, 0 }, { 0, 1 }, { 2, 0 }, { 1, 1 } };
+			temp = new int[][] { { 0, 0 }, { -1, 1 }, { 1, 0 }, { 0, 1 } };
 			piece(temp, Color.RED, 5, 18);
 		}
 		else if (n == 5)
 		{
-			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 2, 1 } };
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 1, 1 } };
 			piece(temp, Color.ORANGE, 5, 18);
 		}
 		else if (n == 6)
 		{
-			temp = new int[][] { { 1, 0 }, { 0, 0 }, { 2, 0 }, { 0, 1 } };
+			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, 1 } };
 			piece(temp, Color.BLUE, 5, 18);
 		}
 		else if (n == 7)
@@ -216,44 +216,37 @@ public class Piece extends AbstractPiece implements Cloneable
 	 */
 	public void rotateC()
 	{
-		if (n == 1 && direction == 1)
-		{
-			rotateCC();
-			direction = 0;
+//		if (n == 1 && direction == 1)
+//		{
+//			rotateCC();
+//			direction = 0;
+//
+//			return;
+//		}
+//
+//		if (n == 7)
+//		{
+//			return;
+//		}
 
-			return;
-		}
-
-		if (n == 7)
-		{
-			return;
-		}
-
-		boolean ableToRotate = true;
+		boolean ableToRotate     = true;
 		ArrayList<Location> copy = new ArrayList<Location>();
 		
 		for (Location l : getShape())
 		{
 			copy.add(new Location(l.getX(), l.getY()));
 		}
+		
+		for (int i = 0; i < copy.size(); i++)
+		{
+			copy.get(i).rotateC();
+			Location next = copy.get(i).add(getLocation());
 
-		if (getX() + getHeight() >= getBoard().getWidth())
-		{
-			ableToRotate = false;
-		}
-		else
-		{
-			for (int i = 0; i < getShape().size(); i++)
+			if (!spaceIsFree(next))
 			{
-				copy.get(i).rotateC();
-				Location next = copy.get(i).add(getLocation());
-	
-				if (!spaceIsFree(next))
-				{
-					ableToRotate = false;
-					
-					break;
-				}
+				ableToRotate = false;
+				
+				break;
 			}
 		}
 

@@ -37,6 +37,26 @@ public class Sidebar
 	{
 		return nP;
 	}
+
+	/**
+	 * Get the Scoreboard part of the Sidebar.
+	 * 
+	 * @return The Scoreboard part of the Sidebar.
+	 */
+	public Scoreboard getScoreboard()
+	{
+		return sB;
+	}
+
+	/**
+	 * Get the LinesCompleted part of the Sidebar.
+	 * 
+	 * @return The LinesCompleted part of the Sidebar.
+	 */
+	public LinesCompleted getLinesCompleted()
+	{
+		return lC;
+	}
 	
 	/**
 	 * renders the image of the Sidebar(displays lines completed, score, and the
