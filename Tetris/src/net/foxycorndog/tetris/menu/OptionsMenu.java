@@ -11,7 +11,7 @@ import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
 
 /**
- * 
+ * Menu that is used for editing game options.
  * 
  * @author	Braden Steffaniak
  * @since	Apr 23, 2013 at 5:20:30 PM
@@ -27,6 +27,11 @@ public class OptionsMenu extends Menu
 	
 	private	Button	toggleSoundButton, backButton;
 	
+	/**
+	 * Create an OptionsMenu instance for the specified MainMenu.
+	 * 
+	 * @param menu The MainMenu that this instance belongs to.
+	 */
 	public OptionsMenu(final MainMenu menu)
 	{
 		soundsOn  = new Image(null);

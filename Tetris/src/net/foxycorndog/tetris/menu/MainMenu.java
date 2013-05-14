@@ -174,6 +174,9 @@ public class MainMenu extends Menu
 		quitButton.addButtonListener(listener);
 	}
 	
+	/**
+	 * Open the options menu into the main view.
+	 */
 	private void openOptionsMenu()
 	{
 		optionsMenu = new OptionsMenu(this);
@@ -181,13 +184,19 @@ public class MainMenu extends Menu
 		leaveMainMenuFocus();
 	}
 	
+	/**
+	 * Open the credits menu into the main view.
+	 */
 	private void openCreditsMenu()
 	{
 		creditsMenu = new CreditsMenu(this);
 		
 		leaveMainMenuFocus();
 	}
-	
+
+	/**
+	 * Close the options menu and return to the main menu.
+	 */
 	public void closeOptionsMenu()
 	{
 		optionsMenu.dispose();
@@ -195,7 +204,10 @@ public class MainMenu extends Menu
 		
 		returnToMainMenu();
 	}
-	
+
+	/**
+	 * Close the credits menu and return to the main menu.
+	 */
 	public void closeCreditsMenu()
 	{
 		creditsMenu.dispose();
@@ -203,7 +215,10 @@ public class MainMenu extends Menu
 		
 		returnToMainMenu();
 	}
-	
+
+	/**
+	 * Return to the main menu and restore its functionality.
+	 */
 	private void returnToMainMenu()
 	{
 		playButton.setEnabled(true);
@@ -212,6 +227,9 @@ public class MainMenu extends Menu
 		quitButton.setEnabled(true);
 	}
 	
+	/**
+	 * Take away the focus from the MainMenu.
+	 */
 	private void leaveMainMenuFocus()
 	{
 		playButton.setEnabled(false);

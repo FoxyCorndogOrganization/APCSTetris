@@ -6,14 +6,15 @@ import net.foxycorndog.tetris.event.BoardEvent;
 import net.foxycorndog.tetris.event.BoardListener;
 
 /**
- * 
+ * Class that keeps track of and displays the score of the
+ * Tetris game.
  * 
  * @author	Henry Rybolt
  * @author	Braden Steffaniak
  * @since	Apr 23, 2013 at 4:54:12 PM
  * @since	v0.1
  * @version	Apr 27, 2013 at 12:43:29 PM
- * @version	v0.1
+ * @version	v1.0
  */
 public class Scoreboard implements BoardListener
 {

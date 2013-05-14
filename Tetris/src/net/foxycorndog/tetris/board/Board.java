@@ -26,8 +26,6 @@ public class Board extends AbstractBoard
 
 	private Piece						currentPiece;
 
-	private BunchOSquares				boss;
-
 	private Tetris						tetris;
 
 	private int[]						deleteRows;
@@ -54,7 +52,6 @@ public class Board extends AbstractBoard
 
 		events = new ArrayList<BoardListener>();
 		deleteRows = new int[4];
-		boss = new BunchOSquares(width, height);
 
 		KeyListener listener = new KeyListener()
 		{
@@ -100,11 +97,6 @@ public class Board extends AbstractBoard
 		Keyboard.addKeyListener(listener);
 
 		// setTicksPerSecond(8f);
-	}
-
-	public BunchOSquares getBoss()
-	{
-		return boss;
 	}
 
 	/**

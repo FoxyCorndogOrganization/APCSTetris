@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Class used to hold information for each Piece in the Tetris game. There are
  * also methods to manipulate the data and render the data to the screen.
- * 
+ *
  * @author Henry Rybolt
  * @author Braden Steffaniak
  * @since May 6, 2013 at 3:36:36 PM
@@ -17,7 +17,6 @@ public class Piece extends AbstractPiece implements Cloneable
 {
 	private int						direction;
 	private int						n;
-	private ArrayList<Square>		squares;
 	private Location				place;
 	private Color					c;
 	private boolean					dead;
@@ -39,7 +38,7 @@ public class Piece extends AbstractPiece implements Cloneable
 
 	/**
 	 * Create a Piece with the specified shapes and color.
-	 * 
+	 *
 	 * @param locations
 	 *            ArrayList of the locations of the square within.
 	 * @param color
@@ -55,7 +54,7 @@ public class Piece extends AbstractPiece implements Cloneable
 	 * with its shape, its shape is defined by n the code is as follows n values
 	 * are the integer the shape is the image: |_| |_||_| |_||_| 1 =
 	 * |_||_||_||_|, 2 = |_||_||_|, 3 = |_||_| , 4 = |_||_|,
-	 * 
+	 *
 	 * |_||_||_| |_||_||_| |_||_| 5 = |_| , 6 = |_|, 7 = |_||_|
 	 */
 	public Piece(int n)
@@ -64,8 +63,6 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			throw new IllegalArgumentException("n must be 1-7");
 		}
-		
-		squares = new ArrayList<Square>();
 
 		calculatePiece(n);
 	}
@@ -102,35 +99,16 @@ public class Piece extends AbstractPiece implements Cloneable
 		setShape(locs);
 
 		locs = getShape();
-		
+
 		for (int i = 0; i < locs.size(); i++)
 		{
 			Location loc = locs.get(i);
-			
+
 			//TODO fix center w/ max and min
 			boolean center = loc.getX() == getWidth() / 2 && loc.getY() == getHeight() / 2;
-			
-			Square square = new Square(c, this, center, loc);
-			square.setLocation(place.add(loc));
-			
-			squares.add(square);
 		}
 	}
 
-	/**
-	 * deletes a square
-	 */
-	public void delete(Square s)
-	{
-		squares.remove(s);
-	}
-
-	/**
-	 * The piece is calculated based on the number that is passed to the
-	 * method. A temporary matrix is made that adds a square with a
-	 * specific color to a given location.
-	 * @param n A random number between 1 and 7 (inclusive).
-	 */
 	private void calculatePiece(int n)
 	{
 		this.n = n;
@@ -182,7 +160,7 @@ public class Piece extends AbstractPiece implements Cloneable
 		rotateC();
 		rotateC();
 		rotateC();
-		
+
 //		if (n == 1 && direction == 1)
 //		{
 //			rotateC();
@@ -237,12 +215,12 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		boolean ableToRotate     = true;
 		ArrayList<Location> copy = new ArrayList<Location>();
-		
+
 		for (Location l : getShape())
 		{
 			copy.add(new Location(l.getX(), l.getY()));
 		}
-		
+
 		for (int i = 0; i < copy.size(); i++)
 		{
 			copy.get(i).rotateC();
@@ -251,7 +229,7 @@ public class Piece extends AbstractPiece implements Cloneable
 			if (!spaceIsFree(next))
 			{
 				ableToRotate = false;
-				
+
 				break;
 			}
 		}
@@ -260,39 +238,6 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			setShape(copy);
 		}
-	}
-
-	/**
-	 * precondition: the tetrimino this method is being used on has just been
-	 * constructed returns true if their are two or more tetriminos occupying
-	 * the same space false if their is only one tetrimino returns false
-	 */
-	public boolean doubledUp()
-	{
-		boolean doubledUp = false;
-
-		for (int i = 0; i < getShape().size(); i++)
-		{
-			Location next = getShape().get(i).add(place);
-			Square s = squares.get(i);
-
-			if (s.getBoard() != null)
-			{
-				if (s.getBoard().getBoss().get(next) != null)
-				{
-					doubledUp = true;
-				}
-			}
-			else
-			{
-				if (getBoard().getBoss().get(next) != null)
-				{
-					doubledUp = true;
-				}
-			}
-		}
-
-		return doubledUp;
 	}
 
 	/**
@@ -306,7 +251,7 @@ public class Piece extends AbstractPiece implements Cloneable
 		for (int i = 0; i < getShape().size(); i++)
 		{
 			Location next = getShape().get(i).add(getLocation());
-			
+
 			if (!spaceIsFree(next))
 			{
 				ableToMove = false;
@@ -323,7 +268,7 @@ public class Piece extends AbstractPiece implements Cloneable
 	{
 		dead = true;
 	}
-	
+
 	/**
 	 * If a square in a given piece is in a certain location it is
 	 * deleted from the board.
@@ -332,22 +277,22 @@ public class Piece extends AbstractPiece implements Cloneable
 	public void deleteSquare(Location loc)
 	{
 		ArrayList<Location> shape = getShape();
-		
+
 		for (int i = shape.size() - 1; i >= 0; i--)
 		{
 			Location l = shape.get(i).add(getLocation());
-			
+
 			if (l.equals(loc))
 			{
 				shape.remove(i);
-				
+
 				break;
 			}
 		}
-		
+
 		setShape(shape);
 	}
-	
+
 	/**
 	 * Used to move a square to a new location given in the parameter.
 	 * @param src
@@ -356,22 +301,22 @@ public class Piece extends AbstractPiece implements Cloneable
 	public void moveSquare(Location src, Location dst)
 	{
 		ArrayList<Location> shape = getShape();
-		
+
 		for (int i = shape.size() - 1; i >= 0; i--)
 		{
 			Location l = shape.get(i).add(getLocation());
-			
+
 			if (l.equals(src))
 			{
 				shape.set(i, shape.get(i).add(dst));
-				
+
 				break;
 			}
 		}
-		
+
 		setShape(shape);
 	}
-	
+
 	/**
 	 * returns whether the tetrimino was klled
 	 */
@@ -398,7 +343,7 @@ public class Piece extends AbstractPiece implements Cloneable
 
 	/**
 	 * Get the array of Pieces. Contains all seven of the original Piece shapes.
-	 * 
+	 *
 	 * @return The array of the seven original Pieces.
 	 */
 	public static AbstractPiece[] getPieces()
@@ -408,15 +353,15 @@ public class Piece extends AbstractPiece implements Cloneable
 
 	/**
 	 * Get a brand new instance of one of the seven original Pieces.
-	 * 
+	 *
 	 * @return A brand new instance of one of the seven original Pieces.
 	 */
 	public static Piece getRandomPiece()
 	{
 		int index = (int)(Math.random() * pieces.length);
-		
+
 		Piece rand = null;
-		
+
 //		if (pieces[index] == null)
 //		{
 			rand = new Piece(index + 1);
@@ -425,13 +370,13 @@ public class Piece extends AbstractPiece implements Cloneable
 //		{
 //			rand = pieces[index].clone();
 //		}
-		
+
 		return rand;
 	}
 
 	/**
 	 * Return a clone of the specified Piece instance.
-	 * 
+	 *
 	 * @return Another instance of a Piece exactly like the preceding one.
 	 */
 	public Piece clone()

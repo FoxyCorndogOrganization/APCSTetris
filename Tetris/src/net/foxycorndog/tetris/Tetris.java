@@ -58,6 +58,9 @@ public class Tetris extends GameStarter
 		game.start();
 	}
 	
+	/**
+	 * Tell the game to start.
+	 */
 	public void playGame()
 	{
 		mainMenu.dispose();
@@ -182,6 +185,11 @@ public class Tetris extends GameStarter
 		return font;
 	}
 	
+	/**
+	 * Create the final SoundLibrary instance.
+	 * 
+	 * @return The final SoundLibrary instance.
+	 */
 	private static final SoundLibrary createSoundLibrary()
 	{
 		SoundLibrary library = new SoundLibrary();
