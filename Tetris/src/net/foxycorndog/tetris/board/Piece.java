@@ -17,7 +17,6 @@ public class Piece extends AbstractPiece implements Cloneable
 {
 	private int						direction;
 	private int						n;
-	private ArrayList<Square>		squares;
 	private Location				place;
 	private Color					c;
 	private boolean					dead;
@@ -64,8 +63,6 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			throw new IllegalArgumentException("n must be 1-7");
 		}
-		
-		squares = new ArrayList<Square>();
 
 		calculatePiece(n);
 	}
@@ -109,20 +106,7 @@ public class Piece extends AbstractPiece implements Cloneable
 			
 			//TODO fix center w/ max and min
 			boolean center = loc.getX() == getWidth() / 2 && loc.getY() == getHeight() / 2;
-			
-			Square square = new Square(c, this, center, loc);
-			square.setLocation(place.add(loc));
-			
-			squares.add(square);
 		}
-	}
-
-	/**
-	 * deletes a square
-	 */
-	public void delete(Square s)
-	{
-		squares.remove(s);
 	}
 
 	private void calculatePiece(int n)
@@ -254,39 +238,6 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			setShape(copy);
 		}
-	}
-
-	/**
-	 * precondition: the tetrimino this method is being used on has just been
-	 * constructed returns true if their are two or more tetriminos occupying
-	 * the same space false if their is only one tetrimino returns false
-	 */
-	public boolean doubledUp()
-	{
-		boolean doubledUp = false;
-
-		for (int i = 0; i < getShape().size(); i++)
-		{
-			Location next = getShape().get(i).add(place);
-			Square s = squares.get(i);
-
-			if (s.getBoard() != null)
-			{
-				if (s.getBoard().getBoss().get(next) != null)
-				{
-					doubledUp = true;
-				}
-			}
-			else
-			{
-				if (getBoard().getBoss().get(next) != null)
-				{
-					doubledUp = true;
-				}
-			}
-		}
-
-		return doubledUp;
 	}
 
 	/**

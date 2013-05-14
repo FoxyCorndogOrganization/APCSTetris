@@ -4,6 +4,17 @@ import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.event.BoardEvent;
 import net.foxycorndog.tetris.event.BoardListener;
 
+/**
+ * Class that displays and keeps track of how many
+ * lines have been completed.
+ * 
+ * @author	Henry Rybolt
+ * @author	Braden Steffaniak
+ * @since	May 14, 2013 at 9:50:40 AM
+ * @since	v0.1
+ * @version	May 14, 2013 at 9:50:40 AM
+ * @version	v1.0
+ */
 public class LinesCompleted implements BoardListener
 {
 	int lines;

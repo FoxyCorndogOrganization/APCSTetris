@@ -468,11 +468,21 @@ public abstract class AbstractPiece implements Cloneable
 		GL.popMatrix();
 	}
 
+	/**
+	 * Get the Color instance of the Piece.
+	 * 
+	 * @return The Color instance of the Piece.
+	 */
 	public Color getColor()
 	{
 		return color;
 	}
 
+	/**
+	 * Set the new Color instance of the Piece
+	 * 
+	 * @param color The Color new instance of the Piece.
+	 */
 	public void setColor(Color color)
 	{
 		this.color = color;

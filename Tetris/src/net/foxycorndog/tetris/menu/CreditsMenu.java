@@ -11,7 +11,7 @@ import net.foxycorndog.jfoxylib.events.ButtonListener;
 import net.foxycorndog.jfoxylib.opengl.GL;
 
 /**
- * 
+ * Menu used to display the credits.
  * 
  * @author	Braden Steffaniak
  * @since	Apr 23, 2013 at 5:19:54 PM
