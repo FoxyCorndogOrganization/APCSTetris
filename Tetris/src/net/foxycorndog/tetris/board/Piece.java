@@ -125,6 +125,12 @@ public class Piece extends AbstractPiece implements Cloneable
 		squares.remove(s);
 	}
 
+	/**
+	 * The piece is calculated based on the number that is passed to the
+	 * method. A temporary matrix is made that adds a square with a
+	 * specific color to a given location.
+	 * @param n A random number between 1 and 7 (inclusive).
+	 */
 	private void calculatePiece(int n)
 	{
 		this.n = n;
@@ -318,6 +324,11 @@ public class Piece extends AbstractPiece implements Cloneable
 		dead = true;
 	}
 	
+	/**
+	 * If a square in a given piece is in a certain location it is
+	 * deleted from the board.
+	 * @param loc
+	 */
 	public void deleteSquare(Location loc)
 	{
 		ArrayList<Location> shape = getShape();
@@ -337,6 +348,11 @@ public class Piece extends AbstractPiece implements Cloneable
 		setShape(shape);
 	}
 	
+	/**
+	 * Used to move a square to a new location given in the parameter.
+	 * @param src
+	 * @param dst
+	 */
 	public void moveSquare(Location src, Location dst)
 	{
 		ArrayList<Location> shape = getShape();
