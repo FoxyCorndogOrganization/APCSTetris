@@ -26,12 +26,7 @@ import net.foxycorndog.tetris.Tetris;
  */
 public class MainMenu extends Menu
 {
-	private boolean 		rUp, gUp, bUp;
-	
-	private int				r, g, b;
 	private	int				circleX, circleY;
-	
-	private float			counter;
 	
 	private Texture			titleScreenTexture, menuBoxTexture,
 							circleTexture;
@@ -60,10 +55,6 @@ public class MainMenu extends Menu
 		bundle      = new Bundle(4 * 3, 2, true, false);
 		
 		queue       = new Queue<Integer>();
-		
-		r = 235;
-		g = 235;
-		b = 235;
 		
 		Texture playButtonTexture    = null;
 		Texture optionsButtonTexture = null;
@@ -239,24 +230,11 @@ public class MainMenu extends Menu
 	}
 	
 	/**
-	 * Method called each frame. Used to calculate logic and
-	 * update the Color of the MainMenu.
+	 * Method called each frame to do logic.
 	 */
 	public void loop()
 	{
-		float delta = 60f / Frame.getFPS();
 		
-		if (!Float.isInfinite(delta) && !Float.isNaN(delta))
-		{
-			counter += delta;
-		}
-		
-		if (counter >= 1)
-		{
-			updateColor();
-			
-			counter %= 1;
-		}
 	}
 	
 	/**
@@ -285,7 +263,7 @@ public class MainMenu extends Menu
 				GL.translate(xOff + getX(), yOff + getY(), 0);
 				GL.scale(min, min, 1);
 				
-				GL.setColor(r / 255f, g / 255f, b / 255f, 1);
+				GL.setColor(tetris.getRf(), tetris.getGf(), tetris.getBf(), 1);
 				bundle.render(GL.QUADS, 0, 4, titleScreenTexture);
 				
 				if (optionsMenu != null)
@@ -311,42 +289,11 @@ public class MainMenu extends Menu
 	}
 	
 	/**
-	 * Set the color that the Menu will be rendered in.
-	 */
-	private void updateColor()
-	{
-		r = rUp ? r + 1 : r - 1;
-		r = r >= 256 ? 255 : r;
-		r = r <= 100 ? 100 : r;
-		
-		g = gUp ? g + 1 : g - 1;
-		g = g >= 256 ? 255 : g;
-		g = g <= 100 ? 100 : g;
-		
-		b = bUp ? b + 1 : b - 1;
-		b = b >= 256 ? 255 : b;
-		b = b <= 100 ? 100 : b;
-		
-		if ((int)(Math.random() * 100) == 0)
-		{
-			rUp = !rUp;
-		}
-		if ((int)(Math.random() * 100) == 0)
-		{
-			gUp = !gUp;
-		}
-		if ((int)(Math.random() * 100) == 0)
-		{
-			bUp = !bUp;
-		}
-	}
-	
-	/**
 	 * Render the Buttons to their correct place.
 	 */
 	private void renderButtons()
 	{
-		GL.setColor((r + 100) / 255f, (g + 100) / 255f, (b + 100) / 255f, 1);
+		GL.setColor((tetris.getR() + 100) / 255f, (tetris.getG() + 100) / 255f, (tetris.getB() + 100) / 255f, 1);
 		
 		playButton.render();
 		optionsButton.render();

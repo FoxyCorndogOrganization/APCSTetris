@@ -203,9 +203,9 @@ public abstract class AbstractPiece implements Cloneable
 //			loc.setX(loc.getX() - minX);
 //			loc.setY(loc.getY() - minY);
 //		}
-
-		this.width  = maxX - minX;
-		this.height = maxY - minY;
+		
+		this.width  = maxX - minX + 1;
+		this.height = maxY - minY + 1;
 		this.shape  = shape;
 
 		bundle = new Bundle(amountOfSquares * 4, 2, true, false);
@@ -490,14 +490,18 @@ public abstract class AbstractPiece implements Cloneable
 
 	/**
 	 * Rotates the Piece 90 degrees clockwise.
+	 * 
+	 * @return Whether the Piece rotated successfully.
 	 */
-	public abstract void rotateClockwise();
+	public abstract boolean rotateClockwise();
 
 	/**
 	 * Rotates the Piece 90 degrees counter-clockwise. The method for this
 	 * is to rotate it clockwise three times. Three rights make a left...
+	 * 
+	 * @return Whether the Piece rotated successfully.
 	 */
-	public abstract void rotateCounterClockwise();
+	public abstract boolean rotateCounterClockwise();
 
 	/**
 	 * Return a clone of the specified Piece instance.

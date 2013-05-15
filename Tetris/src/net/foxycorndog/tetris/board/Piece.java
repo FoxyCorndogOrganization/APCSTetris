@@ -155,64 +155,21 @@ public class Piece extends AbstractPiece implements Cloneable
 	/**
 	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
-	public void rotateCC()
+	public boolean rotateCC()
 	{
-		rotateC();
-		rotateC();
-		rotateC();
-
-//		if (n == 1 && direction == 1)
-//		{
-//			rotateC();
-//			direction = 0;
-//
-//			return;
-//		}
-//		if (n == 7)
-//		{
-//			return;
-//		}
-//
-//		boolean ableToRotate = true;
-//		ArrayList<Location> copy = (ArrayList<Location>)getShape().clone();
-//
-//		for (int i = 0; i < getShape().size(); i++)
-//		{
-//			getShape().get(i).rotateCC();
-//			Location next = getShape().get(i).add(place);
-//
-//			if (spaceIsFree(next) == false)
-//			{
-//				ableToRotate = false;
-//			}
-//		}
-//
-//		if (!ableToRotate)
-//		{
-//			setShape(copy);
-//		}
-//
-//		updateLocations();
+		return rotate(false);
 	}
 
 	/**
 	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
-	public void rotateC()
+	public boolean rotateC()
 	{
-//		if (n == 1 && direction == 1)
-//		{
-//			rotateCC();
-//			direction = 0;
-//
-//			return;
-//		}
-//
-//		if (n == 7)
-//		{
-//			return;
-//		}
-
+		return rotate(true);
+	}
+	
+	private boolean rotate(boolean clockwise)
+	{
 		boolean ableToRotate     = true;
 		ArrayList<Location> copy = new ArrayList<Location>();
 
@@ -223,7 +180,15 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		for (int i = 0; i < copy.size(); i++)
 		{
-			copy.get(i).rotateC();
+			if (clockwise)
+			{
+				copy.get(i).rotateC();
+			}
+			else
+			{
+				copy.get(i).rotateCC();
+			}
+			
 			Location next = copy.get(i).add(getLocation());
 
 			if (!spaceIsFree(next))
@@ -238,6 +203,8 @@ public class Piece extends AbstractPiece implements Cloneable
 		{
 			setShape(copy);
 		}
+		
+		return ableToRotate;
 	}
 
 	/**
@@ -318,27 +285,19 @@ public class Piece extends AbstractPiece implements Cloneable
 	}
 
 	/**
-	 * returns whether the tetrimino was klled
-	 */
-	// public boolean isDead()
-	// {
-	// return dead;
-	// }
-
-	/**
 	 * rotates the tetrimino clockwise
 	 */
-	public void rotateClockwise()
+	public boolean rotateClockwise()
 	{
-		rotateC();
+		return rotateC();
 	}
 
 	/**
 	 * rotates the tetrimino counter-clockwise
 	 */
-	public void rotateCounterClockwise()
+	public boolean rotateCounterClockwise()
 	{
-		rotateCC();
+		return rotateCC();
 	}
 
 	/**
@@ -360,31 +319,8 @@ public class Piece extends AbstractPiece implements Cloneable
 	{
 		int index = (int)(Math.random() * pieces.length);
 
-		Piece rand = null;
-
-//		if (pieces[index] == null)
-//		{
-			rand = new Piece(index + 1);
-//		}
-//		else
-//		{
-//			rand = pieces[index].clone();
-//		}
+		Piece rand = new Piece(index + 1);
 
 		return rand;
-	}
-
-	/**
-	 * Return a clone of the specified Piece instance.
-	 *
-	 * @return Another instance of a Piece exactly like the preceding one.
-	 */
-	public Piece clone()
-	{
-		Piece piece = null;
-
-		piece = (Piece)super.clone();
-
-		return piece;
 	}
 }

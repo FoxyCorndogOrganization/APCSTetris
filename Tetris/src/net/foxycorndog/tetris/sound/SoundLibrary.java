@@ -59,6 +59,26 @@ public class SoundLibrary
 	}
 	
 	/**
+	 * Loop the Sound with the specified key.
+	 * 
+	 * @param key The key that references the Sound.
+	 */
+	public void loopSound(String key)
+	{
+		getSound(key).loop();
+	}
+	
+	/**
+	 * Stop the Sound with the specified key.
+	 * 
+	 * @param key The key that references the Sound.
+	 */
+	public void stopSound(String key)
+	{
+		getSound(key).stop();
+	}
+	
+	/**
 	 * Mute all of the Sounds in the library.
 	 */
 	public void mute()

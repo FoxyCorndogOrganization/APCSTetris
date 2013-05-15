@@ -1,10 +1,16 @@
 package net.foxycorndog.tetris.board;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import net.foxycorndog.jfoxylib.Frame;
+import net.foxycorndog.jfoxylib.components.Button;
+import net.foxycorndog.jfoxylib.events.ButtonEvent;
+import net.foxycorndog.jfoxylib.events.ButtonListener;
 import net.foxycorndog.jfoxylib.events.KeyEvent;
 import net.foxycorndog.jfoxylib.events.KeyListener;
 import net.foxycorndog.jfoxylib.input.Keyboard;
+import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.event.BoardEvent;
 import net.foxycorndog.tetris.event.BoardListener;
@@ -23,12 +29,22 @@ import net.foxycorndog.tetris.event.BoardListener;
 public class Board extends AbstractBoard
 {
 	private boolean						lost;
+	
+	private	int							ticks;
+	private	int							lastSpeedTick;
+	
+	private	float						speedChangeAmount;
+	private	float						speedChangeFactor;
+	
+	private long						pressStartTime;
+	
+	private	Button						backButton;
 
 	private Piece						currentPiece;
 
+	private	KeyListener					keyListener;
+	
 	private Tetris						tetris;
-
-	private int[]						deleteRows;
 
 	private ArrayList<BoardListener>	events;
 
@@ -44,26 +60,31 @@ public class Board extends AbstractBoard
 	 *            up. eg: passing 10 would create 10x10 grid spaces across the
 	 *            board.
 	 */
-	public Board(int width, int height, int gridSpaceSize, Tetris tetris)
+	public Board(int width, int height, int gridSpaceSize, final Tetris tetris)
 	{
 		super(width, height, gridSpaceSize);
 
 		this.tetris = tetris;
 
 		events = new ArrayList<BoardListener>();
-		deleteRows = new int[4];
+		
+		pressStartTime = Long.MAX_VALUE;
 
-		KeyListener listener = new KeyListener()
+		keyListener = new KeyListener()
 		{
 			public void keyPressed(KeyEvent event)
 			{
 				if (event.getCode() == Keyboard.KEY_LEFT)
 				{
 					movePiece(currentPiece, -1, 0);
+					
+					pressStartTime = System.currentTimeMillis();
 				}
 				if (event.getCode() == Keyboard.KEY_RIGHT)
 				{
 					movePiece(currentPiece, 1, 0);
+					
+					pressStartTime = System.currentTimeMillis();
 				}
 				if (event.getCode() == Keyboard.KEY_UP)
 				{
@@ -81,6 +102,20 @@ public class Board extends AbstractBoard
 				{
 					setTicksPerSecond(getTicksPerSecond() / 4);
 				}
+				if (event.getCode() == Keyboard.KEY_LEFT)
+				{
+					if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+					{
+						pressStartTime = Long.MAX_VALUE;
+					}
+				}
+				if (event.getCode() == Keyboard.KEY_RIGHT)
+				{
+					if (!Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+					{
+						pressStartTime = Long.MAX_VALUE;
+					}
+				}
 			}
 
 			public void keyTyped(KeyEvent event)
@@ -94,43 +129,104 @@ public class Board extends AbstractBoard
 			}
 		};
 
-		Keyboard.addKeyListener(listener);
+		Keyboard.addKeyListener(keyListener);
 
 		// setTicksPerSecond(8f);
+		
+		backButton = new Button(null);
+		backButton.setAlignment(Button.RIGHT, Button.BOTTOM);
+		backButton.setLocation(-30, 80);
+		
+		try
+		{
+			backButton.setImage("res/images/back.png");
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		backButton.addButtonListener(new ButtonListener()
+		{
+			public void buttonUnHovered(ButtonEvent event)
+			{
+				
+			}
+			
+			public void buttonReleased(ButtonEvent event)
+			{
+				Button source = event.getSource();
+				
+				if (source == backButton)
+				{
+					tetris.openMainMenu();
+				}
+			}
+			
+			public void buttonPressed(ButtonEvent event)
+			{
+				
+			}
+			
+			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+		});
+		
+		speedChangeFactor = 1.8f;
+		speedChangeAmount = 0.5f;
+		
+		lastSpeedTick     = 10;
 	}
 
 	/**
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick() Moves a piece down
-	 *      one space after half a second until the piece hits the bottom of the
-	 *      board or another piece on the board.
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#tick()
+	 * 
+	 * Moves a piece down
+	 * one space after half a second until the piece hits the bottom of the
+	 * board or another piece on the board.
 	 */
 	public void tick()
 	{
-		if (!getLost())
+		if (!lost)
 		{
-			// if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-			// {
-			// currentPiece.move(-1, 0);
-			// }
-			// if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-			// {
-			// currentPiece.move(1, 0);
-			// }
-
-//			currentPiece.move(0, -1);
+			if (ticks >= lastSpeedTick * speedChangeFactor)
+			{
+				lastSpeedTick = ticks;
+				
+				setTicksPerSecond(getTicksPerSecond() + speedChangeAmount);
+			}
+			
+			if (System.currentTimeMillis() - pressStartTime >= 200)
+			{
+				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+				{
+					movePiece(currentPiece, -1, 0);
+				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+				{
+					movePiece(currentPiece, 1, 0);
+				}
+			}
+			
 			boolean moved = movePiece(currentPiece, 0, -1);
 
 			if (!moved)
 			{
 				currentPiece.kill();
 
-				currentPiece = tetris.getSidebar().getNextPiece()
-						.getNextPiece();
+				clearRows();
+
+				currentPiece = tetris.getSidebar().getNextPiece().getNextPiece();
 				tetris.getSidebar().getNextPiece().generateNextPiece();
-				addPiece(currentPiece, 4, 18);
+				
+				addPiece(currentPiece, getWidth() / 2 - currentPiece.getWidth() / 2, getHeight() - currentPiece.getHeight());
 
 				if (currentPiece.yallHitTheBottomBaby())
 				{
+					Keyboard.removeKeyListener(keyListener);
+					
 					lost = true;
 
 					for (BoardListener listener : events)
@@ -138,15 +234,16 @@ public class Board extends AbstractBoard
 						listener.onGameLost(null);
 					}
 					
+					Tetris.SOUND_LIBRARY.stopSound("music.wav");
 					Tetris.SOUND_LIBRARY.playSound("lose.wav");
 				}
 				else
 				{
 					Tetris.SOUND_LIBRARY.playSound("pop.wav");
 				}
-
-				clearRows();
 			}
+			
+			ticks++;
 		}
 	}
 	
@@ -179,7 +276,7 @@ public class Board extends AbstractBoard
 	 * @return lost. Lost is either true or false. If lost is true, the piece is
 	 *         still able to move.
 	 */
-	public boolean getLost()
+	public boolean hasLost()
 	{
 		return lost;
 	}
@@ -187,8 +284,10 @@ public class Board extends AbstractBoard
 	/**
 	 * Coordinates use the Cartesian system.
 	 * 
-	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int) checks
-	 *      to see it the coordinate (x,y) is valid for the piece to move to.
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#isValid(int, int)
+	 * 
+	 * checks to see it the coordinate (x,y) is valid for the piece to
+	 * move to.
 	 */
 	public boolean isValid(int x, int y)
 	{
@@ -300,18 +399,44 @@ public class Board extends AbstractBoard
 		addPiece(currentPiece, 4, 18);
 		
 		Tetris.SOUND_LIBRARY.playSound("pop.wav");
+		Tetris.SOUND_LIBRARY.loopSound("music.wav");
 	}
 
 	/**
 	 * @see net.foxycorndog.tetris.board.AbstractBoard#addPiece(net.foxycorndog.tetris.board.Piece,
 	 *      int, int)
 	 */
-	@Override
 	public void addPiece(Piece piece, int x, int y)
 	{
 		piece.setBoard(this);
 		piece.setLocation(x, y);
 
 		getPieces().add(piece);
+	}
+	
+	/**
+	 * Render the back Button.
+	 * 
+	 * @see net.foxycorndog.tetris.board.AbstractBoard#render()
+	 */
+	public void render()
+	{
+		super.render();
+		
+		GL.pushMatrix();
+		{
+			GL.scale(0.75f, 0.75f, 1);
+			
+			backButton.render();
+		}
+		GL.popMatrix();
+	}
+	
+	/**
+	 * Dispose of the Components used by the Board.
+	 */
+	public void dispose()
+	{
+		backButton.dispose();
 	}
 }

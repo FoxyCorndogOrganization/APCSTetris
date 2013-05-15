@@ -29,7 +29,11 @@ import net.foxycorndog.tetris.sound.SoundLibrary;
  */
 public class Tetris extends GameStarter
 {
-	private float						bgColor;
+	private boolean 					rUp, gUp, bUp;
+	
+	private int							r, g, b;
+	
+	private float						counter;
 	
 	private Board						board;
 	private Sidebar						sidebar;
@@ -74,8 +78,6 @@ public class Tetris extends GameStarter
 		
 		board.newGame();
 		board.move(50, 50);
-		
-//		board.addPiece(Piece.getRandomPiece(), 5, 5);
 	}
 	
 	/**
@@ -93,20 +95,36 @@ public class Tetris extends GameStarter
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 		});
 		
-		bgColor  = 0;
-		
-		mainMenu = new MainMenu(this);
-		
 		try
 		{
 			SOUND_LIBRARY.addSound("pop.wav", new Sound("res/sounds/pop.wav"));
 			SOUND_LIBRARY.addSound("lineremoved.wav", new Sound("res/sounds/lineremoved.wav"));
 			SOUND_LIBRARY.addSound("lose.wav", new Sound("res/sounds/lose.wav"));
+			SOUND_LIBRARY.addSound("music.wav", new Sound("res/sounds/music.wav"));
 		}
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
+		
+		r = 235;
+		g = 235;
+		b = 235;
+		
+		openMainMenu();
+	}
+	
+	public void openMainMenu()
+	{
+		if (board != null)
+		{
+			board.dispose();
+		}
+		
+		board   = null;
+		sidebar = null;
+		
+		mainMenu = new MainMenu(this);
 	}
 	
 	/**
@@ -124,6 +142,8 @@ public class Tetris extends GameStarter
 	 */
 	public void render2D()
 	{
+		GL.setClearColor(getRf() / 2, getGf() / 2, getBf() / 2, 1);
+		
 		if (mainMenu != null)
 		{
 			mainMenu.render();
@@ -148,6 +168,20 @@ public class Tetris extends GameStarter
 	 */
 	public void loop()
 	{
+		float delta = 60f / Frame.getFPS();
+		
+		if (!Float.isInfinite(delta) && !Float.isNaN(delta))
+		{
+			counter += delta;
+		}
+		
+		if (counter >= 1)
+		{
+			updateColor();
+			
+			counter %= 1;
+		}
+		
 		if (mainMenu != null)
 		{
 			mainMenu.loop();
@@ -173,6 +207,67 @@ public class Tetris extends GameStarter
 		{
 //			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
 		}
+	}
+	
+	/**
+	 * Set the color that the Menu will be rendered in.
+	 */
+	private void updateColor()
+	{
+		r = rUp ? r + 1 : r - 1;
+		r = r >= 256 ? 255 : r;
+		r = r <= 100 ? 100 : r;
+		
+		g = gUp ? g + 1 : g - 1;
+		g = g >= 256 ? 255 : g;
+		g = g <= 100 ? 100 : g;
+		
+		b = bUp ? b + 1 : b - 1;
+		b = b >= 256 ? 255 : b;
+		b = b <= 100 ? 100 : b;
+		
+		if ((int)(Math.random() * 100) == 0)
+		{
+			rUp = !rUp;
+		}
+		if ((int)(Math.random() * 100) == 0)
+		{
+			gUp = !gUp;
+		}
+		if ((int)(Math.random() * 100) == 0)
+		{
+			bUp = !bUp;
+		}
+	}
+	
+	public int getR()
+	{
+		return r;
+	}
+	
+	public int getG()
+	{
+		return g;
+	}
+	
+	public int getB()
+	{
+		return b;
+	}
+	
+	public float getRf()
+	{
+		return r / 255f;
+	}
+	
+	public float getGf()
+	{
+		return g / 255f;
+	}
+	
+	public float getBf()
+	{
+		return b / 255f;
 	}
 	
 	/**
