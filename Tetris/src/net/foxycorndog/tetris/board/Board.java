@@ -159,6 +159,7 @@ public class Board extends AbstractBoard
 				
 				if (source == backButton)
 				{
+					quitGame();
 					tetris.openMainMenu();
 				}
 			}
@@ -234,7 +235,7 @@ public class Board extends AbstractBoard
 						listener.onGameLost(null);
 					}
 					
-					Tetris.SOUND_LIBRARY.stopSound("music.wav");
+					quitGame();
 					Tetris.SOUND_LIBRARY.playSound("lose.wav");
 				}
 				else
@@ -247,6 +248,22 @@ public class Board extends AbstractBoard
 		}
 	}
 	
+	/**
+	 * Quit the game and stop the music.
+	 */
+	private void quitGame()
+	{
+		Tetris.SOUND_LIBRARY.stopSound("music.wav");
+	}
+	
+	/**
+	 * Move the specified Piece the specified amount.
+	 * 
+	 * @param piece The Piece to move.
+	 * @param dx The amount of squares to move it horizontally.
+	 * @param dy The amount of squares to move it vertically.
+	 * @return Whether it moved successfully or not.
+	 */
 	private boolean movePiece(Piece piece, int dx, int dy)
 	{
 		boolean moved = piece.move(dx, dy);
