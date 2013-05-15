@@ -6,6 +6,11 @@ import java.io.IOException;
 
 import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.GameStarter;
+import net.foxycorndog.jfoxylib.components.Button;
+import net.foxycorndog.jfoxylib.events.ButtonEvent;
+import net.foxycorndog.jfoxylib.events.ButtonListener;
+import net.foxycorndog.jfoxylib.events.FrameEvent;
+import net.foxycorndog.jfoxylib.events.FrameListener;
 import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.input.Mouse;
 import net.foxycorndog.jfoxylib.openal.Sound;
@@ -34,6 +39,8 @@ public class Tetris extends GameStarter
 	private int							r, g, b;
 	
 	private float						counter;
+	
+	private	Button						backButton;
 	
 	private Board						board;
 	private Sidebar						sidebar;
@@ -70,14 +77,93 @@ public class Tetris extends GameStarter
 		mainMenu.dispose();
 		mainMenu = null;
 		
-		board    = new Board(10, 30, 10, this);
-		sidebar  = new Sidebar();
+		board    = new Board(50, 30, 10, this);
+		board.setScale(3f);
+		
+		sidebar    = new Sidebar();
+		
+		backButton = new Button(null);
+		
+		try
+		{
+			backButton.setImage("res/images/back.png");
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		board.addListener(sidebar.getScoreboard());
 		board.addListener(sidebar.getLinesCompleted());
 		
 		board.newGame();
-		board.move(50, 50);
+		
+		arrangeComponents();
+		
+		backButton.addButtonListener(new ButtonListener()
+		{
+			public void buttonUnHovered(ButtonEvent event)
+			{
+				
+			}
+			
+			public void buttonReleased(ButtonEvent event)
+			{
+				Button source = event.getSource();
+				
+				if (source == backButton)
+				{
+					quitGame();
+					openMainMenu();
+				}
+			}
+			
+			public void buttonPressed(ButtonEvent event)
+			{
+				
+			}
+			
+			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+		});
+	}
+	
+	/**
+	 * Arrange all of the Components to fit in the Frame in the
+	 * most optimal way.
+	 */
+	private void arrangeComponents()
+	{
+		int sidebarOffsetX = 30;
+		
+		float wid = board.getScaledWidth() + sidebar.getScaledWidth() + sidebarOffsetX;
+		float hei = board.getScaledHeight();
+		
+		int boardX = Math.round(Frame.getWidth() / 2f - wid / 2f);
+		int boardY = Math.round(Frame.getHeight() / 2f - hei / 2f);
+		
+		boardY = boardY < 0 ? 0 : boardY;
+		
+		board.setLocation(boardX, boardY);
+		
+		sidebar.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX,
+				board.getY() + Math.round(board.getScaledHeight() / 2));
+		
+		backButton.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX,
+				board.getY());
+	}
+	
+	/**
+	 * Quit the Tetris game.
+	 */
+	public void quitGame()
+	{
+		board.quitGame();
+		
+		backButton.dispose();
+		backButton = null;
 	}
 	
 	/**
@@ -111,16 +197,22 @@ public class Tetris extends GameStarter
 		g = 235;
 		b = 235;
 		
+		Frame.addFrameListener(new FrameListener()
+		{
+			public void frameResized(FrameEvent e)
+			{
+				if (board != null)
+				{
+					arrangeComponents();
+				}
+			}
+		});
+		
 		openMainMenu();
 	}
 	
 	public void openMainMenu()
 	{
-		if (board != null)
-		{
-			board.dispose();
-		}
-		
 		board   = null;
 		sidebar = null;
 		
@@ -152,6 +244,7 @@ public class Tetris extends GameStarter
 		{
 			board.render();
 			sidebar.render();
+			backButton.render();
 		}
 	}
 

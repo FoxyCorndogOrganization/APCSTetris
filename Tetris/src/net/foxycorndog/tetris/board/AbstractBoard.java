@@ -28,6 +28,7 @@ public abstract class AbstractBoard
 	
 	private float 						counter;
 	private	float						ticksPerSecond;
+	private	float						scale;
 	
 	private	Image						boardImage;
 	
@@ -76,6 +77,8 @@ public abstract class AbstractBoard
 		{
 			throw new IllegalArgumentException("The width and height must be > 0");
 		}
+		
+		this.scale         = 1;
 		
 		this.width         = width;
 		this.height        = height;
@@ -133,7 +136,7 @@ public abstract class AbstractBoard
 					}
 				}
 				
-				grid.addVertices(GL.genRectVerts(width * squareSize + 0, y * squareSize + 1, 1, squareSize));
+				grid.addVertices(GL.genRectVerts(width * squareSize - 1, y * squareSize + 1, 1, squareSize));
 			}
 		}
 		grid.endEditingVertices();
@@ -191,6 +194,26 @@ public abstract class AbstractBoard
 	}
 	
 	/**
+	 * Get the number pixels wide the Board is.
+	 * 
+	 * @return The number pixels wide the Board is.
+	 */
+	public float getScaledWidth()
+	{
+		return width * scale * gridSpaceSize;
+	}
+	
+	/**
+	 * Get the number pixels high the Board is.
+	 * 
+	 * @return The number pixels high the Board is.
+	 */
+	public float getScaledHeight()
+	{
+		return height * scale * gridSpaceSize;
+	}
+	
+	/**
 	 * Get the size (in pixels) that each space on the
 	 * Board will take up. eg: passing 10 would create 10x10 grid
 	 * spaces across the board.
@@ -201,6 +224,26 @@ public abstract class AbstractBoard
 	public int getGridSpaceSize()
 	{
 		return gridSpaceSize;
+	}
+	
+	/**
+	 * Get the horizontal location that the Board image is displayed.
+	 * 
+	 * @return The horizontal location that the Board image is displayed.
+	 */
+	public int getX()
+	{
+		return x;
+	}
+	
+	/**
+	 * Get the vertical location that the Board image is displayed.
+	 * 
+	 * @return The vertical location that the Board image is displayed.
+	 */
+	public int getY()
+	{
+		return y;
 	}
 	
 	/**
@@ -274,6 +317,26 @@ public abstract class AbstractBoard
 	}
 	
 	/**
+	 * Get the scale in which the Board is rendered.
+	 * 
+	 * @return The scale that the Board is rendered in.
+	 */
+	public float getScale()
+	{
+		return scale;
+	}
+	
+	/**
+	 * Set the scale in which to render the Board by.
+	 * 
+	 * @param scale The scale that the Board will be rendered in.
+	 */
+	public void setScale(float scale)
+	{
+		this.scale = scale;
+	}
+	
+	/**
 	 * Render the Board's background image as well as all of the Pieces
 	 * to the screen.
 	 */
@@ -286,29 +349,31 @@ public abstract class AbstractBoard
 			// Translate everything that will be rendered after this call
 			// by (x, y) pixels.
 			GL.translate(x, y, 0);
-			GL.scale(3, 3, 1);
+			GL.scale(scale, scale, 1);
 			
 //			boardImage.render();
 			
-			GL.pushAttrib(GL.ALL_ATTRIB_BITS);
+			GL.beginClipping(0, 0, width * Piece.getSegmentSize(), height * Piece.getSegmentSize() + 1);
 			{
-				GL.setColor(0, 0, 0, 1);
-				grid.render(GL.QUADS, width * height * 4, (width + 2) * (height + 2) * 4 - width * height * 4, WHITE_TEXTURE);
+				GL.pushAttrib(GL.ALL_ATTRIB_BITS);
+				{
+					GL.setColor(0, 0, 0, 1);
+					grid.render(GL.QUADS, width * height * 4, (width + 2) * (height + 2) * 4 - width * height * 4, WHITE_TEXTURE);
+				}
+				GL.popAttrib();
+				
+				GL.translate(0, 0, -1);
+				grid.render(GL.QUADS, 0, width * height * 4, GRID_SQUARE_TEXTURE);
+				
+				GL.translate(0, 0, 1);
+				
+				// A for each loop that renders all of the Pieces to the screen.
+				for (AbstractPiece piece : pieces)
+				{
+					piece.render();
+				}
 			}
-			GL.popAttrib();
-			
-			GL.translate(0, 0, -1);
-			grid.render(GL.QUADS, 0, width * height * 4, GRID_SQUARE_TEXTURE);
-			
-			GL.translate(0, 0, 1);
-			
-			// A for each loop that renders all of the Pieces to the screen.
-			for (AbstractPiece piece : pieces)
-			{
-				piece.render();
-			}
-			
-			renderBorder();
+			GL.endClipping();
 		}
 		// Return the the previous matrix formation.
 		GL.popMatrix();
@@ -324,20 +389,6 @@ public abstract class AbstractBoard
 	public ArrayList<Piece> getPieces()
 	{
 		return pieces;
-	}
-	
-	/**
-	 * Render the Border around the grid that the Tetris game is
-	 * played inside.
-	 */
-	private void renderBorder()
-	{
-		// A for each loop that renders all of the Pieces of the Border
-		// to the screen.
-		for (Piece piece : border)
-		{
-			piece.render();
-		}
 	}
 	
 	/**

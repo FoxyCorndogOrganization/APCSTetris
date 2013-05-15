@@ -1,5 +1,7 @@
 package net.foxycorndog.tetris.sidebar;
 
+import net.foxycorndog.jfoxylib.opengl.GL;
+
 /**
  * Class that holds everything in the sidebar and renders it
  * too.
@@ -13,20 +15,83 @@ package net.foxycorndog.tetris.sidebar;
  */
 public class Sidebar
 {
-	NextPiece		nP;
-	Scoreboard		sB;
-	LinesCompleted	lC;
+	private	int				x, y;
+	private	int				width, height;
+	
+	private	float			scaledWidth, scaledHeight;
+	
+	private	NextPiece		nextPiece;
+	private	Scoreboard		scoreBoard;
+	private	LinesCompleted	linesCompleted;
 
 	/**
 	 * creates a sidebar
 	 */
 	public Sidebar()
 	{
-		int x = 400;
-		int y = 200;
-		nP = new NextPiece(x, y);
-		sB = new Scoreboard(x, y);
-		lC = new LinesCompleted(x, y);
+		nextPiece = new NextPiece();
+		nextPiece.setLocation(0, 130);
+		nextPiece.setScale(2);
+		
+		scoreBoard = new Scoreboard();
+		scoreBoard.setLocation(0, 70);
+		
+		linesCompleted = new LinesCompleted();
+		linesCompleted.setLocation(0, 0);
+		
+		width = nextPiece.getWidth();
+	}
+	
+	/**
+	 * Set the new location of the Sidebar.
+	 * 
+	 * @param x The new horizontal location of the Sidebar.
+	 * @param y The new vertical location of the Sidebar.
+	 */
+	public void setLocation(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+
+	/**
+	 * Get the width of the Sidebar.
+	 * 
+	 * @return The width of the Sidebar.
+	 */
+	public int getWidth()
+	{
+		return width;
+	}
+
+	/**
+	 * Get the height of the Sidebar.
+	 * 
+	 * @return The height of the Sidebar.
+	 */
+	public int getHeight()
+	{
+		return height;
+	}
+
+	/**
+	 * Get the width of the Sidebar after scaling.
+	 * 
+	 * @return The width of the Sidebar after scaling.
+	 */
+	public float getScaledWidth()
+	{
+		return nextPiece.getScaledWidth();
+	}
+
+	/**
+	 * Get the height of the Sidebar after scaling.
+	 * 
+	 * @return The height of the Sidebar after scaling.
+	 */
+	public float getScaledHeight()
+	{
+		return nextPiece.getScaledHeight();
 	}
 
 	/**
@@ -36,7 +101,7 @@ public class Sidebar
 	 */
 	public NextPiece getNextPiece()
 	{
-		return nP;
+		return nextPiece;
 	}
 
 	/**
@@ -46,7 +111,7 @@ public class Sidebar
 	 */
 	public Scoreboard getScoreboard()
 	{
-		return sB;
+		return scoreBoard;
 	}
 
 	/**
@@ -56,7 +121,7 @@ public class Sidebar
 	 */
 	public LinesCompleted getLinesCompleted()
 	{
-		return lC;
+		return linesCompleted;
 	}
 	
 	/**
@@ -65,8 +130,14 @@ public class Sidebar
 	 */
 	public void render()
 	{
-		sB.render();
-		nP.render();
-		lC.render();
+		GL.pushMatrix();
+		{
+			GL.translate(x, y, 0);
+			
+			scoreBoard.render();
+			nextPiece.render();
+			linesCompleted.render();
+		}
+		GL.popMatrix();
 	}
 }

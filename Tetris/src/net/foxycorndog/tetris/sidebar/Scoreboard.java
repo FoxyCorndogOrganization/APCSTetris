@@ -18,17 +18,27 @@ import net.foxycorndog.tetris.event.BoardListener;
  */
 public class Scoreboard implements BoardListener
 {
+	private	int	x, y;
 	private int score;
-	private int x, y;
 	
 	/**
 	 * creates the scoreBoard and displays it in the sideBar
 	 */
-	public Scoreboard(int x, int y)
+	public Scoreboard()
+	{
+		score = 0;
+	}
+	
+	/**
+	 * Set the new location of the Scoreboard.
+	 * 
+	 * @param x The new horizontal location of the Scoreboard.
+	 * @param y The new vertical location of the Scoreboard.
+	 */
+	public void setLocation(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
-		score = 0;
 	}
 	
 	/**
@@ -36,10 +46,8 @@ public class Scoreboard implements BoardListener
 	 */
 	public void render()
 	{
-		int xC = 0;
-		int yC = 220;
 		float scale = 0.5f;
-		Tetris.getFont().render("score " + score, x + xC, y + yC, 0, scale, null);
+		Tetris.getFont().render("score " + score, x, y, 0, scale, null);
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);

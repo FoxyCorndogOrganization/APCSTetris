@@ -17,18 +17,27 @@ import net.foxycorndog.tetris.event.BoardListener;
  */
 public class LinesCompleted implements BoardListener
 {
-	int lines;
-	int x;
-	int y;
+	private	int	x, y;
+	private	int lines;
 	
 	/**
 	 * creates a linesCompleted and displays it in the sideBar
 	 */
-	public LinesCompleted(int x, int y)
+	public LinesCompleted()
+	{
+		lines = 0;
+	}
+	
+	/**
+	 * Set the new location of the LinesCompleted.
+	 * 
+	 * @param x The new horizontal location of the LinesCompleted.
+	 * @param y The new vertical location of the LinesCompleted.
+	 */
+	public void setLocation(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
-		lines = 0;
 	}
 	
 	/**
@@ -36,10 +45,8 @@ public class LinesCompleted implements BoardListener
 	 */
 	public void render()
 	{
-		int xC = 0;
-		int yC = 150;
 		float scale = 0.5f;
-		Tetris.getFont().render("lines " + lines, x + xC, y + yC, 0, scale, null);
+		Tetris.getFont().render("lines " + lines, x, y, 0, scale, null);
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);

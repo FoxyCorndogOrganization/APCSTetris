@@ -37,8 +37,6 @@ public class Board extends AbstractBoard
 	private	float						speedChangeFactor;
 	
 	private long						pressStartTime;
-	
-	private	Button						backButton;
 
 	private Piece						currentPiece;
 
@@ -133,50 +131,8 @@ public class Board extends AbstractBoard
 
 		// setTicksPerSecond(8f);
 		
-		backButton = new Button(null);
-		backButton.setAlignment(Button.RIGHT, Button.BOTTOM);
-		backButton.setLocation(-30, 80);
-		
-		try
-		{
-			backButton.setImage("res/images/back.png");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		
-		backButton.addButtonListener(new ButtonListener()
-		{
-			public void buttonUnHovered(ButtonEvent event)
-			{
-				
-			}
-			
-			public void buttonReleased(ButtonEvent event)
-			{
-				Button source = event.getSource();
-				
-				if (source == backButton)
-				{
-					quitGame();
-					tetris.openMainMenu();
-				}
-			}
-			
-			public void buttonPressed(ButtonEvent event)
-			{
-				
-			}
-			
-			public void buttonHovered(ButtonEvent event)
-			{
-				
-			}
-		});
-		
-		speedChangeFactor = 1.8f;
-		speedChangeAmount = 0.5f;
+		speedChangeFactor = 1.2f;
+		speedChangeAmount = 2.5f;
 		
 		lastSpeedTick     = 10;
 	}
@@ -222,7 +178,7 @@ public class Board extends AbstractBoard
 				currentPiece = tetris.getSidebar().getNextPiece().getNextPiece();
 				tetris.getSidebar().getNextPiece().generateNextPiece();
 				
-				addPiece(currentPiece, getWidth() / 2 - currentPiece.getWidth() / 2, getHeight() - currentPiece.getHeight());
+				addPieceToCenter();
 
 				if (currentPiece.yallHitTheBottomBaby())
 				{
@@ -251,7 +207,7 @@ public class Board extends AbstractBoard
 	/**
 	 * Quit the game and stop the music.
 	 */
-	private void quitGame()
+	public void quitGame()
 	{
 		Tetris.SOUND_LIBRARY.stopSound("music.wav");
 	}
@@ -413,12 +369,17 @@ public class Board extends AbstractBoard
 	{
 		currentPiece = Piece.getRandomPiece();
 
-		addPiece(currentPiece, 4, 18);
+		addPieceToCenter();
 		
 		Tetris.SOUND_LIBRARY.playSound("pop.wav");
 		Tetris.SOUND_LIBRARY.loopSound("music.wav");
 	}
 
+	public void addPieceToCenter()
+	{
+		addPiece(currentPiece, getWidth() / 2 - currentPiece.getWidth() / 2, getHeight() - currentPiece.getHeight());
+	}
+	
 	/**
 	 * @see net.foxycorndog.tetris.board.AbstractBoard#addPiece(net.foxycorndog.tetris.board.Piece,
 	 *      int, int)
@@ -443,17 +404,7 @@ public class Board extends AbstractBoard
 		GL.pushMatrix();
 		{
 			GL.scale(0.75f, 0.75f, 1);
-			
-			backButton.render();
 		}
 		GL.popMatrix();
-	}
-	
-	/**
-	 * Dispose of the Components used by the Board.
-	 */
-	public void dispose()
-	{
-		backButton.dispose();
 	}
 }
