@@ -53,7 +53,7 @@ public class Tetris extends GameStarter
 	public static void main(String args[])
 	{
 		Frame.create((int)(390 * 1.4), (int)(510 * 1.4));
-		Frame.setResizable(false);
+		Frame.setResizable(true);
 		Frame.setTitle("Tetris");
 		Frame.setTargetFPS(60);
 		
@@ -70,7 +70,7 @@ public class Tetris extends GameStarter
 		mainMenu.dispose();
 		mainMenu = null;
 		
-		board    = new Board(10, 20, 10, this);
+		board    = new Board(10, 30, 10, this);
 		sidebar  = new Sidebar();
 		
 		board.addListener(sidebar.getScoreboard());

@@ -7,6 +7,7 @@ import net.foxycorndog.jfoxylib.Frame;
 import net.foxycorndog.jfoxylib.components.Image;
 import net.foxycorndog.jfoxylib.input.Keyboard;
 import net.foxycorndog.jfoxylib.opengl.GL;
+import net.foxycorndog.jfoxylib.opengl.bundle.Bundle;
 import net.foxycorndog.jfoxylib.opengl.texture.Texture;
 
 /**
@@ -34,6 +35,29 @@ public abstract class AbstractBoard
 	
 	private ArrayList<Piece>			pieces;
 	
+	private	Bundle						grid;
+	
+	private static final Texture		LR_SIDE_TEXTURE     = genTexture("res/images/lrside.png");
+	private static final Texture		BT_SIDE_TEXTURE     = genTexture("res/images/btside.png");
+	private static final Texture		WHITE_TEXTURE       = genTexture("res/images/btside.png");
+	private static final Texture		GRID_SQUARE_TEXTURE = genTexture("res/images/gridsquare.png");
+	
+	private static final Texture genTexture(String location)
+	{
+		Texture tex = null;
+		
+		try
+		{
+			tex = new Texture(location);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return tex;
+	}
+	
 	/**
 	 * Instantiate the image for the Board as well as other
 	 * instantiations.
@@ -48,6 +72,11 @@ public abstract class AbstractBoard
 	 */
 	public AbstractBoard(int width, int height, int gridSpaceSize)
 	{
+		if (width <= 0 || height <= 0)
+		{
+			throw new IllegalArgumentException("The width and height must be > 0");
+		}
+		
 		this.width         = width;
 		this.height        = height;
 		this.gridSpaceSize = gridSpaceSize;
@@ -68,6 +97,77 @@ public abstract class AbstractBoard
 		}
 		
 		pieces = new ArrayList<Piece>();
+		
+		genGridImage(width, height);
+	}
+	
+	private void genGridImage(int width, int height)
+	{
+		grid = new Bundle((width + 2) * (height + 2) * 4, 2, true, false);
+		
+		int squareSize = 10;
+		
+		grid.beginEditingVertices();
+		{
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					grid.addVertices(GL.genRectVerts(x * squareSize + 1, y * squareSize + 1, squareSize, squareSize));
+				}
+			}
+			
+			for (int y = 0; y < height; y++)
+			{
+				grid.addVertices(GL.genRectVerts(0, y * squareSize + 1, 1, squareSize));
+				
+				for (int x = 0; x < width; x++)
+				{
+					if (y == 0)
+					{
+						grid.addVertices(GL.genRectVerts(x * squareSize + 1, y * squareSize, squareSize, 1));
+					}
+					else if (y == height - 1)
+					{
+						grid.addVertices(GL.genRectVerts(x * squareSize + 1, (y + 1)* squareSize + 0, squareSize, 1));
+					}
+				}
+				
+				grid.addVertices(GL.genRectVerts(width * squareSize + 0, y * squareSize + 1, 1, squareSize));
+			}
+		}
+		grid.endEditingVertices();
+		
+		grid.beginEditingTextures();
+		{
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					grid.addTextures(GL.genRectTextures(GRID_SQUARE_TEXTURE));
+				}
+			}
+			
+			for (int y = 0; y < height; y++)
+			{
+				grid.addTextures(GL.genRectTextures(LR_SIDE_TEXTURE));
+				
+				for (int x = 0; x < width; x++)
+				{
+					if (y == 0)
+					{
+						grid.addTextures(GL.genRectTextures(BT_SIDE_TEXTURE));
+					}
+					else if (y == height - 1)
+					{
+						grid.addTextures(GL.genRectTextures(BT_SIDE_TEXTURE));
+					}
+				}
+
+				grid.addTextures(GL.genRectTextures(LR_SIDE_TEXTURE));
+			}
+		}
+		grid.endEditingTextures();
 	}
 	
 	/**
@@ -188,7 +288,19 @@ public abstract class AbstractBoard
 			GL.translate(x, y, 0);
 			GL.scale(3, 3, 1);
 			
-			boardImage.render();
+//			boardImage.render();
+			
+			GL.pushAttrib(GL.ALL_ATTRIB_BITS);
+			{
+				GL.setColor(0, 0, 0, 1);
+				grid.render(GL.QUADS, width * height * 4, (width + 2) * (height + 2) * 4 - width * height * 4, WHITE_TEXTURE);
+			}
+			GL.popAttrib();
+			
+			GL.translate(0, 0, -1);
+			grid.render(GL.QUADS, 0, width * height * 4, GRID_SQUARE_TEXTURE);
+			
+			GL.translate(0, 0, 1);
 			
 			// A for each loop that renders all of the Pieces to the screen.
 			for (AbstractPiece piece : pieces)
