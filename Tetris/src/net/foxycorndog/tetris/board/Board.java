@@ -131,8 +131,8 @@ public class Board extends AbstractBoard
 
 		// setTicksPerSecond(8f);
 		
-		speedChangeFactor = 1.2f;
-		speedChangeAmount = 2.5f;
+		speedChangeFactor = 1.8f;
+		speedChangeAmount = 0.5f;
 		
 		lastSpeedTick     = 10;
 	}
