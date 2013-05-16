@@ -77,8 +77,8 @@ public class Tetris extends GameStarter
 		mainMenu.dispose();
 		mainMenu = null;
 		
-		board    = new Board(50, 30, 10, this);
-		board.setScale(3f);
+		board    = new Board(200, 180, 10, this);
+		board.setScale(0.5f);
 		
 		sidebar    = new Sidebar();
 		
