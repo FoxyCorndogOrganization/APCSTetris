@@ -77,8 +77,8 @@ public class Tetris extends GameStarter
 		mainMenu.dispose();
 		mainMenu = null;
 		
-		board    = new Board(200, 180, 10, this);
-		board.setScale(0.5f);
+		board    = new Board(10, 20, 10, this);
+		board.setScale(3f);
 		
 		sidebar    = new Sidebar();
 		
@@ -151,7 +151,7 @@ public class Tetris extends GameStarter
 		sidebar.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX,
 				board.getY() + Math.round(board.getScaledHeight() / 2));
 		
-		backButton.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX,
+		backButton.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX - 30,
 				board.getY());
 	}
 	
