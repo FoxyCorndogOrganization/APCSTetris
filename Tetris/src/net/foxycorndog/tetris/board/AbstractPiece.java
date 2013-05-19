@@ -22,8 +22,12 @@ public abstract class AbstractPiece implements Cloneable
 {
 	private			int				x, y;
 	private			int				width, height;
-
+	private			int				unsetX, unsetY;
+	private			int				offsetX, offsetY;
+	
 	private			Color			color;
+	
+	private			Location		center;
 
 	private			Board			board;
 
@@ -82,10 +86,45 @@ public abstract class AbstractPiece implements Cloneable
 	{
 		setShape(shape);
 	}
+	
+	/**
+	 * Create an Abstract Piece from the specified shape and Color.
+	 * 
+	 * @param shape The ArrayList of locations describing the shape.
+	 * @param color The Color instance describing the Color of the Piece.
+	 */
 	public AbstractPiece(ArrayList<Location> shape, Color color)
 	{
 		setColor(color);
 		setShape(shape);
+	}
+	
+	/**
+	 * Create an Abstract Piece from the specified shape and Color.
+	 * 
+	 * @param shape The Array of locations describing the shape.
+	 * @param color The Color instance describing the Color of the Piece.
+	 */
+	public AbstractPiece(Location shape[], Color color)
+	{
+		setColor(color);
+		
+		ArrayList<Location> locs = new ArrayList<Location>();
+		
+		for (int i = 0; i < shape.length; i++)
+		{
+			locs.add(shape[i]);
+		}
+		
+		setShape(locs);
+	}
+	
+	/**
+	 * Calculate the center of the Piece.
+	 */
+	public void calculateCenter()
+	{
+		center = new Location(width / 2, height / 2);
 	}
 
 	/**
@@ -106,6 +145,8 @@ public abstract class AbstractPiece implements Cloneable
 	public void setBoard(Board board)
 	{
 		this.board = board;
+		
+		update();
 	}
 	
 	public ArrayList<Location> getShape()
@@ -196,24 +237,60 @@ public abstract class AbstractPiece implements Cloneable
 			}
 		}
 		
-//		for (int i = 0; i < shape.size(); i++)
-//		{
-//			Location loc = shape.get(i);
-//			
-//			loc.setX(loc.getX() - minX);
-//			loc.setY(loc.getY() - minY);
-//		}
-		
-		this.width  = maxX - minX + 1;
-		this.height = maxY - minY + 1;
-		this.shape  = shape;
-
 		bundle = new Bundle(amountOfSquares * 4, 2, true, false);
 
 		if (amountOfSquares <= 0)
 		{
 			return;
 		}
+		
+		int avgX = 0;
+		int avgY = 0;
+		
+//		for (int i = 0; i < shape.size(); i++)
+//		{
+//			Location loc = shape.get(i);
+//			shape.set(i, new Location(loc.getX() - minX, loc.getY() - minY));
+//			
+//			loc = shape.get(i);
+//			
+//			avgX += loc.getX() + 1;
+//			avgY += loc.getY() + 1;
+////			loc.setX(loc.getX() - minX);
+////			loc.setY(loc.getY() - minY);
+//		}
+//		
+//		unsetX = minX;
+//		unsetY = minY;
+		
+		offsetX = -minX;
+		offsetY = -minY;
+		
+		maxX = maxX - minX;
+		maxY = maxY - minY;
+		minX = 0;
+		minY = 0;
+		
+		this.width  = maxX - minX + 1;
+		this.height = maxY - minY + 1;
+		this.shape  = shape;
+		
+		avgX /= shape.size();
+		avgY /= shape.size();
+		
+		avgX -= 1;
+		avgY -= 1;
+		
+//		avgX = width  / 2;
+//		avgY = height / 2;
+		
+//		avgX -= width % 2 == 0 ? 1 : 0;
+//		avgY -= height % 2 == 0 ? 1 : 0;
+		
+//		System.out.println(avgX + ", " + avgY);
+		
+//		calculateCenter();
+		center = new Location(avgX, avgY);
 		
 		int wid = square.getWidth();
 		int hei = square.getHeight();
@@ -236,6 +313,63 @@ public abstract class AbstractPiece implements Cloneable
 			}
 		}
 		bundle.endEditingTextures();
+		
+		update();
+	}
+	
+	/**
+	 * Get the horizontal offset of the shape matrix.
+	 * 
+	 * @return The horizontal offset of the shape matrix.
+	 */
+	public int getOffsetX()
+	{
+		return offsetX;
+	}
+	
+	/**
+	 * Get the vertical offset of the shape matrix.
+	 * 
+	 * @return The vertical offset of the shape matrix.
+	 */
+	public int getOffsetY()
+	{
+		return offsetY;
+	}
+	
+	/**
+	 * Update the location of the Board is not null.
+	 */
+	private void update()
+	{
+		if (board != null)
+		{
+			move(unsetX, unsetY, true);
+			
+			unsetX = 0;
+			unsetY = 0;
+		}
+	}
+	
+	/**
+	 * Get the offset for the center of the Piece.
+	 * 
+	 * @return The offset for the center of the Piece.
+	 */
+	public Location getCenter()
+	{
+		return center;
+	}
+	
+	/**
+	 * Get the offset for the center of the Piece, but opposite.
+	 * (y, x)
+	 * 
+	 * @return The opposite offset for the center of the Piece. (y, x)
+	 */
+	public Location getCenterOpposite()
+	{
+		return new Location(center.getY(), -center.getX());
 	}
 	
 	/**
@@ -385,7 +519,20 @@ public abstract class AbstractPiece implements Cloneable
 	 */
 	public boolean move(int cols, int rows)
 	{
-		return move(new Location(cols, rows));
+		return move(cols, rows, false);
+	}
+	
+	/**
+	 * Move the Piece according to the positional vector added.
+	 * 
+	 * @param cols The horizontal amount to move the Piece.
+	 * @param rows The vertical amount to move the Piece.
+	 * @param force Whether or not to force the move.
+	 * @return Whether the Piece was successfully moved or not.
+	 */
+	private boolean move(int cols, int rows, boolean force)
+	{
+		return move(new Location(cols, rows), force);
 	}
 	
 	/**
@@ -393,6 +540,25 @@ public abstract class AbstractPiece implements Cloneable
 	 */
 	public boolean move(Location l)
 	{
+		return move(l, false);
+	}
+	
+	/**
+	 * Move the Piece according to the positional vector added.
+	 * 
+	 * @param l The vector to be added.
+	 * @param force Whether or not to force the move.
+	 * @return Whether the Piece was successfully moved or not.
+	 */
+	private boolean move(Location l, boolean force)
+	{
+		if (force)
+		{
+			setLocation(getX() + l.getX(), getY() + l.getY());
+			
+			return true;
+		}
+		
 		boolean ableToMove = true;
 
 		for (int i = 0; i < getShape().size(); i++)

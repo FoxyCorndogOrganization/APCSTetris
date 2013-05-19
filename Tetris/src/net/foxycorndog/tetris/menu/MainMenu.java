@@ -22,7 +22,7 @@ import net.foxycorndog.tetris.Tetris;
  * @since	Apr 21, 2013 at 12:10:55 AM
  * @since	v0.1
  * @version	Apr 24, 2013 at 6:38:55 AM
- * @version	v0.1
+ * @version	v1.1
  */
 public class MainMenu extends Menu
 {
@@ -38,6 +38,7 @@ public class MainMenu extends Menu
 	
 	private OptionsMenu		optionsMenu;
 	private	CreditsMenu		creditsMenu;
+	private	PlayMenu		playMenu;
 	
 	private Tetris			tetris;
 	
@@ -127,7 +128,7 @@ public class MainMenu extends Menu
 			{
 				if (event.getSource() == playButton)
 				{
-					tetris.playGame();
+					openPlayMenu();
 				}
 				else if (event.getSource() == optionsButton)
 				{
@@ -174,6 +175,17 @@ public class MainMenu extends Menu
 		
 		leaveMainMenuFocus();
 	}
+
+	/**
+	 * Close the options menu and return to the main menu.
+	 */
+	public void closeOptionsMenu()
+	{
+		optionsMenu.dispose();
+		optionsMenu = null;
+		
+		returnToMainMenu();
+	}
 	
 	/**
 	 * Open the credits menu into the main view.
@@ -186,23 +198,33 @@ public class MainMenu extends Menu
 	}
 
 	/**
-	 * Close the options menu and return to the main menu.
-	 */
-	public void closeOptionsMenu()
-	{
-		optionsMenu.dispose();
-		optionsMenu = null;
-		
-		returnToMainMenu();
-	}
-
-	/**
 	 * Close the credits menu and return to the main menu.
 	 */
 	public void closeCreditsMenu()
 	{
 		creditsMenu.dispose();
 		creditsMenu = null;
+		
+		returnToMainMenu();
+	}
+	
+	/**
+	 * Open the play menu into the main view.
+	 */
+	private void openPlayMenu()
+	{
+		playMenu = new PlayMenu(tetris);
+		
+		leaveMainMenuFocus();
+	}
+
+	/**
+	 * Close the options menu and return to the main menu.
+	 */
+	public void closePlayMenu()
+	{
+		playMenu.dispose();
+		playMenu = null;
 		
 		returnToMainMenu();
 	}
@@ -266,7 +288,11 @@ public class MainMenu extends Menu
 				GL.setColor(tetris.getRf(), tetris.getGf(), tetris.getBf(), 1);
 				bundle.render(GL.QUADS, 0, 4, titleScreenTexture);
 				
-				if (optionsMenu != null)
+				if (playMenu != null)
+				{
+					playMenu.render();
+				}
+				else if (optionsMenu != null)
 				{
 					optionsMenu.render();
 				}

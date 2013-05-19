@@ -156,10 +156,10 @@ public class NextPiece
 			
 			bgImage.render();
 			
-			GL.translate(30 / scale, 20 / scale, 0);
+			GL.translate(10 / scale, 20 / scale, 0);
 			nextPiece.render();
 
-			GL.translate(-30 / scale + 20 / scale, 60 / scale, 0);
+			GL.translate(-10 / scale + 20 / scale, 60 / scale, 0);
 			Tetris.getFont().render("Next:", 0, 0, 0, 0.25f, null);
 		}
 		GL.popMatrix();

@@ -47,6 +47,24 @@ public class Location implements Cloneable
 	}
 	
 	/**
+	 * adds two locations like their positional vectors
+	 */
+	public void add2(Location l)
+	{
+		x += l.getX();
+		y += l.getY();
+	}
+
+	/**
+	 * subtracts two locations like their positional vectors
+	 */
+	public void subtract2(Location l)
+	{
+		x -= l.getX();
+		y -= l.getY();
+	}
+	
+	/**
 	 * returns the x-coordinate of the location
 	 */
 	public int getX()

@@ -72,23 +72,23 @@ public class Board extends AbstractBoard
 		{
 			public void keyPressed(KeyEvent event)
 			{
-				if (event.getCode() == Keyboard.KEY_LEFT)
+				if (event.getKeyCode() == Keyboard.KEY_LEFT)
 				{
 					movePiece(currentPiece, -1, 0);
 					
 					pressStartTime = System.currentTimeMillis();
 				}
-				if (event.getCode() == Keyboard.KEY_RIGHT)
+				if (event.getKeyCode() == Keyboard.KEY_RIGHT)
 				{
 					movePiece(currentPiece, 1, 0);
 					
 					pressStartTime = System.currentTimeMillis();
 				}
-				if (event.getCode() == Keyboard.KEY_UP)
+				if (event.getKeyCode() == Keyboard.KEY_UP)
 				{
 					currentPiece.rotateClockwise();
 				}
-				if (event.getCode() == Keyboard.KEY_DOWN)
+				if (event.getKeyCode() == Keyboard.KEY_DOWN)
 				{
 					setTicksPerSecond(getTicksPerSecond() * 4);
 				}
@@ -96,18 +96,18 @@ public class Board extends AbstractBoard
 
 			public void keyReleased(KeyEvent event)
 			{
-				if (event.getCode() == Keyboard.KEY_DOWN)
+				if (event.getKeyCode() == Keyboard.KEY_DOWN)
 				{
 					setTicksPerSecond(getTicksPerSecond() / 4);
 				}
-				if (event.getCode() == Keyboard.KEY_LEFT)
+				if (event.getKeyCode() == Keyboard.KEY_LEFT)
 				{
 					if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
 					{
 						pressStartTime = Long.MAX_VALUE;
 					}
 				}
-				if (event.getCode() == Keyboard.KEY_RIGHT)
+				if (event.getKeyCode() == Keyboard.KEY_RIGHT)
 				{
 					if (!Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 					{
@@ -367,8 +367,27 @@ public class Board extends AbstractBoard
 	 */
 	public void newGame()
 	{
+//		int ind = (int)(Math.random() * getWidth());
+//		
+//		ArrayList<Location> shape = new ArrayList<Location>();
+//		
+////		ind = 0;
+//		
+//		int i  = 0;
+//		while (i < getWidth())
+//		{
+//			if (i != ind)
+//			{
+//				shape.add(new Location(i, 0));
+//			}
+//			
+//			i++;
+//		}
+//		
+//		currentPiece = new Piece(shape, new Color(100, 100, 100));
 		currentPiece = Piece.getRandomPiece();
-
+//		currentPiece = new Piece(2);
+		
 		addPieceToCenter();
 		
 		Tetris.SOUND_LIBRARY.playSound("pop.wav");
@@ -377,7 +396,7 @@ public class Board extends AbstractBoard
 
 	public void addPieceToCenter()
 	{
-		addPiece(currentPiece, getWidth() / 2 - currentPiece.getWidth() / 2, getHeight() - currentPiece.getHeight());
+		addPiece(currentPiece, getWidth() / 2 - Math.round(currentPiece.getWidth() / 2), getHeight() - currentPiece.getHeight());
 	}
 	
 	/**

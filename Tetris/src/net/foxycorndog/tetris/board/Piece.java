@@ -17,34 +17,31 @@ public class Piece extends AbstractPiece implements Cloneable
 {
 	private int						direction;
 	private int						n;
-	private Location				place;
 	private Color					c;
 	private boolean					dead;
-	private static Piece			pieces[];
 	public static final Location	RIGHT	= new Location(1, 0);
 	public static final Location	LEFT	= new Location(-1, 0);
 	public static final Location	UP		= new Location(0, 1);
 	public static final Location	DOWN	= new Location(0, -1);
 
-	static
+	/**
+	 * Create a Piece with the specified shapes and color.
+	 *
+	 * @param locations ArrayList of the locations of the square within.
+	 * @param color The Color of the Piece.
+	 */
+	public Piece(ArrayList<Location> locations, Color color)
 	{
-		pieces = new Piece[7];
-
-		for (int i = 0; i < pieces.length; i++)
-		{
-			pieces[i] = new Piece(i + 1);
-		}
+		super(locations, color);
 	}
 
 	/**
 	 * Create a Piece with the specified shapes and color.
 	 *
-	 * @param locations
-	 *            ArrayList of the locations of the square within.
-	 * @param color
-	 *            The Color of the Piece.
+	 * @param locations Array of the locations of the square within.
+	 * @param color The Color of the Piece.
 	 */
-	public Piece(ArrayList<Location> locations, Color color)
+	public Piece(Location locations[], Color color)
 	{
 		super(locations, color);
 	}
@@ -65,6 +62,8 @@ public class Piece extends AbstractPiece implements Cloneable
 		}
 
 		calculatePiece(n);
+		
+		this.n = n;
 	}
 
 	/**
@@ -72,12 +71,11 @@ public class Piece extends AbstractPiece implements Cloneable
 	 * square componenets defined by their x and y coordinates stored in the
 	 * shape matrix, and in the world w
 	 */
-	public void piece(int[][] temp, Color c, int x, int y)
+	public void loadPiece(int[][] temp, Color c)
 	{
 		direction = 0;
 		dead      = false;
 		this.c    = c;
-		place     = new Location(x, y);
 		setColor(c);
 
 		editShape(temp);
@@ -97,16 +95,6 @@ public class Piece extends AbstractPiece implements Cloneable
 		}
 
 		setShape(locs);
-
-		locs = getShape();
-
-		for (int i = 0; i < locs.size(); i++)
-		{
-			Location loc = locs.get(i);
-
-			//TODO fix center w/ max and min
-			boolean center = loc.getX() == getWidth() / 2 && loc.getY() == getHeight() / 2;
-		}
 	}
 
 	private void calculatePiece(int n)
@@ -118,40 +106,40 @@ public class Piece extends AbstractPiece implements Cloneable
 		if (n == 1)
 		{
 			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 2, 0 } };
-			piece(temp, Color.CYAN, 5, 17);
+			loadPiece(temp, Color.CYAN);
 		}
 		else if (n == 2)
 		{
 			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
-			piece(temp, Color.MAGENTA, 5, 18);
+			loadPiece(temp, Color.MAGENTA);
 		}
 		else if (n == 3)
 		{
 			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 1 } };
-			piece(temp, Color.GREEN, 5, 18);
+			loadPiece(temp, Color.GREEN);
 		}
 		else if (n == 4)
 		{
 			temp = new int[][] { { 0, 0 }, { -1, 1 }, { 1, 0 }, { 0, 1 } };
-			piece(temp, Color.RED, 5, 18);
+			loadPiece(temp, Color.RED);
 		}
 		else if (n == 5)
 		{
 			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { 1, 1 } };
-			piece(temp, Color.ORANGE, 5, 18);
+			loadPiece(temp, Color.ORANGE);
 		}
 		else if (n == 6)
 		{
 			temp = new int[][] { { 0, 0 }, { -1, 0 }, { 1, 0 }, { -1, 1 } };
-			piece(temp, Color.BLUE, 5, 18);
+			loadPiece(temp, Color.BLUE);
 		}
 		else if (n == 7)
 		{
 			temp = new int[][] { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
-			piece(temp, Color.YELLOW, 5, 18);
+			loadPiece(temp, Color.YELLOW);
 		}
 	}
-
+	
 	/**
 	 * rotates the tetrimino 90 degrees counter-clockwise if possible
 	 */
@@ -170,6 +158,11 @@ public class Piece extends AbstractPiece implements Cloneable
 	
 	private boolean rotate(boolean clockwise)
 	{
+		if (n == 7)
+		{
+			return true;
+		}
+		
 		boolean ableToRotate     = true;
 		ArrayList<Location> copy = new ArrayList<Location>();
 
@@ -180,16 +173,33 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		for (int i = 0; i < copy.size(); i++)
 		{
+			Location loc = copy.get(i);
+			
+//			loc.subtract2(getCenter());
+			
 			if (clockwise)
 			{
-				copy.get(i).rotateC();
+				loc.rotateC();
 			}
 			else
 			{
-				copy.get(i).rotateCC();
+				loc.rotateCC();
 			}
 			
-			Location next = copy.get(i).add(getLocation());
+//			loc.add2(new Location(getOffsetX(), getOffsetY()));
+			
+//			loc.add2(getCenter());
+//			loc.add2(new Location(getCenter().getX(), 0));
+//			loc.add2(UP);
+//			if (getHeight() % 2 == 0)// && getWidth() % 2 == 0)
+//			{
+//				loc.add2(DOWN);
+//			}
+			
+//			loc.add2(new Location(getHeight() % 2, getWidth() % 2));
+//			loc.add2(new Location(1, 1));
+			
+			Location next = loc.add(getLocation());
 
 			if (!spaceIsFree(next))
 			{
@@ -301,23 +311,13 @@ public class Piece extends AbstractPiece implements Cloneable
 	}
 
 	/**
-	 * Get the array of Pieces. Contains all seven of the original Piece shapes.
-	 *
-	 * @return The array of the seven original Pieces.
-	 */
-	public static AbstractPiece[] getPieces()
-	{
-		return pieces.clone();
-	}
-
-	/**
 	 * Get a brand new instance of one of the seven original Pieces.
 	 *
 	 * @return A brand new instance of one of the seven original Pieces.
 	 */
 	public static Piece getRandomPiece()
 	{
-		int index = (int)(Math.random() * pieces.length);
+		int index = (int)(Math.random() * 7);
 
 		Piece rand = new Piece(index + 1);
 
