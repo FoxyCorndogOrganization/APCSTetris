@@ -14,6 +14,7 @@ import net.foxycorndog.jfoxylib.network.Packet;
 public class GamePacket extends Packet
 {
 	public static final int		LINES_COMPLETED		= 11;
+	public static final int		GAME_LOST			= 12;
 	
 	private static final long	serialVersionUID	= 1588730414391768913L;
 	

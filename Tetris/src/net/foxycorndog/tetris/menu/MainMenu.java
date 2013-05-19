@@ -351,5 +351,18 @@ public class MainMenu extends Menu
 		optionsButton.dispose();
 		creditsButton.dispose();
 		quitButton.dispose();
+		
+		if (optionsMenu != null)
+		{
+			optionsMenu.dispose();
+		}
+		if (creditsButton != null)
+		{
+			creditsButton.dispose();
+		}
+		if (playMenu != null)
+		{
+			playMenu.dispose();
+		}
 	}
 }

@@ -101,7 +101,7 @@ public class PlayMenu extends Menu
 	 */
 	private void openMultiplayerMenu()
 	{
-		multiplayerMenu = new MultiplayerMenu();
+		multiplayerMenu = new MultiplayerMenu(tetris);
 		
 		leavePlayMenuFocus();
 	}
@@ -164,5 +164,7 @@ public class PlayMenu extends Menu
 	{
 		singleplayerButton.dispose();
 		multiplayerButton.dispose();
+		
+		multiplayerMenu.dispose();
 	}
 }

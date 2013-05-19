@@ -9,7 +9,11 @@ import net.foxycorndog.jfoxylib.events.ButtonEvent;
 import net.foxycorndog.jfoxylib.events.ButtonListener;
 import net.foxycorndog.jfoxylib.events.KeyEvent;
 import net.foxycorndog.jfoxylib.events.KeyListener;
+import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.input.Keyboard;
+import net.foxycorndog.jfoxylib.network.Client;
+import net.foxycorndog.jfoxylib.network.Packet;
+import net.foxycorndog.jfoxylib.network.Server;
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.event.BoardEvent;
@@ -29,6 +33,7 @@ import net.foxycorndog.tetris.event.BoardListener;
 public class Board extends AbstractBoard
 {
 	private boolean						lost;
+	private	boolean						gameStarted;
 	
 	private	int							ticks;
 	private	int							lastSpeedTick;
@@ -41,6 +46,9 @@ public class Board extends AbstractBoard
 	private Piece						currentPiece;
 
 	private	KeyListener					keyListener;
+
+	private	Client						client;
+	private	Server						server;
 	
 	private Tetris						tetris;
 
@@ -129,7 +137,7 @@ public class Board extends AbstractBoard
 
 		Keyboard.addKeyListener(keyListener);
 
-		// setTicksPerSecond(8f);
+		//setTicksPerSecond(8f);
 		
 		speedChangeFactor = 1.8f;
 		speedChangeAmount = 0.5f;
@@ -146,7 +154,20 @@ public class Board extends AbstractBoard
 	 */
 	public void tick()
 	{
-		if (!lost)
+		if (server != null)
+		{
+			if (server.isConnected() && !gameStarted)
+			{
+				newGame();
+				gameStarted = true;
+			}
+			else
+			{
+				
+			}
+		}
+		
+		if (!lost && gameStarted)
 		{
 			if (ticks >= lastSpeedTick * speedChangeFactor)
 			{
@@ -210,6 +231,15 @@ public class Board extends AbstractBoard
 	public void quitGame()
 	{
 		Tetris.SOUND_LIBRARY.stopSound("music.wav");
+		
+		if (server != null)
+		{
+			server.close();
+		}
+		else if (client != null)
+		{
+			client.close();
+		}
 	}
 	
 	/**
@@ -367,6 +397,8 @@ public class Board extends AbstractBoard
 	 */
 	public void newGame()
 	{
+		gameStarted = true;
+		
 //		int ind = (int)(Math.random() * getWidth());
 //		
 //		ArrayList<Location> shape = new ArrayList<Location>();
@@ -410,6 +442,59 @@ public class Board extends AbstractBoard
 
 		getPieces().add(piece);
 	}
+
+	/**
+	 * Connect the Board game to the Client.
+	 * 
+	 * @param ip The IP of the Server to connect to.
+	 * @param port The port of the Server to connect to.
+	 */
+	public void connectClient(String ip, int port)
+	{
+		client = new Client(ip, port)
+		{
+			public void onReceivedPacket(Packet packet)
+			{
+				System.out.println("recieved " + packet.getData());
+			}
+		};
+		
+		new Thread()
+		{
+			public void run()
+			{
+				client.connect();
+			}
+		}.start();
+	}
+	
+	/**
+	 * Create a server for Clients to connect to.
+	 * 
+	 * @param port The port to create the Server on.
+	 */
+	public void createServer(int port)
+	{
+		gameStarted = false;
+		
+		server = new Server(port)
+		{
+			public void onReceivedPacket(Packet packet)
+			{
+				
+			}
+		};
+		
+		new Thread()
+		{
+			public void run()
+			{
+				server.create();
+				
+//				server.sendPacket(new Packet(null, 33));
+			}
+		}.start();
+	}
 	
 	/**
 	 * Render the back Button.
@@ -418,6 +503,24 @@ public class Board extends AbstractBoard
 	 */
 	public void render()
 	{
+		if (server != null)
+		{
+			if (server.isConnected())
+			{
+				
+			}
+			else
+			{
+				GL.setColor(0, 0, 0, 1);
+				Tetris.getFont().render("Waiting for\nconnection.", 0, 0, 2, 1, Font.CENTER, Font.CENTER, null);
+
+				GL.setColor(1, 1, 1, 1);
+				Tetris.getFont().render("Waiting for\nconnection.", 2, 2, 2, 1, Font.CENTER, Font.CENTER, null);
+				
+				GL.setColor(0.5f, 0.5f, 0.5f, 1);
+			}
+		}
+		
 		super.render();
 		
 		GL.pushMatrix();

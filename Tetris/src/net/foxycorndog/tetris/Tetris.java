@@ -74,6 +74,17 @@ public class Tetris extends GameStarter
 	 */
 	public void playGame()
 	{
+		createGame();
+		
+		board.newGame();
+	}
+	
+	/**
+	 * Create a game that is capable of being played, but don't play it
+	 * yet.
+	 */
+	private void createGame()
+	{
 		mainMenu.dispose();
 		mainMenu = null;
 		
@@ -95,8 +106,6 @@ public class Tetris extends GameStarter
 		
 		board.addListener(sidebar.getScoreboard());
 		board.addListener(sidebar.getLinesCompleted());
-		
-		board.newGame();
 		
 		arrangeComponents();
 		
@@ -333,31 +342,100 @@ public class Tetris extends GameStarter
 		}
 	}
 	
+	/**
+	 * Connect the Tetris game to the Client.
+	 * 
+	 * @param ip The IP of the Server to connect to.
+	 * @param port The port of the Server to connect to.
+	 */
+	public void connectClient(String ip, int port)
+	{
+		mainMenu.dispose();
+		
+		playGame();
+		
+		board.connectClient(ip, port);
+	}
+	
+	/**
+	 * Create a server for Clients to connect to.
+	 * 
+	 * @param port The port to create the Server on.
+	 */
+	public void createServer(int port)
+	{
+		mainMenu.dispose();
+		
+		createGame();
+		
+		board.createServer(port);
+	}
+	
+	/**
+	 * Get the Board that the Tetris game is using.
+	 * 
+	 * @return The Board that the Tetris game is using.
+	 */
+	public Board getBoard()
+	{
+		return board;
+	}
+	
+	/**
+	 * Get the red component of the menu.
+	 * 
+	 * @return The red component of the menu.
+	 */
 	public int getR()
 	{
 		return r;
 	}
-	
+
+	/**
+	 * Get the green component of the menu.
+	 * 
+	 * @return The green component of the menu.
+	 */
 	public int getG()
 	{
 		return g;
 	}
-	
+
+	/**
+	 * Get the blue component of the menu.
+	 * 
+	 * @return The blue component of the menu.
+	 */
 	public int getB()
 	{
 		return b;
 	}
-	
+
+	/**
+	 * Get the red float component of the menu.
+	 * 
+	 * @return The red float component of the menu.
+	 */
 	public float getRf()
 	{
 		return r / 255f;
 	}
-	
+
+	/**
+	 * Get the green float component of the menu.
+	 * 
+	 * @return The green float component of the menu.
+	 */
 	public float getGf()
 	{
 		return g / 255f;
 	}
-	
+
+	/**
+	 * Get the blue float component of the menu.
+	 * 
+	 * @return The blue float component of the menu.
+	 */
 	public float getBf()
 	{
 		return b / 255f;
