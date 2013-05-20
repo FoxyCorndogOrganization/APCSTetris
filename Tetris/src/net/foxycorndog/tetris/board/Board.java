@@ -47,6 +47,7 @@ public class Board extends AbstractBoard
 
 	private	KeyListener					keyListener;
 
+	private	Network						network;
 	private	Client						client;
 	private	Server						server;
 	
