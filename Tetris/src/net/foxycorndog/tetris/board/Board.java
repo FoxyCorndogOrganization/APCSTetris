@@ -168,7 +168,10 @@ public class Board extends AbstractBoard
 			{
 				GamePacket packet = new GamePacket(null, GamePacket.GAME_LOST);
 				
-				network.sendPacket(packet);
+				if (network != null)
+				{
+					network.sendPacket(packet);
+				}
 			}
 		});
 	}
