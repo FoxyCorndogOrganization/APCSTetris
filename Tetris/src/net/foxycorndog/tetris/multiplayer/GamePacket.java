@@ -16,6 +16,8 @@ public class GamePacket extends Packet
 	public static final int		LINES_COMPLETED		= 11;
 	public static final int		GAME_LOST			= 12;
 	
+	public static final String	VERSION				= "v1.1";
+	
 	private static final long	serialVersionUID	= 1588730414391768913L;
 	
 	/**
