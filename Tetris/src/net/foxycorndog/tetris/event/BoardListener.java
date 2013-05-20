@@ -25,7 +25,7 @@ public interface BoardListener
 	 * 
 	 * @param event The BoardEvent that describes what happened.
 	 */
-	public void onLineDeleted(BoardEvent event);
+	public void onLineCompleted(BoardEvent event);
 	
 	/**
 	 * Method called when a Tetris game is lost.

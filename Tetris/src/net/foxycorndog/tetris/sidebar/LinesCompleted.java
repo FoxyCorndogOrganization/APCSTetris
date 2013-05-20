@@ -61,9 +61,9 @@ public class LinesCompleted implements BoardListener
 	}
 
 	/**
-	 * @see net.foxycorndog.tetris.event.BoardListener#onLineDeleted(net.foxycorndog.tetris.event.BoardEvent)
+	 * @see net.foxycorndog.tetris.event.BoardListener#onLineCompleted(net.foxycorndog.tetris.event.BoardEvent)
 	 */
-	public void onLineDeleted(BoardEvent event)
+	public void onLineCompleted(BoardEvent event)
 	{
 		lines += event.getLines();
 	}

@@ -256,7 +256,18 @@ public class MainMenu extends Menu
 	 */
 	public void loop()
 	{
-		
+		if (playMenu != null)
+		{
+			playMenu.loop();
+		}
+		if (creditsMenu != null)
+		{
+			creditsMenu.loop();
+		}
+		if (optionsMenu != null)
+		{
+			optionsMenu.loop();
+		}
 	}
 	
 	/**
@@ -282,11 +293,17 @@ public class MainMenu extends Menu
 				GL.setTextureScaleMinMethod(GL.LINEAR);
 				GL.setTextureScaleMagMethod(GL.LINEAR);
 				
-				GL.translate(xOff + getX(), yOff + getY(), 0);
-				GL.scale(min, min, 1);
-				
 				GL.setColor(tetris.getRf(), tetris.getGf(), tetris.getBf(), 1);
-				bundle.render(GL.QUADS, 0, 4, titleScreenTexture);
+				
+				GL.pushMatrix();
+				{
+					GL.translate(xOff + getX(), yOff + getY(), 0);
+					GL.scale(min, min, 1);
+					bundle.render(GL.QUADS, 0, 4, titleScreenTexture);
+				}
+				GL.popMatrix();
+				
+				GL.scale(min, min, 1);
 				
 				if (playMenu != null)
 				{
@@ -302,10 +319,19 @@ public class MainMenu extends Menu
 				}
 				else
 				{
-					bundle.render(GL.QUADS, 4, 4, menuBoxTexture);
+					GL.pushMatrix();
+					{
+						GL.scale(1/min, 1/min, 1);
+						GL.translate(xOff + getX(), yOff + getY(), 0);
+						GL.scale(min, min, 1);
+						
+						bundle.render(GL.QUADS, 4, 4, menuBoxTexture);
 					
-					renderButtons();
+						renderButtons();
+					}
+					GL.popMatrix();
 				}
+				
 				
 				Texture.unbind();
 			}

@@ -93,7 +93,10 @@ public class PlayMenu extends Menu
 	 */
 	public void loop()
 	{
-		
+		if (multiplayerMenu != null)
+		{
+			multiplayerMenu.loop();
+		}
 	}
 	
 	/**
@@ -165,6 +168,9 @@ public class PlayMenu extends Menu
 		singleplayerButton.dispose();
 		multiplayerButton.dispose();
 		
-		multiplayerMenu.dispose();
+		if (multiplayerMenu != null)
+		{
+			multiplayerMenu.dispose();
+		}
 	}
 }

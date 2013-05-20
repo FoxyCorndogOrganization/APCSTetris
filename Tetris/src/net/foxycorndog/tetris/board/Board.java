@@ -12,12 +12,14 @@ import net.foxycorndog.jfoxylib.events.KeyListener;
 import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.input.Keyboard;
 import net.foxycorndog.jfoxylib.network.Client;
+import net.foxycorndog.jfoxylib.network.Network;
 import net.foxycorndog.jfoxylib.network.Packet;
 import net.foxycorndog.jfoxylib.network.Server;
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
 import net.foxycorndog.tetris.event.BoardEvent;
 import net.foxycorndog.tetris.event.BoardListener;
+import net.foxycorndog.tetris.multiplayer.GamePacket;
 
 /**
  * Class that holds the information for the Pieces in the Tetris game, as well
@@ -144,6 +146,31 @@ public class Board extends AbstractBoard
 		speedChangeAmount = 0.5f;
 		
 		lastSpeedTick     = 10;
+		
+		addListener(new BoardListener()
+		{
+			public void onPieceMove(BoardEvent event)
+			{
+				
+			}
+			
+			public void onLineCompleted(BoardEvent event)
+			{
+				if (network != null)
+				{
+					GamePacket packet = new GamePacket(event.getLines(), GamePacket.LINES_COMPLETED);
+					
+					network.sendPacket(packet);
+				}
+			}
+			
+			public void onGameLost(BoardEvent event)
+			{
+				GamePacket packet = new GamePacket(null, GamePacket.GAME_LOST);
+				
+				network.sendPacket(packet);
+			}
+		});
 	}
 
 	/**
@@ -233,13 +260,9 @@ public class Board extends AbstractBoard
 	{
 		Tetris.SOUND_LIBRARY.stopSound("music.wav");
 		
-		if (server != null)
+		if (network != null)
 		{
-			server.close();
-		}
-		else if (client != null)
-		{
-			client.close();
+			network.close();
 		}
 	}
 	
@@ -345,20 +368,7 @@ public class Board extends AbstractBoard
 						pieces[0].deleteSquare(l);
 					}
 					
-					for (int y = r; y < getHeight(); y++)
-					{
-						for (int x = 0; x < getWidth(); x++)
-						{
-							Location l = new Location(x, y);
-							
-							Piece pieces[] = getPieces(l);
-							
-							if (pieces.length > 0)
-							{
-								pieces[0].moveSquare(l, new Location(0, -1));
-							}
-						}
-					}
+					moveSquares(0, r, getWidth(), getHeight(), 0, -1);
 					
 					lines++;
 				}
@@ -376,7 +386,7 @@ public class Board extends AbstractBoard
 	
 			for (BoardListener listener : events)
 			{
-				listener.onLineDeleted(event);
+				listener.onLineCompleted(event);
 			}
 			
 			Tetris.SOUND_LIBRARY.playSound("lineremoved.wav");
@@ -425,6 +435,9 @@ public class Board extends AbstractBoard
 		
 		Tetris.SOUND_LIBRARY.playSound("pop.wav");
 		Tetris.SOUND_LIBRARY.loopSound("music.wav");
+		
+//		setTicksPerSecond(4);
+		setTicksPerSecond(4);
 	}
 
 	public void addPieceToCenter()
@@ -443,6 +456,94 @@ public class Board extends AbstractBoard
 
 		getPieces().add(piece);
 	}
+	
+	/**
+	 * Moves all of the squares within the given rectangle specifications
+	 * the specified amount.
+	 * 
+	 * @param x The horizontal start of the bounds of the rectangle of the
+	 * 		squares to move.
+	 * @param y The vertical start of the bounds of the rectangle of the
+	 * 		squares to move.
+	 * @param width The width of the bounds of the rectangle of the
+	 * 		squares to move.
+	 * @param height The height of the bounds of the rectangles of the
+	 * 		squares to move.
+	 * @param dx The horizontal amount to move the squares.
+	 * @param dy The vertical amount to move the squares.
+	 */
+	private void moveSquares(int x, int y, int width, int height, int dx, int dy)
+	{
+		x = x < 0 ? 0 : x;
+		y = y < 0 ? 0 : y;
+		x = x >= getWidth()  ? getWidth()  - 1 : x;
+		y = y >= getHeight() ? getHeight() - 1 : y;
+		
+		width  = width  > getWidth()  ? getWidth()  : width;
+		height = height > getHeight() ? getHeight() : height;
+		
+		ArrayList<Piece>    ps   = new ArrayList<Piece>();
+		ArrayList<Location> locs = new ArrayList<Location>();
+		
+		for (int y2 = y; y2 < height; y2++)
+		{
+			for (int x2 = x; x2 < width; x2++)
+			{
+				Location l = new Location(x2, y2);
+				
+				Piece pieces[] = getPieces(l);
+				
+				if (pieces.length > 0)
+				{
+					locs.add(l);
+					ps.add(pieces[0]);
+					
+//					pieces[0].moveSquare(l, new Location(dx, dy));
+				}
+			}
+		}
+		
+		for (int i = 0; i < ps.size(); i++)
+		{
+			Location loc = locs.get(i);
+			
+			ps.get(i).moveSquare(loc, new Location(dx, dy));
+		}
+	}
+	
+	/**
+	 * Adds the specified number of straight lines to the bottom of the
+	 * Board. The straight lines are full of squares, except for one
+	 * spot.
+	 */
+	public void addStraightLines(int numLines)
+	{
+		moveSquares(0, 0, getWidth(), getHeight(), 0, numLines);
+		
+		for (int n = 0; n < numLines; n++)
+		{
+			int ind = (int)(Math.random() * getWidth());
+			
+			ArrayList<Location> shape = new ArrayList<Location>();
+			
+	//		ind = 0;
+			
+			int i  = 0;
+			while (i < getWidth())
+			{
+				if (i != ind)
+				{
+					shape.add(new Location(i, 0));
+				}
+				
+				i++;
+			}
+			
+			Piece newPiece = new Piece(shape, new Color(100, 100, 100));
+			
+			addPiece(newPiece, 0, n);
+		}
+	}
 
 	/**
 	 * Connect the Board game to the Client.
@@ -456,17 +557,36 @@ public class Board extends AbstractBoard
 		{
 			public void onReceivedPacket(Packet packet)
 			{
-				System.out.println("recieved " + packet.getData());
+				tetris.addPacketToQueue(packet);
 			}
 		};
+		
+		setClient(client);
 		
 		new Thread()
 		{
 			public void run()
 			{
 				client.connect();
+				
+				newGame();
 			}
 		}.start();
+	}
+
+	/**
+	 * Set the Client that the Board should use.
+	 * 
+	 * @param client The Client to use.
+	 */
+	public void setClient(Client client)
+	{
+		network = client;
+		
+		if (client.isConnected())
+		{
+			newGame();
+		}
 	}
 	
 	/**
@@ -482,9 +602,11 @@ public class Board extends AbstractBoard
 		{
 			public void onReceivedPacket(Packet packet)
 			{
-				
+				tetris.addPacketToQueue(packet);
 			}
 		};
+		
+		network = server;
 		
 		new Thread()
 		{

@@ -7,7 +7,9 @@ import net.foxycorndog.jfoxylib.components.Image;
 import net.foxycorndog.jfoxylib.components.TextField;
 import net.foxycorndog.jfoxylib.events.ButtonEvent;
 import net.foxycorndog.jfoxylib.events.ButtonListener;
+import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.network.Client;
+import net.foxycorndog.jfoxylib.network.NetworkException;
 import net.foxycorndog.jfoxylib.network.Packet;
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.tetris.Tetris;
@@ -23,11 +25,17 @@ import net.foxycorndog.tetris.Tetris;
  */
 public class MultiplayerMenu extends Menu
 {
+	private	boolean		startGame;
+	
+	private	String		status;
+	
 	private	Image		joinServerImage;
 	
 	private	Button		createServerButton, joinButton;
 	
 	private	TextField	ipField;
+	
+	private	Client		client;
 	
 	private	Tetris		tetris;
 	
@@ -85,7 +93,33 @@ public class MultiplayerMenu extends Menu
 					String ip = ipField.getText();
 					int port  = 9482;
 					
-					tetris.connectClient(ip, port);
+					client = new Client(ip, port)
+					{
+						public void onReceivedPacket(Packet packet)
+						{
+							tetris.addPacketToQueue(packet);
+						}
+					};
+					
+					new Thread()
+					{
+						public void run()
+						{
+							try
+							{
+								client.connect();
+								
+								if (client.isConnected())
+								{
+									startGame = true;
+								}
+							}
+							catch (NetworkException e)
+							{
+								status = "Connection refused.";
+							}
+						}
+					}.start();
 				}
 				else if (source == createServerButton)
 				{
@@ -115,7 +149,10 @@ public class MultiplayerMenu extends Menu
 	 */
 	public void loop()
 	{
-		
+		if (startGame)
+		{
+			tetris.connectClient(client);
+		}
 	}
 
 	/**
@@ -134,6 +171,11 @@ public class MultiplayerMenu extends Menu
 			joinServerImage.render();
 			createServerButton.render();
 			joinButton.render();
+			
+			if (status != null)
+			{
+				Tetris.getFont().render(status, 0, 220, 0, 1, Font.CENTER, Font.CENTER, null);
+			}
 		}
 		GL.popMatrix();
 	}

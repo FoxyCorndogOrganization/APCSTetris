@@ -13,13 +13,17 @@ import net.foxycorndog.jfoxylib.events.FrameEvent;
 import net.foxycorndog.jfoxylib.events.FrameListener;
 import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.input.Mouse;
+import net.foxycorndog.jfoxylib.network.Client;
+import net.foxycorndog.jfoxylib.network.Packet;
 import net.foxycorndog.jfoxylib.openal.Sound;
 import net.foxycorndog.jfoxylib.opengl.GL;
 import net.foxycorndog.jfoxylib.opengl.texture.Texture;
+import net.foxycorndog.jfoxyutil.Queue;
 import net.foxycorndog.tetris.board.AbstractBoard;
 import net.foxycorndog.tetris.board.Board;
 import net.foxycorndog.tetris.board.Color;
 import net.foxycorndog.tetris.menu.MainMenu;
+import net.foxycorndog.tetris.multiplayer.GamePacket;
 import net.foxycorndog.tetris.sidebar.Sidebar;
 import net.foxycorndog.tetris.sound.SoundLibrary;
 
@@ -46,6 +50,8 @@ public class Tetris extends GameStarter
 	private Sidebar						sidebar;
 	
 	private MainMenu					mainMenu;
+	
+	private	Queue<Packet>				packetQueue;
 	
 	private static Font					font;
 	
@@ -190,6 +196,8 @@ public class Tetris extends GameStarter
 			';', '"', '\'', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 		});
 		
+		packetQueue = new Queue<Packet>();
+		
 		try
 		{
 			SOUND_LIBRARY.addSound("pop.wav", new Sound("res/sounds/pop.wav"));
@@ -220,6 +228,42 @@ public class Tetris extends GameStarter
 		openMainMenu();
 	}
 	
+	/**
+	 * Process the specified packet given. Does whatever is supposed to
+	 * be done with the Packet.
+	 * 
+	 * @param packet The Packet to process.
+	 */
+	private void processPacket(Packet packet)
+	{
+		int id = packet.getId();
+		
+		if (id == GamePacket.LINES_COMPLETED)
+		{
+			int numLines = ((Integer)packet.getData()).intValue();
+			
+			board.addStraightLines(numLines);
+		}
+		else if (id == GamePacket.GAME_LOST)
+		{
+			System.out.println("you fn won!");
+		}
+	}
+	
+	/**
+	 * Add the specified Packet to the Queue of Packets to be processed
+	 * by the game.
+	 * 
+	 * @param packet The Packet to add to the Queue.
+	 */
+	public void addPacketToQueue(Packet packet)
+	{
+		packetQueue.enqueue(packet);
+	}
+	
+	/**
+	 * Open the MainMenu into the main view.
+	 */
 	public void openMainMenu()
 	{
 		board   = null;
@@ -309,6 +353,13 @@ public class Tetris extends GameStarter
 		{
 //			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
 		}
+		
+		while (!packetQueue.isEmpty())
+		{
+			Packet packet = (Packet)packetQueue.dequeue();
+			
+			processPacket(packet);
+		}
 	}
 	
 	/**
@@ -352,9 +403,23 @@ public class Tetris extends GameStarter
 	{
 		mainMenu.dispose();
 		
-		playGame();
+		createGame();
 		
 		board.connectClient(ip, port);
+	}
+	
+	/**
+	 * Connect the Tetris game to the Client.
+	 * 
+	 * @param client The Client to use.
+	 */
+	public void connectClient(Client client)
+	{
+		mainMenu.dispose();
+		
+		createGame();
+		
+		board.setClient(client);
 	}
 	
 	/**
