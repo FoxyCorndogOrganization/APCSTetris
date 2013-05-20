@@ -91,7 +91,7 @@ public class MultiplayerMenu extends Menu
 				if (source == joinButton)
 				{
 					String ip = ipField.getText();
-					int port  = 9482;
+					int port  = 9999;
 					
 					client = new Client(ip, port)
 					{
@@ -123,7 +123,7 @@ public class MultiplayerMenu extends Menu
 				}
 				else if (source == createServerButton)
 				{
-					int port = 9482;
+					int port = 9999;
 					
 					tetris.createServer(port);
 				}
