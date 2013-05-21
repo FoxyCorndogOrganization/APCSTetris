@@ -209,6 +209,7 @@ public abstract class AbstractPiece implements Cloneable
 	 */
 	private void loadMatrix(ArrayList<Location> shape)
 	{
+		
 		int amountOfSquares = shape.size();
 
 		int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;

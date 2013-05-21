@@ -42,6 +42,7 @@ public class Tetris extends GameStarter
 	
 	private int							r, g, b;
 	
+	private	float						scale;
 	private float						counter;
 	
 	private	Button						backButton;
@@ -94,7 +95,7 @@ public class Tetris extends GameStarter
 		mainMenu.dispose();
 		mainMenu = null;
 		
-		board    = new Board(10, 20, 10, this);
+		board    = new Board(15, 30, 10, this);
 		board.setScale(3f);
 		
 		sidebar    = new Sidebar();
@@ -156,6 +157,9 @@ public class Tetris extends GameStarter
 		float wid = board.getScaledWidth() + sidebar.getScaledWidth() + sidebarOffsetX;
 		float hei = board.getScaledHeight();
 		
+		wid *= scale;
+		hei *= scale;
+		
 		int boardX = Math.round(Frame.getWidth() / 2f - wid / 2f);
 		int boardY = Math.round(Frame.getHeight() / 2f - hei / 2f);
 		
@@ -180,6 +184,16 @@ public class Tetris extends GameStarter
 		
 		backButton.dispose();
 		backButton = null;
+	}
+	
+	/**
+	 * Get the scale of the tetris game.
+	 * 
+	 * @return The scale of the tetris game.
+	 */
+	public float getScale()
+	{
+		return scale;
 	}
 	
 	/**
@@ -296,9 +310,39 @@ public class Tetris extends GameStarter
 		}
 		else
 		{
-			board.render();
-			sidebar.render();
-			backButton.render();
+			GL.pushMatrix();
+			{
+				float bWidth  = board.getScaledWidth() + 200;
+				float bHeight = board.getScaledHeight();
+				
+				
+				
+				if (Frame.getWidth() < bWidth || Frame.getHeight() < bHeight)
+				{
+					float minDim = Math.min(Frame.getWidth(), Frame.getHeight());
+				
+					float scaleX = minDim / (bWidth);
+					float scaleY = minDim / (bHeight);
+				
+					GL.setTextureScaleMinMethod(GL.LINEAR);
+					GL.setTextureScaleMagMethod(GL.LINEAR);
+					
+					scale = Math.min(scaleX, scaleY);
+					
+					GL.scale(scale, scale, 1);
+				}
+				else
+				{
+					scale = 1;
+				}
+				
+				arrangeComponents();
+				
+				board.render();
+				sidebar.render();
+				backButton.render();
+			}
+			GL.popMatrix();
 		}
 	}
 

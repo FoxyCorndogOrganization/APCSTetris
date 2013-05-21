@@ -13,6 +13,7 @@ import net.foxycorndog.jfoxylib.font.Font;
 import net.foxycorndog.jfoxylib.input.Keyboard;
 import net.foxycorndog.jfoxylib.network.Client;
 import net.foxycorndog.jfoxylib.network.Network;
+import net.foxycorndog.jfoxylib.network.NetworkException;
 import net.foxycorndog.jfoxylib.network.Packet;
 import net.foxycorndog.jfoxylib.network.Server;
 import net.foxycorndog.jfoxylib.opengl.GL;
@@ -160,7 +161,14 @@ public class Board extends AbstractBoard
 				{
 					GamePacket packet = new GamePacket(event.getLines(), GamePacket.LINES_COMPLETED);
 					
-					network.sendPacket(packet);
+					try
+					{
+						network.sendPacket(packet);
+					}
+					catch (NetworkException e)
+					{
+						System.err.println("Couldn't send data.");
+					}
 				}
 			}
 			
@@ -170,7 +178,17 @@ public class Board extends AbstractBoard
 				
 				if (networkReady())
 				{
-					network.sendPacket(packet);
+					try
+					{
+						network.sendPacket(packet);
+					}
+					catch (NetworkException e)
+					{
+						System.err.println("Couldn't send data.");
+					}
+					
+					network.close();
+					network = null;
 				}
 			}
 		});
@@ -522,9 +540,18 @@ public class Board extends AbstractBoard
 		
 		for (int i = 0; i < ps.size(); i++)
 		{
-			Location loc = locs.get(i);
+			Piece piece = ps.get(i);
 			
-			ps.get(i).moveSquare(loc, new Location(dx, dy));
+			if (!piece.isAlive())
+			{
+				Location loc = locs.get(i);
+				
+				piece.moveSquare(loc, new Location(dx, dy));
+			}
+			else
+			{
+				piece.move(dx, dy);
+			}
 		}
 	}
 	

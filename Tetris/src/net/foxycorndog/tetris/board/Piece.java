@@ -18,7 +18,7 @@ public class Piece extends AbstractPiece implements Cloneable
 	private int						direction;
 	private int						n;
 	private Color					c;
-	private boolean					dead;
+	private boolean					alive;
 	public static final Location	RIGHT	= new Location(1, 0);
 	public static final Location	LEFT	= new Location(-1, 0);
 	public static final Location	UP		= new Location(0, 1);
@@ -74,7 +74,7 @@ public class Piece extends AbstractPiece implements Cloneable
 	public void loadPiece(int[][] temp, Color c)
 	{
 		direction = 0;
-		dead      = false;
+		alive     = true;
 		this.c    = c;
 		setColor(c);
 
@@ -237,13 +237,23 @@ public class Piece extends AbstractPiece implements Cloneable
 
 		return !ableToMove;
 	}
+	
+	/**
+	 * Get whether the Piece is still active or not.
+	 * 
+	 * @return Whether the Piece is still active or not.
+	 */
+	public boolean isAlive()
+	{
+		return alive;
+	}
 
 	/**
 	 * kills the tetrimino makes it outdated
 	 */
 	public void kill()
 	{
-		dead = true;
+		alive = false;
 	}
 
 	/**
