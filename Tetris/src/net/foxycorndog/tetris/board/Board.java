@@ -156,7 +156,7 @@ public class Board extends AbstractBoard
 			
 			public void onLineCompleted(BoardEvent event)
 			{
-				if (network != null)
+				if (networkReady())
 				{
 					GamePacket packet = new GamePacket(event.getLines(), GamePacket.LINES_COMPLETED);
 					
@@ -168,12 +168,21 @@ public class Board extends AbstractBoard
 			{
 				GamePacket packet = new GamePacket(null, GamePacket.GAME_LOST);
 				
-				if (network != null)
+				if (networkReady())
 				{
 					network.sendPacket(packet);
 				}
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean networkReady()
+	{
+		return network != null && network.isConnected();
 	}
 
 	/**
@@ -190,6 +199,7 @@ public class Board extends AbstractBoard
 			if (server.isConnected() && !gameStarted)
 			{
 				newGame();
+				
 				gameStarted = true;
 			}
 			else
@@ -263,10 +273,14 @@ public class Board extends AbstractBoard
 	{
 		Tetris.SOUND_LIBRARY.stopSound("music.wav");
 		
+		Keyboard.removeKeyListener(keyListener);
+		
 		if (network != null)
 		{
 			network.close();
 		}
+		
+		network = null;
 	}
 	
 	/**

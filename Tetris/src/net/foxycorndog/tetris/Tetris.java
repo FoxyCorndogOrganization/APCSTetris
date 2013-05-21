@@ -176,6 +176,7 @@ public class Tetris extends GameStarter
 	public void quitGame()
 	{
 		board.quitGame();
+		board = null;
 		
 		backButton.dispose();
 		backButton = null;

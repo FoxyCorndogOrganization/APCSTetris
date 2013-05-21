@@ -40,7 +40,8 @@ public class MultiplayerMenu extends Menu
 	private	Tetris		tetris;
 	
 	/**
-	 * Create a MultiplayerMenu instance.
+	 * Create a MultiplayerMenu instance.589746123pc
+	 * 
 	 */
 	public MultiplayerMenu(final Tetris tetris)
 	{
