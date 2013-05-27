@@ -47,7 +47,7 @@ public class Scoreboard implements BoardListener
 	public void render()
 	{
 		float scale = 0.5f;
-		Tetris.getFont().render("score " + score, x, y, 0, scale, null);
+		Tetris.getFont().render("Score: " + score, x, y, 0, scale, null);
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);

@@ -46,7 +46,7 @@ public class LinesCompleted implements BoardListener
 	public void render()
 	{
 		float scale = 0.5f;
-		Tetris.getFont().render("lines " + lines, x, y, 0, scale, null);
+		Tetris.getFont().render("Lines: " + lines, x, y, 0, scale, null);
 		
 //		GL.translate(100, 100, 0);
 //		GL.scale(5, 5, 1);

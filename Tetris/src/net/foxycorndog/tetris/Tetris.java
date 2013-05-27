@@ -54,7 +54,7 @@ public class Tetris extends GameStarter
 	
 	private	Queue<Packet>				packetQueue;
 	
-	private static Font					font;
+	private static Font					font, fancyFont;
 	
 	public static final SoundLibrary	SOUND_LIBRARY = createSoundLibrary();
 	
@@ -93,23 +93,26 @@ public class Tetris extends GameStarter
 	private void createGame()
 	{
 		mainMenu.dispose();
-		mainMenu = null;
+		mainMenu   = null;
 		
-		board    = new Board(15, 30, 10, this);
+		board      = new Board(10, 20, 10, this);
 		board.setScale(3f);
 		
 		sidebar    = new Sidebar();
 		
 		backButton = new Button(null);
 		
-		try
-		{
-			backButton.setImage("res/images/back.png");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+//		try
+//		{
+//			backButton.setImage("res/images/back.png");
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+		
+		backButton.setFont(fancyFont);
+		backButton.setText("Back");
 		
 		board.addListener(sidebar.getScoreboard());
 		board.addListener(sidebar.getLinesCompleted());
@@ -170,7 +173,7 @@ public class Tetris extends GameStarter
 		sidebar.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX,
 				board.getY() + Math.round(board.getScaledHeight() / 2));
 		
-		backButton.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX - 30,
+		backButton.setLocation(board.getX() + Math.round(board.getScaledWidth()) + sidebarOffsetX,
 				board.getY());
 	}
 	
@@ -201,15 +204,30 @@ public class Tetris extends GameStarter
 	 */
 	public void init()
 	{
-		font = new Font("res/images/font.gif", 15, 6, new char[]
+		try
 		{
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-			'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'A', 'a', 'b',
-			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'a', '&', '1', '2', '3',
-			'4', '5', '6', '7', '8', '9', '0', '(', '$', ':', '.', ',', '!', '?', ')',
-			';', '"', '\'', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-		});
+			font = new Font("res/images/font.gif", 15, 6, new char[]
+			{
+				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+				'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'A', 'a', 'b',
+				'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+				'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'a', '&', '1', '2', '3',
+				'4', '5', '6', '7', '8', '9', '0', '(', '$', ':', '.', ',', '!', '?', ')',
+				';', '"', '\'', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			});
+			
+			fancyFont = new Font("res/images/fancyFont2.png", 20, 4, new char[]
+			{
+				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+				'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+				'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '&', '1', '2', '3', '4', '5', '6', '7',
+				'8', '9', '0', '(', '$', ':', '.', ',', '!', '?', ')', ';', '"', '\'', ' ', ' ', ' ', ' ', ' ', ' '
+			});
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 		packetQueue = new Queue<Packet>();
 		
@@ -323,9 +341,6 @@ public class Tetris extends GameStarter
 				
 					float scaleX = minDim / (bWidth);
 					float scaleY = minDim / (bHeight);
-				
-					GL.setTextureScaleMinMethod(GL.LINEAR);
-					GL.setTextureScaleMagMethod(GL.LINEAR);
 					
 					scale = Math.min(scaleX, scaleY);
 					
@@ -558,7 +573,7 @@ public class Tetris extends GameStarter
 	 */
 	public static Font getFont()
 	{
-		return font;
+		return fancyFont;
 	}
 	
 	/**

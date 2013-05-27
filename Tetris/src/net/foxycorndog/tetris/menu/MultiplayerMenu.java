@@ -8,6 +8,7 @@ import net.foxycorndog.jfoxylib.components.TextField;
 import net.foxycorndog.jfoxylib.events.ButtonEvent;
 import net.foxycorndog.jfoxylib.events.ButtonListener;
 import net.foxycorndog.jfoxylib.font.Font;
+import net.foxycorndog.jfoxylib.font.MissingCharacterException;
 import net.foxycorndog.jfoxylib.network.Client;
 import net.foxycorndog.jfoxylib.network.NetworkException;
 import net.foxycorndog.jfoxylib.network.Packet;
@@ -165,9 +166,15 @@ public class MultiplayerMenu extends Menu
 		{
 			GL.scale(1.8f, 1.8f, 1);
 			
-			ipField.render();
+			try
+			{
+				ipField.render();
+			}
+			catch (MissingCharacterException e)
+			{
+//				e.printStackTrace();
+			}
 			
-
 			GL.scale(0.3f, 0.3f, 1);
 			joinServerImage.render();
 			createServerButton.render();

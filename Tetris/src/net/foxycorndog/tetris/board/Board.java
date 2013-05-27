@@ -672,18 +672,8 @@ public class Board extends AbstractBoard
 	{
 		if (server != null)
 		{
-			if (server.isConnected())
+			if (!server.isConnected())
 			{
-				
-			}
-			else
-			{
-				GL.setColor(0, 0, 0, 1);
-				Tetris.getFont().render("Waiting for\nconnection.", 0, 0, 2, 1, Font.CENTER, Font.CENTER, null);
-
-				GL.setColor(1, 1, 1, 1);
-				Tetris.getFont().render("Waiting for\nconnection.", 2, 2, 2, 1, Font.CENTER, Font.CENTER, null);
-				
 				GL.setColor(0.5f, 0.5f, 0.5f, 1);
 			}
 		}
@@ -695,5 +685,21 @@ public class Board extends AbstractBoard
 			GL.scale(0.75f, 0.75f, 1);
 		}
 		GL.popMatrix();
+
+		if (server != null)
+		{
+			if (server.isConnected())
+			{
+				
+			}
+			else
+			{
+				GL.setColor(0, 0, 0, 1);
+				Tetris.getFont().render("Waiting for\nconnection.", 0, 0, 2, 1, Font.CENTER, Font.CENTER, null);
+
+				GL.setColor(1, 1, 1, 1);
+				Tetris.getFont().render("Waiting for\nconnection.", 2, 2, 2, 1, Font.CENTER, Font.CENTER, null);
+			}
+		}
 	}
 }

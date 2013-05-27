@@ -20,20 +20,20 @@ import net.foxycorndog.jfoxylib.opengl.texture.Texture;
  */
 public abstract class AbstractPiece implements Cloneable
 {
-	private			int				x, y;
-	private			int				width, height;
-	private			int				unsetX, unsetY;
-	private			int				offsetX, offsetY;
+	private			int					x, y;
+	private			int					width, height;
+	private			int					unsetX, unsetY;
+	private			int					offsetX, offsetY;
 	
-	private			Color			color;
+	private			Color				color;
 	
-	private			Location		center;
+	private			Location			center;
 
-	private			Board			board;
+	private			Board				board;
 
-	private 		Bundle			bundle;
+	private 		Bundle				bundle;
 
-	private	static	Texture			square;
+	private	static	Texture				square;
 
 	private			ArrayList<Location>	shape;
 
