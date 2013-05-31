@@ -106,7 +106,7 @@ public abstract class AbstractBoard
 	
 	private void genGridImage(int width, int height)
 	{
-		grid = new Bundle((width + 2) * (height + 2) * 4, 2, true, false);
+		grid = new Bundle((width + 2) * (height + 2) * 3 * 2, 2, true, false);
 		
 		int squareSize = 10;
 		
@@ -358,12 +358,12 @@ public abstract class AbstractBoard
 				GL.pushAttrib(GL.ALL_ATTRIB_BITS);
 				{
 					GL.setColor(0, 0, 0, 1);
-					grid.render(GL.QUADS, width * height * 4, (width + 2) * (height + 2) * 4 - width * height * 4, WHITE_TEXTURE);
+					grid.render(GL.TRIANGLES, width * height * 3 * 2, (width + 2) * (height + 2) * 3 * 2 - width * height * 3 * 2, WHITE_TEXTURE);
 				}
 				GL.popAttrib();
 				
 				GL.translate(0, 0, -1);
-				grid.render(GL.QUADS, 0, width * height * 4, GRID_SQUARE_TEXTURE);
+				grid.render(GL.TRIANGLES, 0, width * height * 3 * 2, GRID_SQUARE_TEXTURE);
 				
 				GL.translate(0, 0, 1);
 				

@@ -53,7 +53,7 @@ public class MainMenu extends Menu
 	{
 		this.tetris = tetris;
 		
-		bundle      = new Bundle(4 * 3, 2, true, false);
+		bundle      = new Bundle(3 * 2 * 3, 2, true, false);
 		
 		queue       = new Queue<Integer>();
 		
@@ -299,7 +299,7 @@ public class MainMenu extends Menu
 				{
 					GL.translate(xOff + getX(), yOff + getY(), 0);
 					GL.scale(min, min, 1);
-					bundle.render(GL.QUADS, 0, 4, titleScreenTexture);
+					bundle.render(GL.TRIANGLES, 0, 3 * 2, titleScreenTexture);
 				}
 				GL.popMatrix();
 				
@@ -325,7 +325,7 @@ public class MainMenu extends Menu
 						GL.translate(xOff + getX(), yOff + getY(), 0);
 						GL.scale(min, min, 1);
 						
-						bundle.render(GL.QUADS, 4, 4, menuBoxTexture);
+						bundle.render(GL.TRIANGLES, 3 * 2, 3 * 2, menuBoxTexture);
 					
 						renderButtons();
 					}
@@ -364,7 +364,7 @@ public class MainMenu extends Menu
 		if (queue.size() > 0)
 		{
 			GL.translate(circleX, circleY, 0);
-			bundle.render(GL.QUADS, 4 * 2, 4, circleTexture);
+			bundle.render(GL.TRIANGLES, 3 * 2 * 2, 3 * 2, circleTexture);
 		}
 	}
 	

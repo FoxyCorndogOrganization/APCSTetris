@@ -238,7 +238,7 @@ public abstract class AbstractPiece implements Cloneable
 			}
 		}
 		
-		bundle = new Bundle(amountOfSquares * 4, 2, true, false);
+		bundle = new Bundle(amountOfSquares * 3 * 2, 2, true, false);
 
 		if (amountOfSquares <= 0)
 		{
@@ -630,7 +630,7 @@ public abstract class AbstractPiece implements Cloneable
 			GL.translate(x, y, 0);
 			GL.setColor(color.getRedf(), color.getGreenf(), color.getBluef(), 1);
 			
-			bundle.render(GL.QUADS, square);
+			bundle.render(GL.TRIANGLES, square);
 		}
 		GL.popMatrix();
 	}
