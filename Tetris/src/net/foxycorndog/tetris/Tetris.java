@@ -38,25 +38,25 @@ import net.foxycorndog.tetris.sound.SoundLibrary;
  */
 public class Tetris extends GameStarter
 {
-	private boolean 					rUp, gUp, bUp;
+	private					boolean 		rUp, gUp, bUp;
 	
-	private int							r, g, b;
+	private					int				r, g, b;
 	
-	private	float						scale;
-	private float						counter;
+	private					float			scale;
+	private					float			counter;
 	
-	private	Button						backButton;
+	private					Button			backButton;
 	
-	private Board						board;
-	private Sidebar						sidebar;
+	private					Board			board;
+	private					Sidebar			sidebar;
 	
-	private MainMenu					mainMenu;
+	private					MainMenu		mainMenu;
 	
-	private	Queue<Packet>				packetQueue;
+	private					Queue<Packet>	packetQueue;
 	
-	private static Font					font, fancyFont;
+	private static			Font			font, fancyFont;
 	
-	public static final SoundLibrary	SOUND_LIBRARY = createSoundLibrary();
+	public	static	final	SoundLibrary	SOUND_LIBRARY = createSoundLibrary();
 	
 	/**
 	 * Main method that creates a Frame and starts up the Tetris
@@ -143,6 +143,16 @@ public class Tetris extends GameStarter
 			}
 			
 			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonUp(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonDown(ButtonEvent event)
 			{
 				
 			}
@@ -372,7 +382,7 @@ public class Tetris extends GameStarter
 	/**
 	 * Method to calculate logic each frame.
 	 */
-	public void loop()
+	public void update()
 	{
 		float delta = 60f / Frame.getFPS();
 		
@@ -397,22 +407,22 @@ public class Tetris extends GameStarter
 			board.loop();
 		}
 		
-		int x = Mouse.getDisplayX() - Frame.getX();
-		int y = Mouse.getDisplayY() - Frame.getY();
-		
-		int closeX = Frame.getWidth() - 50;
-		int closeY = -20;
-		
-		int closeWidth  = 82;
-		int closeHeight = 50;
-		
-		int dx = Mouse.getDX();
-		int dy = Mouse.getDY();
-		
-		if (x > closeX && x < closeX + closeWidth && y > closeY && y < closeY + closeHeight)
-		{
-//			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
-		}
+//		int x = Mouse.getDisplayX() - Frame.getX();
+//		int y = Mouse.getDisplayY() - Frame.getY();
+//		
+//		int closeX = Frame.getWidth() - 50;
+//		int closeY = -20;
+//		
+//		int closeWidth  = 82;
+//		int closeHeight = 50;
+//		
+//		int dx = Mouse.getDX();
+//		int dy = Mouse.getDY();
+//		
+//		if (x > closeX && x < closeX + closeWidth && y > closeY && y < closeY + closeHeight)
+//		{
+////			Frame.setLocation(Frame.getX() + dx, Frame.getY() + dy);
+//		}
 		
 		while (!packetQueue.isEmpty())
 		{

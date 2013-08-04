@@ -43,15 +43,15 @@ public class NextPiece
 		
 		try
 		{
-			bgImage.setImage(new Texture("res/images/nextpiece.png"));
+			bgImage.setTexture(new Texture("res/images/nextpiece.png"));
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 		
-		width  = bgImage.getWidth();
-		height = bgImage.getHeight();
+		width  = Math.round(bgImage.getScaledWidth());
+		height = Math.round(bgImage.getScaledHeight());
 	}
 	
 	/**

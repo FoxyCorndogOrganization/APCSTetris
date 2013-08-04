@@ -35,8 +35,8 @@ public class CreditsMenu extends Menu
 		
 		try
 		{
-			creditsImage.setImage("res/images/peoplecredits.png");
-			backImage.setImage("res/images/back.png");
+			creditsImage.setTexture("res/images/peoplecredits.png");
+			backImage.setTexture("res/images/back.png");
 		}
 		catch (IOException e)
 		{
@@ -69,6 +69,16 @@ public class CreditsMenu extends Menu
 			}
 			
 			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonUp(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonDown(ButtonEvent event)
 			{
 				
 			}

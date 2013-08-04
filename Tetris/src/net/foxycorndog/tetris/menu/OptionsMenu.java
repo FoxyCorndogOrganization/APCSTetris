@@ -40,9 +40,9 @@ public class OptionsMenu extends Menu
 		
 		try
 		{
-			soundsOn.setImage("res/images/soundson.png");
-			soundsOff.setImage("res/images/soundsoff.png");
-			backImage.setImage("res/images/back.png");
+			soundsOn.setTexture("res/images/soundson.png");
+			soundsOff.setTexture("res/images/soundsoff.png");
+			backImage.setTexture("res/images/back.png");
 		}
 		catch (IOException e)
 		{
@@ -104,6 +104,16 @@ public class OptionsMenu extends Menu
 			}
 			
 			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonUp(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonDown(ButtonEvent event)
 			{
 				
 			}

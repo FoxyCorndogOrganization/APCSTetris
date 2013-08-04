@@ -92,7 +92,7 @@ public abstract class AbstractBoard
 		
 		try
 		{
-			boardImage.setImage(new Texture("res/images/grid.png"));
+			boardImage.setTexture(new Texture("res/images/grid.png"));
 		}
 		catch (IOException e)
 		{

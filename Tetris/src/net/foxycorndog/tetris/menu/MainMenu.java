@@ -99,19 +99,19 @@ public class MainMenu extends Menu
 		circleTexture.bind();
 		
 		playButton = new Button(null);
-		playButton.setImage(playButtonTexture);
+		playButton.setTexture(playButtonTexture);
 		playButton.setLocation(86, 230 - 38 * 0);
 		
 		optionsButton = new Button(null);
-		optionsButton.setImage(optionsButtonTexture);
+		optionsButton.setTexture(optionsButtonTexture);
 		optionsButton.setLocation(86, 230 - 38 * 1);
 		
 		creditsButton = new Button(null);
-		creditsButton.setImage(creditsButtonTexture);
+		creditsButton.setTexture(creditsButtonTexture);
 		creditsButton.setLocation(86, 230 - 38 * 2);
 		
 		quitButton = new Button(null);
-		quitButton.setImage(quitButtonTexture);
+		quitButton.setTexture(quitButtonTexture);
 		quitButton.setLocation(86, 232 - 38 * 3);
 		
 		ButtonListener listener = new ButtonListener()
@@ -153,10 +153,20 @@ public class MainMenu extends Menu
 			{
 				Button button  = event.getSource();
 				
-				circleX = button.getX();
-				circleY = button.getY() - 5;
+				circleX = Math.round(button.getX());
+				circleY = Math.round(button.getY() - 5);
 				
 				queue.enqueue(circleY);
+			}
+
+			public void buttonUp(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonDown(ButtonEvent event)
+			{
+				
 			}
 		};
 		

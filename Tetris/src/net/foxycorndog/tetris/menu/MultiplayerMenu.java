@@ -50,14 +50,14 @@ public class MultiplayerMenu extends Menu
 		
 		ipField = new TextField(null);
 //		ipField.setSize(300, 80);
-		ipField.setScale(0.75f);
+		ipField.setTextScale(0.75f);
 		ipField.setAlignment(TextField.CENTER, TextField.CENTER);
 		ipField.setFont(Tetris.getFont());
 		ipField.setLocation(0, 10);
 		
 		joinServerImage = new Image(null);
 		joinServerImage.setAlignment(Image.CENTER, Image.CENTER);
-		joinServerImage.setLocation(0, ipField.getHeight() + 130);
+		joinServerImage.setLocation(0, ipField.getScaledHeight() + 130);
 		
 		joinButton = new Button(null);
 		joinButton.setAlignment(Image.CENTER, Image.CENTER);
@@ -70,9 +70,9 @@ public class MultiplayerMenu extends Menu
 		try
 		{
 			ipField.setBackgroundImage("res/images/GUI/TextField.png");
-			joinServerImage.setImage("res/images/joinserver.png");
-			createServerButton.setImage("res/images/createserver.png");
-			joinButton.setImage("res/images/join.png");
+			joinServerImage.setTexture("res/images/joinserver.png");
+			createServerButton.setTexture("res/images/createserver.png");
+			joinButton.setTexture("res/images/join.png");
 		}
 		catch (IOException e)
 		{
@@ -137,6 +137,16 @@ public class MultiplayerMenu extends Menu
 			}
 			
 			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonUp(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonDown(ButtonEvent event)
 			{
 				
 			}

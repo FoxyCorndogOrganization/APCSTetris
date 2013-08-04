@@ -44,8 +44,8 @@ public class PlayMenu extends Menu
 		
 		try
 		{
-			singleplayerButton.setImage("res/images/singleplayer.png");
-			multiplayerButton.setImage("res/images/multiplayer.png");
+			singleplayerButton.setTexture("res/images/singleplayer.png");
+			multiplayerButton.setTexture("res/images/multiplayer.png");
 		}
 		catch (IOException e)
 		{
@@ -79,6 +79,16 @@ public class PlayMenu extends Menu
 			}
 			
 			public void buttonHovered(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonUp(ButtonEvent event)
+			{
+				
+			}
+
+			public void buttonDown(ButtonEvent event)
 			{
 				
 			}
